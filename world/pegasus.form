@@ -1,0 +1,97 @@
+
+
++buckets command ouptut example:
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                                  ║
+║   Bucket    Flags  Description                                 #Jobs  Pct   C  A  D  Due    ARTs ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+║   CODE      VHPMLS For bugs and code enhancements                 22 100%  42 42 42   72     10d ║
+╠══════════════════════════════════════════════════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════════════════════════════════════════════════╝
+
++buckets command ouptut template:
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                                  ║
+║   Bucket    Flags  Description                                 #Jobs  Pct   C  A  D  Due    ARTs ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+║   xxxx1xxx  xx2xxx xxxxxxxxxxxxxxxxxxx3xxxxxxxxxxxxxxxxxxxxxx  xx4xx x5x% x6x x7x x8x x9    x10x ║
+╠══════════════════════════════════════════════════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+
++job <#> command output example:
+╔════════════════════════════╤══════════════════════════════════╤══════════════════════════════════╗
+║    Bucket: Bucketname      ┆   Due On: DD/MM/YYYY             ┆  Opened By: Character Name       ║
+║     Title: Job Title Here  ┆   Status: New                    ┆Assigned To: Character Name       ║
+║ Open Date: DD/MM/YYYY      ┆   Tagged: Character1, Character2,┆                                  ║
+║                            ┆           Character3, Character4,┆                                  ║
+║                            ┆           Character5             ┆                                  ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┴┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┴┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+╠╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╣
+║ Comment #1:                                                                                      ║
+║┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉                                                                 ║
+║             Theres some text here, and we are going to have stuff wrapped up together nicely     ║
+║             We should probably have everything columnated so that we make a table of comments    ║
+║             id in column one and the comment in column two.                                      ║
+║                                                                                                  ║
+║                                                 ┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉╣
+║                                                     Character Name Here - DD/MM/YYYY HH:MM:SS    ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+╠╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╣
+║ Comment #2:                                                                                      ║
+║┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉                                                                 ║
+║             Theres some text here, and we are going to have stuff wrapped up together nicely     ║
+║             We should probably have everything columnated so that we make a table of comments    ║
+║             id in column one and the comment in column two.                                      ║
+║                                                                                                  ║
+║                                                 ┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉╣
+║                                                     Character Name Here - DD/MM/YYYY HH:MM:SS    ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+╚══════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+
++bucket/info <Bucket> command output example:
+╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
+║  Name: ADMIN <ID> (# jobs in bucket)                                 Hidden Status: Unhidden     ║
+║  Locked To: LOCK INFO (You have access)                             +Myjobs Status: Inaccessible ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+║  Avg Resolve Time: 26:11:09:43                                                                   ║
+║┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉                                                                 ║
+║  Closure Stats: Completed: 2   Deleted: 3   Approved: 13   Denied: 4                             ║
+║  Provides: (Attributes provided to jobs in the bucket)                                           ║
+║             POST_APPROVE    POST_COMPLETE   POST_DENY                                            ║
+║                                                                                                  ║
+║  Desc: For game administrative issues.                                                           ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+║  Post Data:  (Job system will post to these boards)                                              ║
+║               Complete: 42   Approve: 42    Deny: 42                                             ║
+║                                                                                                  ║
+║  Players:    (Connected players with access to this bucket)                                      ║
+║                                                                                                  ║
+║               Swift, Oleo, and Taladan                                                           ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+
++jobs/<all|mine|pri|search|new|list|overdue|sortby|who> command output example:
+╔══════════════════════════════════════════════════════════════════════════════════════════════════╗
+║  Job# Type  Title                                      Opened By        Due On   Assigned To     ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+║     1 CODE  Building System                            Swift            -------- -               ║
+║     2 CODE  Scrolls and Staves                         Swift            -------- Paprika         ║
+║     3 CODE  Epic Coding Megajob                        Aurinko          -------- Aurinko         ║
+║     4 PITCH NPC Sheet Code Project                     Aurinko          -------- Aurinko         ║
+║     5 CODE  BUG: NPC Spells                            Swift            -------- -               ║
+║     6 FEEP  Plot Tools idea                            Swift            -------- -               ║
+║     7 PLOTS PrP: Orcsipation Proclamation              Markus           OVERDUE! -               ║
+║     8 FEEP  +Follow                                    Paprika          OVERDUE! -               ║
+║     9 ADMIN Metaplot Discussion                        Swift            -------- -               ║
+║    10 PITCH PrC: Dungeon Delver                        Einar            -------- -               ║
+║    11 CODE  FEEP: Roll to a job                        Paprika          OVERDUE! Paprika         ║
+║    12 CODE  Timestops                                  Swift            -------- -               ║
+║    13 REQ   PRP                                        Derrak           OVERDUE! Swift           ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+║                                    * Denotes New Activity                                        ║
+╠┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╣
+╚══════════════════════════════════════════════════════════════════════════════════════════════════╝

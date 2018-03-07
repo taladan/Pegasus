@@ -1,0 +1,23 @@
+    def parse(self):
+        """parse the bucket command"""
+
+        self.buckets = map(str.lower, evennia.search_tag("isbucket", category="jobs"))
+        valid_actions = ("access", "check", "create", "delete", "info", "rename")
+
+        if self.switches:
+            if self.switches[0].lower() not in self.valid_actions:
+                self.caller.msg("%s is not a valid switch for the Buckets command" % self.switches[0])
+                return
+            else:
+                self.switch = self.switches[0].lower()
+
+        else:
+            self.caller.msg("The +buckets command requires one of the following switches: %s, %s, %s, %s, or %s" % valid_actions)
+            return
+
+        if self.args:
+            if self.lhs.lower() in self.buckets:
+                self.bucket = self.lhs.lower()
+            else:
+                self.caller.msg("%s is not a valid Bucket" % self.lhs)
+                return
