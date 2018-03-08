@@ -52,7 +52,6 @@ Command steps:
 
 
 Author: taladan@gmail.com
-last edited: 02/28//2018
 """
 from datetime import datetime
 import evennia as ev
