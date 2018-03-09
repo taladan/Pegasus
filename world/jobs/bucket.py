@@ -105,11 +105,11 @@ class Bucket(Channel):
 
     def set(self, setting, value, **kwargs):
         """used to change settings on a particular bucket"""
-        try:
+        if "interval" in kwargs:
             interval = kwargs.pop("interval")
             self.db.due_timeout = value
             self.db.interval = interval
             self.db.timeout_string = str(self.db.due_timeout) + " " + self.db.interval
-        except KeyError:
-            attr = _VALID_BUCKET_SETTINGS[setting]
-            self.db.attr = value
+        else:
+            attr = "self.db." + _VALID_BUCKET_SETTINGS[setting]
+            exec(attr + "=" + str(value))
