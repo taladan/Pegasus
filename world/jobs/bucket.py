@@ -5,8 +5,10 @@ import evennia as ev
 from typeclasses.channels import Channel
 from evennia.utils import lazy_property
 from jobutils import Utils
-from jobs_settings import _VALID_BUCKET_ACTIONS
-from jobs_settings import _VALID_BUCKET_SETTINGS
+import jobs_settings as settings
+
+_VALID_BUCKET_SETTINGS = settings._VALID_BUCKET_SETTINGS
+_VALID_BUCKET_ACTIONS = settings._VALID_BUCKET_ACTIONS
 
 date = datetime
 ju = Utils()
@@ -27,6 +29,7 @@ class Bucket(Channel):
         self.db.createdon = '{:%m-%d-%Y at %H:%M %Z}'.format(date.utcnow())
         self.db.denial_board = '0'
         self.db.due_timeout = 0
+        self.db.timeout_string = "0"
         self.db.completed_jobs = 0
         self.db.num_of_jobs = len(self.associated)
         self.db.per_player_actions = {}
@@ -49,16 +52,15 @@ class Bucket(Channel):
         if self.db.per_player_actions.keys() is not None:
             return obj in self.db.per_player_actions.keys()
 
-    def grant_access(self, obj, action):
-        """give a character access to a bucket"""
+    def grant_access(self, action, obj):
+        """give an object access to a bucket"""
         action = [action]
         ppa = self.db.per_player_actions
-        if ju.ischaracter(obj):
-            for act in action:
-                if obj in ppa.keys():
-                    ppa[obj].append(act)
-                else:
-                    ppa[obj] = [act]
+        for act in action:
+            if obj in ppa.keys():
+                ppa[obj].append(act)
+            else:
+                ppa[obj] = [act]
 
     def has_jobs(self):
         """return true if the bucket has any jobs on it, false if not"""
@@ -77,7 +79,7 @@ class Bucket(Channel):
         #     return False
 
     def info(self):
-        """returns pertinent bucket info as a list"""
+        """returns bucket info as a list"""
         ret = [self.key,
                self.db.desc,
                self.db.num_of_jobs,
@@ -85,7 +87,7 @@ class Bucket(Channel):
                self.db.completion_board,
                self.db.approval_board,
                self.db.denial_board,
-               self.db.due_timeout,
+               self.db.timeout_string,
                self.db.resolution_time,]
         return ret
 
@@ -93,10 +95,21 @@ class Bucket(Channel):
         """Allows you to see a bucket when you type +jobs.  Toggling it again turns it off"""
         pass
 
+    def remove_access(self,action, obj):
+        """removes action access from obj for bucket"""
+        try:
+            self.db.per_player_actions[obj].remove(action)
+            return True
+        except KeyError:
+            return false
 
-    def set(self, setting, value, obj):
+    def set(self, setting, value, **kwargs):
         """used to change settings on a particular bucket"""
-        valid_settings = (self.db.desc, self.db.completion_board,
-                          self.db.approval_board, self.db.denial_board,
-                          self.db.due_timeout,)
-        pass
+        try:
+            interval = kwargs.pop("interval")
+            self.db.due_timeout = value
+            self.db.interval = interval
+            self.db.timeout_string = str(self.db.due_timeout) + " " + self.db.interval
+        except KeyError:
+            attr = _VALID_BUCKET_SETTINGS[setting]
+            self.db.attr = value

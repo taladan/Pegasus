@@ -4,34 +4,35 @@
 ################################################################################
 #  JOBS - Skin output:
 #           To change the skin of the tables output to the user, uncomment and
-#           change the defaults below.
+#           change the defaults below. Only a single character may be used for
+#           these.
 #
 #           Please note: Unicode characters /may/ not work correctly on all
 #                        mu* clients.  Use at your own risk.
 ################################################################################
-# _CORNER_TOP_LEFT_CHAR = "╔"
-# _CORNER_TOP_RIGHT_CHAR = "╗"
-# _CORNER_BOTTOM_LEFT_CHAR = "╚"
-# _CORNER_BOTTOM_RIGHT_CHAR = "╝"
-# _BORDER_LEFT_CHAR = "║"
-# _BORDER_RIGHT_CHAR = "║"
-# _BORDER_TOP_CHAR = "═"
-# _BORDER_BOTTOM_CHAR = "═"
-# _HEADER_BOTTOM_LEFT_CHAR = "╠"
-# _HEADER_BOTTOM_RIGHT_CHAR = "╣"
-# _HEADER_LINE_CHAR = "╼"
+_CORNER_TOP_LEFT_CHAR = ""
+_CORNER_TOP_RIGHT_CHAR = ""
+_CORNER_BOTTOM_LEFT_CHAR = ""
+_CORNER_BOTTOM_RIGHT_CHAR = ""
+_BORDER_LEFT_CHAR = ""
+_BORDER_RIGHT_CHAR = ""
+_BORDER_TOP_CHAR = ""
+_BORDER_BOTTOM_CHAR = ""
+_HEADER_BOTTOM_LEFT_CHAR = ""
+_HEADER_BOTTOM_RIGHT_CHAR = ""
+_HEADER_LINE_CHAR = ""
 
 ################################################################################
 #  JOBS - Message prefixes
 #           Use the variables below to change how your messages are prefixed
-#           when they are sent to the player.
+#           when they are sent to the player. Must contain string.
 #
 #           Please note: Unicode characters /may/ not work correctly on all
 #                        mu* clients.  Use at your own risk.
 ################################################################################
-# _ERROR_PRE = "|w|[200Game:|n "
-# _SUCC_PRE = "|w|[001Game:|n "
-# _TEST_PRE = "|000|[021TESTING>>>|n"
+_ERROR_PRE = ""
+_SUCC_PRE = ""
+_TEST_PRE = ""
 
 ################################################################################
 #  JOBS - Bucket actions & Job actions
@@ -47,32 +48,29 @@
 #           actions alongside the default actions - this will keep system functionality
 #           from breaking
 ################################################################################
-# _DEFAULT_VALID_BUCKET_ACTIONS = ("access", "check", "create",
-#                                  "delete", "info", "rename", "sort")
-# _DEFAULT_VALID_JOB_ACTIONS = ("add", "approve", "complete",
-#                               "create", "deny", "edit", "give",
-#                               "log", "mail", "sort", "stats")
-# _VALID_BUCKET_ACTIONS = _DEFAULT_VALID_BUCKET_ACTIONS
-# _VALID_JOB_ACTIONS = _DEFAULT_VALID_JOB_ACTIONS
+_VALID_BUCKET_ACTIONS = ()      # Must be a set
+_VALID_BUCKET_SETTINGS = {}     # Must be a dict
+_VALID_JOB_ACTIONS = ()         # Must be a set
+_VALID_TIMEOUT_INTERVALS = ()   # Must be a set
 """
+import jobs_defaults as defaults
 
-import jobs_defaults
-
-_CORNER_TOP_LEFT_CHAR = jobs_defaults._CORNER_TOP_LEFT_CHAR
-_CORNER_TOP_RIGHT_CHAR = jobs_defaults._CORNER_TOP_RIGHT_CHAR
-_CORNER_BOTTOM_LEFT_CHAR = jobs_defaults._CORNER_BOTTOM_LEFT_CHAR
-_CORNER_BOTTOM_RIGHT_CHAR = jobs_defaults._CORNER_BOTTOM_RIGHT_CHAR
-_BORDER_LEFT_CHAR = jobs_defaults._BORDER_LEFT_CHAR
-_BORDER_RIGHT_CHAR = jobs_defaults._BORDER_RIGHT_CHAR
-_BORDER_TOP_CHAR = jobs_defaults._BORDER_TOP_CHAR
-_BORDER_BOTTOM_CHAR = jobs_defaults._BORDER_BOTTOM_CHAR
-_HEADER_BOTTOM_LEFT_CHAR = jobs_defaults._HEADER_BOTTOM_LEFT_CHAR
-_HEADER_BOTTOM_RIGHT_CHAR = jobs_defaults._HEADER_BOTTOM_RIGHT_CHAR
-_HEADER_LINE_CHAR = jobs_defaults._HEADER_LINE_CHAR
-_ERROR_PRE = jobs_defaults._ERROR_PRE
-_SUCC_PRE = jobs_defaults._SUCC_PRE
-_TEST_PRE = jobs_defaults._TEST_PRE
-_VALID_BUCKET_ACTIONS = jobs_defaults._VALID_BUCKET_ACTIONS
-_VALID_JOB_ACTIONS = jobs_defaults._VALID_JOB_ACTIONS
-_VALID_BUCKET_SETTINGS = jobs_defaults._VALID_BUCKET_SETTINGS
-_VALID_JOB_SETTINGS = jobs_defaults._VALID_JOB_SETTINGS
+_CORNER_TOP_LEFT_CHAR = defaults._DEFAULT_CORNER_TOP_LEFT_CHAR
+_CORNER_TOP_RIGHT_CHAR = defaults._DEFAULT_CORNER_TOP_RIGHT_CHAR
+_CORNER_BOTTOM_LEFT_CHAR = defaults._DEFAULT_CORNER_BOTTOM_LEFT_CHAR
+_CORNER_BOTTOM_RIGHT_CHAR = defaults._DEFAULT_CORNER_BOTTOM_RIGHT_CHAR
+_BORDER_LEFT_CHAR = defaults._DEFAULT_BORDER_LEFT_CHAR
+_BORDER_RIGHT_CHAR = defaults._DEFAULT_BORDER_RIGHT_CHAR
+_BORDER_TOP_CHAR = defaults._DEFAULT_BORDER_TOP_CHAR
+_BORDER_BOTTOM_CHAR = defaults._DEFAULT_BORDER_BOTTOM_CHAR
+_HEADER_BOTTOM_LEFT_CHAR = defaults._DEFAULT_HEADER_BOTTOM_LEFT_CHAR
+_HEADER_BOTTOM_RIGHT_CHAR = defaults._DEFAULT_HEADER_BOTTOM_RIGHT_CHAR
+_HEADER_LINE_CHAR = defaults._DEFAULT_HEADER_LINE_CHAR
+_ERROR_PRE = defaults._DEFAULT_ERROR_PRE
+_SUCC_PRE = defaults._DEFAULT_SUCC_PRE
+_TEST_PRE = defaults._DEFAULT_TEST_PRE
+_VALID_BUCKET_ACTIONS = defaults._DEFAULT_VALID_BUCKET_ACTIONS
+_VALID_JOB_ACTIONS = defaults._DEFAULT_VALID_JOB_ACTIONS
+_VALID_BUCKET_SETTINGS = defaults._DEFAULT_VALID_BUCKET_SETTINGS
+_VALID_TIMEOUT_INTERVALS = defaults._DEFAULT_VALID_TIMEOUT_INTERVALS
+_VALID_JOB_SETTINGS = defaults._DEFAULT_VALID_JOB_SETTINGS
