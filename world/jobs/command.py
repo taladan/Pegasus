@@ -102,9 +102,6 @@ class CmdJgroups(MuxCommand):
     lock = "cmd:perm(Admin)"
     help_category = "Jobs"
 
-    # def __init__(self):
-    #     super(CmdJgroups, self).parse()
-
     def info(self, jgroup):
         pass
 
