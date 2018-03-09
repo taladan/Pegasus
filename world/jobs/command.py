@@ -17,29 +17,24 @@ Description:
 TODO: Structure:
     * bucket manager  handles tags.
     * each tag on the bucket manager is a different bucket.
-    * jobs are also tags.
     * You may have many jobs tagged to a single bucket.
     * jobs can not belong to more than one bucket at a time
     * jobs can be moved from one bucket to another.
     * jobs can only be tagged with existing bucket names.
-    * If bucket name doesn't exist, error and exit, or save post to bucket correctly (idea of drafts).
-    * User can be member of buckets by having the bucket names tagged on her.
-    * Users appropriately tagged can access any job in a bucket she is tagged for.
     * Users can see any comments on any job that she can see
     * Users can comment on any job she can see
     * Non-Privilege Users can not access any buckets or jobs unless they are tagged for a specific job.
-    * Users should be able to refer to bucket by name or #
 
 Command steps:
-    * +bucket/add <Name> - Create a new bucket named <Name>
+    * +bucket/create <Bucket> = <Description> - Create a new <Bucket> with <Description>
         - This registers a new channel as a bucket unless bucket exists
 
-    * +bucket/rename <Old[/#]>=<New> - Rename a bucket may use # for old but must use string for new
+    * +bucket/rename <Bucket>=<New> - Rename a bucket may use # for old but must use string for new
         - This should identify the old bucket by name and rename it, retaining any jobs that are children of this channel
 
-    * +bucket/delete <Name[/#]> - deletes a bucket (must be empty of jobs)
-        - This should delete a bucket from the system unless it has jobs associated with it should take either name of
-          bucket or bucket id #
+    * +bucket/delete <Bucket> - deletes a bucket (must be empty of jobs)
+        - This should delete a bucket from the system unless it has jobs associated with it should take only the name of
+          Bucket
 
     * +job/create <Bucket>=<Title>/<Text> - creates a job of <Title> with body of <Text> in <Bucket>
         - This should make sure there are no other jobs with an identical name before adding it to Bucket
@@ -606,7 +601,7 @@ class CmdJobs(MuxCommand):
         /create <bucket>/<title>=<comments> : Create a job manually
         /deny <#>=<comment>                 : Deny a player request
         /due <#>=<<date>|none>              : Set job due date
-        /edit <#>/<entry#>=<old>/<new>      : Edits a job
+        /edit <#>/< from decemberntry#>=<old>/<new>      : Edits a job
         /esc <#>=<green|yellow|red>         : Escalate a job's priority
         /help <#>                           : Display help for a job's bucket
         /last <#>=<X>                       : List last <X> entries in <#>
@@ -854,7 +849,7 @@ class CmdJobs(MuxCommand):
         # request -- it should display the bucket that is passed.  If it's not a bucket it should
         # return an error message.
 
-        valid_actions = _VALID_JOB_ACTIONS
+        self.valid_actions = _VALID_JOB_ACTIONS
 
         if self.switches or self.args:
             if self.switches:
