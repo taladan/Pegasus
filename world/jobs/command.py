@@ -349,7 +349,7 @@ class CmdBuckets(MuxCommand):
                               border_top_char=_BORDER_TOP_CHAR,
                               border_bottom_char=_BORDER_BOTTOM_CHAR,)
         # layout the column widths
-        ret.reformat_column(0, width=40, align="l")  # Buckets target can access
+        ret.reformat_column(0, width=40, align="l")   # Buckets target can access
         ret.reformat_column(1, width=55, align="c")   # Actions available to target
         # fix header corners
         ret.table[0][0].reformat(corner_bottom_left_char=_HEADER_BOTTOM_LEFT_CHAR)
