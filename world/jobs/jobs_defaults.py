@@ -28,7 +28,7 @@ _DEFAULT_SUCC_PRE = "|w|[001Game:|n "
 _DEFAULT_TEST_PRE = "|000|[021TESTING>>>|n"
 
 # Actions
-_DEFAULT_VALID_BUCKET_ACTIONS = ("access", "check", "create", "delete", "info", "rename", "sort")
+_DEFAULT_VALID_BUCKET_ACTIONS = ("access", "check", "create", "delete", "info", "monitor", "rename", "sort")
 _DEFAULT_VALID_JOB_ACTIONS = ("add", "approve", "complete", "create", "deny", "edit", "give",
                               "log", "mail", "sort", "stats")
 # Settings

@@ -261,7 +261,6 @@ class CmdBuckets(MuxCommand):
 
     def _can_access(self, action, obj):
         """lock validation falls through to bucket.has_access(action, obj)"""
-        locks = obj.locks.check_lockstring
         if self._pass_lock(obj) or (self.bucket is not None and self.bucket.has_access(action, obj)):
             return True
         else:
@@ -334,18 +333,14 @@ class CmdBuckets(MuxCommand):
 
     def _create(self):
         """creates buckets unless they already exist"""
-        # Exists?
         if self.bucket:
             self.caller.msg(_ERROR_PRE + "Bucket: |w%s|n already exists." % self.bucket_name)
             return
-        # Description?
-        try:
-            ev.create_channel(self.bucket_name, desc=self.rhs_text, typeclass="world.jobs.bucket.Bucket")
+        else:
+            ev.create_channel(self.bucket_name, desc=self.rhs, typeclass="world.jobs.bucket.Bucket")
             self._assign_bucket(self.bucket_name)
-            self.bucket.db.createdby = self.caller.key
+            self.bucket.db.createdby = self.caller
             self.caller.msg(_SUCC_PRE + "Bucket: |w%s|n has been created." % self.bucket_name)
-        except AttributeError:
-            self.caller.msg(_ERROR_PRE + "A description must be provided for the bucket.")
 
     def _delete(self):
         """Deletes bucket.  Bucket may not have any jobs inside of bucket"""
@@ -369,6 +364,19 @@ class CmdBuckets(MuxCommand):
         else:
             self.msg(_ERROR_PRE + "That is not a valid bucket.")
 
+    def _monitor(self, obj):
+        if self.bucket.has_connection(obj):
+            status = True if self.caller in self.bucket.mutelist else False
+            if status:
+                status='On'
+                self.bucket.mute(self.caller)
+            else:
+                status = 'Off'
+                self.bucket.unmute(self.caller)
+        else:
+            self.bucket.connect(obj)
+        self.caller.msg(_SUCC_PRE + "Toggling monitor for bucket: |w%s|n %s" % (self.bucket_name, status))
+
     def _rename(self, newname):
         """renames a particular bucket"""
         self.caller.msg(_SUCC_PRE + "Bucket: |w%s|n renamed to |w%s|n." % (self.bucket, newname))
@@ -384,7 +392,6 @@ class CmdBuckets(MuxCommand):
             ret = side.split('/')
         else:
             ret = [side, side]
-
         return ret
 
     def _parse_right(self):
@@ -453,6 +460,69 @@ class CmdBuckets(MuxCommand):
         else:
             self.caller.msg(_ERROR_PRE + "|w%s|n setting must be an integer." % setting)
 
+    def _switchhandler(self):
+        """switch workhorse, hard coding switches is probably bad, but it works right now
+       Todo: Figure out if there's a way to cleanly handle sysop added functionality by calling modules
+        """
+        if self.switch and self._can_access(self.switch, self.caller):
+            # create
+            if self.switch == "create":
+                if self.lhs_target and self.rhs:
+                    self._create()
+                else:
+                    self.caller.msg(_ERROR_PRE +
+                                    "The syntax for the create command is +bucket/create <Bucket> = <Description>")
+            # check
+            elif self.switch == "check":
+                if self.lhs:
+                    self._check(self.character)
+                else:
+                    self.caller.msg(_ERROR_PRE + "The syntax for the check command is +bucket/check <Character>")
+            # access
+            elif self.switch == "access":
+                if self.lhs and self.rhs:
+                    self._access(self.caller)
+                else:
+                    self.caller.msg(_ERROR_PRE +
+                                    "The syntax for the access command is +bucket/access <Bucket>/<action>=<Character>")
+            # delete
+            elif self.switch == "delete":
+                if self.lhs:
+                    self._delete()
+                else:
+                    self.caller.msg(_ERROR_PRE + "The syntax for the delete command is +bucket/delete <Bucket>")
+            # info
+            elif self.switch == "info":
+                if self.bucket_name:
+                    self._info(self.bucket_name)
+                else:
+                    self.caller.msg(_ERROR_PRE + "The syntax for the info command is +bucket/info <Bucket>")
+            # monitor
+            elif self.switch == "monitor":
+                if self.bucket_name:
+                    self._monitor(self.caller)
+                else:
+                    self.caller.msg(_ERROR_PRE + "The syntax for the monitor command is +bucket/monitor <Bucket>")
+            # rename
+            elif self.switch == "rename":
+                if self.rhs:
+                    self._rename(self.rhs)
+                else:
+                    self.caller.msg(_ERROR_PRE + "The syntax for the rename command is +bucket/rename <Bucket>=<value")
+            # set
+            elif self.switch == "set":
+                if self.lhs and self.rhs:
+                    self._set(self.lhs_text.lower(), self.rhs_text.lower())
+                else:
+                    self.caller.msg(_ERROR_PRE +
+                                    "The syntax for the set command is +bucket/set <Bucket>/<setting>=<value")
+            else:
+                self.caller.msg(_ERROR_PRE + "That is not a valid bucket action. See +help buckets.")
+        elif self.switch and not self._can_access(self.switch, self.caller):
+            self.caller.msg(_ERROR_PRE + "You may not access that action for Bucket: |w%s|n." % self.bucket)
+        else:
+            self.caller.msg(self._bucket_table(self.buckets))
+
     def func(self):
         """this does the work of the +buckets command"""
         self.valid_actions = _VALID_BUCKET_ACTIONS
@@ -466,58 +536,9 @@ class CmdBuckets(MuxCommand):
         if self.switch in ("access", "check",):
             if self.lhs:
                 if self._character_validate():
-                    pass
+                    self._switchhandler()
                 else:
                     self.caller.msg(_ERROR_PRE + "|w%s|n is not a valid character." % self.character)
                 return
-            else:
-                pass
         else:
-            pass
-
-        # Each switch is its own function, parse and run if capable.
-        if self.switch and self._can_access(self.switch, self.caller):
-            if self.switch == "create":
-                if self.lhs_target and self.rhs:
-                    self._create()
-                else:
-                    self.caller.msg(_ERROR_PRE +
-                                    "The syntax for the create command is +bucket/create <Bucket> = <Description>")
-            elif self.switch == "check":
-                if self.lhs:
-                    self._check(self.character)
-                else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the check command is +bucket/check <Character>")
-            elif self.switch == "access":
-                if self.lhs and self.rhs:
-                    self._access(self.caller)
-                else:
-                    self.caller.msg(_ERROR_PRE +
-                                    "The syntax for the access command is +bucket/access <Bucket>/<action>=<Character>")
-            elif self.switch == "delete":
-                if self.lhs:
-                    self._delete()
-                else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the delete command is +bucket/delete <Bucket>")
-            elif self.switch == "info":
-                if self.bucket_name:
-                    self._info(self.bucket_name)
-                else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the info command is +bucket/info <Bucket>")
-            elif self.switch == "rename":
-                if self.rhs:
-                    self._rename(self.rhs)
-                else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the rename command is +bucket/rename <Bucket>=<value")
-            elif self.switch == "set":
-                if self.lhs and self.rhs:
-                    self._set(self.lhs_text.lower(), self.rhs_text.lower())
-                else:
-                    self.caller.msg(_ERROR_PRE +
-                                    "The syntax for the set command is +bucket/set <Bucket>/<setting>=<value")
-            else:
-                self.caller.msg(_ERROR_PRE + "That is not a valid bucket action. See +help buckets.")
-        elif self.switch and not self._can_access(self.switch, self.caller):
-            self.caller.msg(_ERROR_PRE + "You may not access that action for Bucket: |w%s|n." % self.bucket)
-        else:
-            self.caller.msg(self._bucket_table(self.buckets))
+            self._switchhandler()

@@ -1,5 +1,9 @@
 
 
+from evennia import default_cmds
+MuxCommand = default_cmds.MuxCommand
+
+
 class CmdJobs(MuxCommand):
     """
     Jobs v0.1

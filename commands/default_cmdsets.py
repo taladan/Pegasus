@@ -18,7 +18,9 @@ from evennia import default_cmds
 from evennia import CmdSet
 from commands import command
 from evennia.contrib.mail import CmdMail
-from world.jobs import command as jobcommand
+from world.jobs.cmdbuckets import CmdBuckets
+from world.jobs.cmdjobs import CmdJobs
+from world.jobs.cmdjgroups import CmdJgroups
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -44,9 +46,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(command.CmdCreateNPC())
         self.add(command.CmdEditNPC())
         self.add(CmdMail())
-        self.add(jobcommand.CmdBuckets())
-        self.add(jobcommand.CmdJobs())
-        self.add(jobcommand.CmdJgroups())
+        self.add(CmdBuckets())
+        self.add(CmdJobs())
+        self.add(CmdJgroups())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
