@@ -9,9 +9,11 @@ import jobs_settings as settings
 
 _VALID_BUCKET_SETTINGS = settings._VALID_BUCKET_SETTINGS
 _VALID_BUCKET_ACTIONS = settings._VALID_BUCKET_ACTIONS
+_SUCC_PRE = settings._SUCC_PRE
 
 date = datetime
 ju = Utils()
+
 
 class Bucket(Channel):
     """
@@ -42,6 +44,7 @@ class Bucket(Channel):
         self.db.resolution_time = 0
         self.db.valid_actions = _VALID_BUCKET_ACTIONS
         self.db.valid_settings = _VALID_BUCKET_SETTINGS
+        self.db.defaultnotification = _SUCC_PRE + "A new job has been posted to |w%s|n" % self.db.key
         self.db.group = "admin"
 
     @lazy_property
@@ -89,8 +92,9 @@ class Bucket(Channel):
                self.db.resolution_time,]
         return ret
 
-    def monitor(self, obj):
-        """Allows you to see a bucket when you type +jobs.  Toggling it again turns it off"""
+    def monitoring(self, obj):
+        """Tracks those monitoring a bucket."""
+        # self.monitors = self.
         pass
 
     @lazy_property

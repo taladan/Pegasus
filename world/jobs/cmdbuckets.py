@@ -365,15 +365,17 @@ class CmdBuckets(MuxCommand):
             self.msg(_ERROR_PRE + "That is not a valid bucket.")
 
     def _monitor(self, obj):
+        """toggles monitoring of a particular bucket"""
         if self.bucket.has_connection(obj):
             status = True if self.caller in self.bucket.mutelist else False
             if status:
                 status='On'
-                self.bucket.mute(self.caller)
+                self.bucket.unmute(self.caller)
             else:
                 status = 'Off'
-                self.bucket.unmute(self.caller)
+                self.bucket.mute(self.caller)
         else:
+            status = 'On'
             self.bucket.connect(obj)
         self.caller.msg(_SUCC_PRE + "Toggling monitor for bucket: |w%s|n %s" % (self.bucket_name, status))
 
