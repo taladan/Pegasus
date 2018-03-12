@@ -424,16 +424,17 @@ class CmdBuckets(MuxCommand):
     def _pass_lock(self, obj):
         """bucket perm locks here."""
         has_perm = obj.check_permstring
-        return has_perm("Admin)") or has_perm("BucketCreator")
-
+        return has_perm("Admin)") or has_perm("BucketAdmin")
 
     def _set(self, setting, value):
+        """sets options on the bucket"""
         if setting in _VALID_BUCKET_SETTINGS.keys():
             self._setting_validate(setting, value)
         else:
             self.caller.msg(_ERROR_PRE + "|w%s|n is not a valid setting for bucket |w%s|n" % (setting, self.bucket_name))
 
     def _set_timeout(self, setting, value):
+        """timeout is a special thing.  Handle it seperately"""
         parts = value.split(" ")
         time = parts[0]
         ival = parts[1]
@@ -448,6 +449,7 @@ class CmdBuckets(MuxCommand):
             self.caller.msg(_ERROR_PRE + "The interval must be 'hours', 'days', 'months', or 'years'.")
 
     def _setting_validate(self, setting, value):
+        """ensures that only allowed settings get run"""
         if setting == "desc":
             if len(value)>45:
                 self.bucket.set(setting, value)

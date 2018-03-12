@@ -1,27 +1,15 @@
 
-from jobs_settings import *
+from datetime import datetime
 
 class Job(Bucket):
-
-    # TODO: Access stuff:
-
     """
-    I can have a jobtype - bucket or job, each one is a channel.
-
-    flags:
-        jobtype
-        isjob
-        ismessage
-
     * Messages belong to a job
     * Jobs belong to buckets
     * Messages can not belong to a bucket
     * Perhaps allow a "Reply" type functionality that appends messages to extant messages
-    *
-    """
-    """
+
         My ideas on access:
-            Players who run factions should be able to be tagged as a bucket administrator
+            Players who run factions should be able to be tagged as "BucketAdmin" category:"jobs"
             and be allowed to administer just that bucket for faction stuff...perhaps a jobs
             subsystem for guilds or factions so they can separate issues?
 
@@ -80,22 +68,19 @@ class Job(Bucket):
     def at_channel_creation(self):
         """This is done when the bucket is created"""
         # Todo: determine vars needed for a Job obj
-        self.tags.add(self.bucketname)
         self.valid_actions = _VALID_JOB_ACTIONS
 
     def create_job(self, **kwargs):
         """create and populate job instances"""
-        creator = self.kwargs.pop("creator")
-        title = self.kwargs.pop("title")
-        text = self.kwargs.pop("text")
-
-        # Create the job
-        # ev.create_channel(self.job_name, desc=text, typeclass="world.jobs.Job")
-
-        # Populate the instance variables
-        self.job.db.creator = creator
-        self.job.db.title= title
-        self.db.createdby = creator
-        self.db.createdon = '{:%m-%d-%Y at %H:%M %Z}'.format.date.now()
-
+        """
+        The steps to create a job:
+        +job/create <Bucket>/<title>=<text>
+        1. The bucket must exist
+        2. The job must have a title
+        3. The job must have text
+        """
+        bucket = self.kwargs.pop("bucket")
+        self.db.title = self.kwargs.pop("title")
+        self.db.text = self.kwargs.pop("text")
+        self.tags.add(bucket, category="jobs")
 

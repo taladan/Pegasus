@@ -89,50 +89,6 @@ class CmdJobs(MuxCommand):
             output = "%s is not a valid switch for the +job system" % switch
 
 
-        def _joblist(self, *args, **kwargs):
-            """List all/yours/new jobs"""
-            pass
-
-        def _catchup(self):
-            """Clears new jobs"""
-            pass
-
-        def _clean(self):
-            """Remove non-players from job data"""
-            pass
-
-        def _credits(self):
-            """Display credit information"""
-            pass
-
-        def _list(self, bucket):
-            """List all jobs in <bucket>"""
-            pass
-
-        def _overdue(self):
-            """List overdue jobs"""
-            pass
-
-        def _reports(self, report=None):
-            """Get a report"""
-            pass
-
-        def _search(self, pattern):
-            """Search jobs for <pattern>"""
-            pass
-
-        def _select(self, expression):
-            """List jobs matching <expression>"""
-            pass
-
-        def _sort(self, sorttype):
-            """Lists jobs by bucket/mod/pri"""
-            pass
-
-        def _who(self, jobid):
-            """Lists jobs assigned to player"""
-            pass
-
         def _act(self, jobid):
             """Display actions on a job"""
             pass
@@ -153,8 +109,20 @@ class CmdJobs(MuxCommand):
             """Assign a job to player"""
             pass
 
+        def _catchup(self):
+            """Clears new jobs"""
+            pass
+
         def _checkin(self, jobid):
             """Checks in a job"""
+            pass
+
+        def _clean(self):
+            """Remove non-players from job data"""
+            pass
+
+        def _credits(self):
+            """Display credit information"""
             pass
 
         def _checkout(self, jobid):
@@ -173,32 +141,57 @@ class CmdJobs(MuxCommand):
             """Complete a job"""
             pass
 
-        def _create(self, bucket, title, comment):
+        def _compress(self):
+            """Compresses job list (Wiz)"""
+            pass
+
+        def _create(self, bucket, title, text):
             """Create a job manually"""
+            ev.create_channel(self.job_name, desc=text, typeclass="world.jobs.Job",
+                              bucket=bucket, creator=self.caller, title=title, text=text)
+
+        def _delete(self, jobid):
+            """Delete a job (Wiz)"""
+            # archive the job
+            # remove it from the bucket association
             pass
 
         def _deny(self, jobid, comment):
             """Deny a player request"""
+            # move the job to the denied stack
+            # mail the player
+            # post the board
             pass
 
         def _due(self, jobid, date=None):
             """Set job due date"""
+            # override default due date with new date
             pass
 
         def _edit(self, jobid, entryid, old, new):
             """Edits a job"""
+            # search and replace the old text with the new
             pass
 
         def _esc(self, jobid, priority):
             """Escalate a job's priority"""
+            # replace job priority
             pass
 
-        def _help(self, jobid):
-            """Display help for a job's bucket"""
+        def _joblist(self, *args, **kwargs):
+            """List all/yours/new jobs"""
             pass
 
         def _last(self, jobid, num):
             """List last num entries in jobid"""
+            pass
+
+        def _list_untag(self, jobid, player_list):
+            """Untags a job for <player list>"""
+            pass
+
+        def _list(self, bucket):
+            """List all jobs in <bucket>"""
             pass
 
         def _lock_job(self, jobid):
@@ -213,13 +206,16 @@ class CmdJobs(MuxCommand):
             """Mails opener with <message>"""
             pass
 
-
         def _merge(self, source, destination):
             """Merge <source> into <destination>"""
             pass
 
-        def _rename(self, jobid, name):
-            """Rename a job"""
+        def _overdue(self):
+            """List overdue jobs"""
+            pass
+
+        def _player_tag(self, jobid, player):
+            """Tags a job for <player>"""
             pass
 
         def _publish(self, jobid, comment):
@@ -230,8 +226,28 @@ class CmdJobs(MuxCommand):
             """Sends a query to <players>"""
             pass
 
+        def _rename(self, jobid, name):
+            """Rename a job"""
+            pass
+
+        def _reports(self, report=None):
+            """Get a report"""
+            pass
+
+        def _search(self, pattern):
+            """Search jobs for <pattern>"""
+            pass
+
+        def _select(self, expression):
+            """List jobs matching <expression>"""
+            pass
+
         def _set(self, jobid, status):
             """Set progress status on a job"""
+            pass
+
+        def _sort(self, sorttype):
+            """Lists jobs by bucket/mod/pri"""
             pass
 
         def _source(self, jobid, player_list):
@@ -250,10 +266,6 @@ class CmdJobs(MuxCommand):
             """Tags a job for you"""
             pass
 
-        def _player_tag(self, jobid, player):
-            """Tags a job for <player>"""
-            pass
-
         def _trans(self, jobid, bucket):
             """Transfer (or undelete) a job"""
             pass
@@ -266,30 +278,17 @@ class CmdJobs(MuxCommand):
             """Untags a job"""
             pass
 
-        def _list_untag(self, jobid, player_list):
-            """Untags a job for <player list>"""
+        def _who(self, jobid):
+            """Lists jobs assigned to player"""
             pass
 
-        def _delete(self, jobid):
-            """Delete a job (Wiz)"""
-            pass
-
-        def _compress(self):
-            """Compresses job list (Wiz)"""
-            pass
-
-        return output
-
+    def _switch_handler(self):
+        pass
 
     def func(self):
         """This does the work of the jobs command"""
-        # I want to display the list of buckets available if no switches or arguments
-        # have been given.  If a switch has been given, process it and call the appropriate
-        # method.  if no switches have been given but args have been given this is a bucket
-        # request -- it should display the bucket that is passed.  If it's not a bucket it should
-        # return an error message.
-
         self.valid_actions = _VALID_JOB_ACTIONS
+        self._switch_handler()
 
         if self.switches or self.args:
             if self.switches:
