@@ -451,7 +451,7 @@ class CmdBuckets(MuxCommand):
     def _setting_validate(self, setting, value):
         """ensures that only allowed settings get run"""
         if setting == "desc":
-            if len(value)>45:
+            if len(value)<45:
                 self.bucket.set(setting, value)
                 self.caller.msg(_SUCC_PRE + "Bucket: |w%s|n description set to: %s" % (self.bucket_name, value))
             else:

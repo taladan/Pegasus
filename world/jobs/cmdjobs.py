@@ -1,7 +1,11 @@
 
 
 from evennia import default_cmds
+from jobutils import Utils
+
+
 MuxCommand = default_cmds.MuxCommand
+argparse = Utils.argparse
 
 
 class CmdJobs(MuxCommand):
@@ -283,26 +287,101 @@ class CmdJobs(MuxCommand):
             pass
 
     def _switch_handler(self):
-        pass
-
-    def func(self):
-        """This does the work of the jobs command"""
-        self.valid_actions = _VALID_JOB_ACTIONS
-        self._switch_handler()
+        """This handles the switches and arguments assignments"""
+        # parse up args
+        passargs = argparse(self.lhs, self.rhs)
+        if passargs is not None:
+            self.lhs_obj, self.lhs_act, self.rhs_obj, self.rhs_act = passargs
+        else:
+            self.lhs_obj = self.lhs_act = self.rhs_obj = self.rhs_act = False
 
         if self.switches or self.args:
             if self.switches:
                 # parse and process switches
                 output = _action_handler(self.switches[0])
                 return output
-
             elif self.args:
-                # This handles @job # - it should display a list of jobs in the bucket. The
-                # arg should match a bucket name or bucket id.
                 pass
-
-            pass
+        # This handles @job # - it should display a list of jobs in the bucket. The
+        # arg should match a bucket name or bucket id.
         else:
             # +job(s) This part should just display the list of available buckets.
             pass
 
+    def func(self):
+        """This does the work of the jobs command"""
+
+
+        self._switch_handler()
+
+        self.valid_actions = self.job.valid_actions
+
+
+        """
+        RHS commands:
+        
+            These commands require processing of lhs '/' and rhs '/', self.lhs, and self.rhs
+                +job/edit <#>/<#>=<old>/<new>           : Edits a job
+            
+            These commands require processing of lhs '/', self.lhs, and self.rhs
+                +job/sumset <#>/<set>=<value>           : Changes a job SUMMARY setting
+                +job/query <players>/<title>=<query>    : Sends a query to <players>
+                +job/create <bucket>/<title>=<comments> : Create a job manually
+            
+            These commands require processing of self.lhs and self.rhs
+                +job/add <#>=<comments>                 : Add comments to a job
+                +job/approve <#>=<comment>              : Approve a player request
+                +job/assign <#>=<<player>|none>         : Assign a job to player
+                +job/complete <#>=<comment>             : Complete a job
+                +job/deny <#>=<comment>                 : Deny a player request
+                +job/due <#>=<<date>|none>              : Set job due date
+                +job/esc <#>=<green|yellow|red>         : Escalate a job's priority
+                +job/last <#>=<X>                       : List last <X> entries in <#>
+                +job/mail <#>=<message>                 : Mails opener with <message>
+                +job/merge <source>=<destination>       : Merge <source> into <destination>
+                +job/rename <#>=<name>                  : Rename a job
+                +job/publish <#>=<comment>              : Publishes a job or <comment>
+                +job/set <#>=<status>                   : Set progress status on a job
+                +job/source <#>=<player list>           : Changes opened-by to <player list>
+                +job/tag <#>=<player>                   : Tags a job for <player>
+                +job/trans <#>=<bucket>                 : Transfer (or undelete) a job
+                +job/untag <#>=<player list>            : Untags a job for <player list>
+                
+            
+        LHS commands:
+            If it's lhs only, there is no need for processing additional / arguments.
+                    "       , there is no need to process rhs arguments
+                    "       , the target can be either a bucket type, report type, pattern, expression, 
+                              jobid or other, so self.lhs will always be the target for these commands.
+                              
+            These commands take an argument
+                +job/list <bucket>                      : List all jobs in <bucket>
+                +job/reports [<report>]                 : Get a report
+                +job/search <pattern>                   : Search jobs for <pattern>
+                +job/select <expression>                : List jobs matching <expression>
+                +job/who <player>                       : Lists jobs assigned to player
+                +job/act <#>                            : Display actions on a job
+                +job/all <#>                            : Displays all comments in a job
+                +job/checkin <#>                        : Checks in a job
+                +job/checkout <#>                       : Checks out a job
+                +job/claim <#>                          : Assign a job to yourself
+                +job/clone <#>                          : Clones a job
+                +job/help <#>                           : Display help for a job's bucket
+                +job/lock <#>                           : Locks a job and prevents changes
+                +job/log <#>                            : Logs a job
+                +job/summary <#>                        : Views a job's header & SUMMARY
+                +job/tag <#>                            : Tags a job for you
+                +job/unlock <#>                         : Unlocks a job
+                +job/untag <#>                          : Untags a job
+                +job/delete <#>                         : Delete a job (Wiz)
+            
+            These commands take no arguments
+                
+                +job/<all|mine|new>                 : List all/yours/new jobs
+                +job/catchup                        : Clears new jobs
+                +job/clean                          : Remove non-players from job data
+                +job/credits                        : Display credit information
+                +job/overdue                        : List overdue jobs
+                +job/<sort|date|pri>                : Lists jobs by bucket/mod/pri
+                +job/compress                       : Compresses job list (Wiz)
+        """

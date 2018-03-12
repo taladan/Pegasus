@@ -83,4 +83,5 @@ class Job(Bucket):
         self.db.title = self.kwargs.pop("title")
         self.db.text = self.kwargs.pop("text")
         self.tags.add(bucket, category="jobs")
+        self.db.jobid = bucket
 

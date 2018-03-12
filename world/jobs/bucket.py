@@ -122,7 +122,7 @@ class Bucket(Channel):
             self.db.timeout_string = str(self.db.due_timeout) + " " + self.db.interval
         else:
             attr = "self.db." + _VALID_BUCKET_SETTINGS[setting]
-            exec(attr + "=" + str(value))
+            exec("%s = '%s'" % (attr, str(value).capitalize()))
 
     @lazy_property
     def _total_jobs(self):
