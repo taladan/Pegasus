@@ -1,5 +1,9 @@
 
 from datetime import datetime
+import evennia as ev
+from jobutils import Utils
+
+ju = Utils()
 
 class Job(Bucket):
     """
@@ -69,6 +73,7 @@ class Job(Bucket):
         """This is done when the bucket is created"""
         # Todo: determine vars needed for a Job obj
         self.valid_actions = _VALID_JOB_ACTIONS
+        self.db.jobid = self._assignid()
 
     def create_job(self, **kwargs):
         """create and populate job instances"""
@@ -79,9 +84,14 @@ class Job(Bucket):
         2. The job must have a title
         3. The job must have text
         """
-        bucket = self.kwargs.pop("bucket")
+        self.db.bucket_name = self.kwargs.pop("bucket")
+
+        if ju.isbucket(self.db.bucket_name):
+            self.bucket = ev.get_channel(self.db.bucket_name)
+            self.db.jobid = self.bucket.db.num_of_jobs + 1
+
         self.db.title = self.kwargs.pop("title")
         self.db.text = self.kwargs.pop("text")
         self.tags.add(bucket, category="jobs")
-        self.db.jobid = bucket
+        self.db.jobid = bucket + str(len())
 

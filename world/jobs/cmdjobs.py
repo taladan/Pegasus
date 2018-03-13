@@ -150,9 +150,21 @@ class CmdJobs(MuxCommand):
             pass
 
         def _create(self, bucket, title, text):
-            """Create a job manually"""
-            ev.create_channel(self.job_name, desc=text, typeclass="world.jobs.Job",
-                              bucket=bucket, creator=self.caller, title=title, text=text)
+            """Create a job"""
+            if ju.isbucket(bucket):
+                self.db.bucket_name = bucket
+                self.title = title
+                self.text = text
+                self.bucket = ev.get_channel(self.db.bucket_name)
+                ev.create_channel(self.job_name, typeclass="world.jobs.Job")
+                self._assign_job(self.title)
+            else:
+                msg = _ERROR_PRE + "|w%s|n is an invalid bucket." % bucket
+
+            self.db.title = title
+            self.db.text = text
+            self.tags.add(bucket, category="jobs")
+            self.db.jobid = bucket + str(len())
 
         def _delete(self, jobid):
             """Delete a job (Wiz)"""
@@ -286,8 +298,6 @@ class CmdJobs(MuxCommand):
             """Lists jobs assigned to player"""
             pass
 
-    def _switch_handler(self):
-        """This handles the switches and arguments assignments"""
         # parse up args
         passargs = argparse(self.lhs, self.rhs)
         if passargs is not None:
@@ -307,6 +317,13 @@ class CmdJobs(MuxCommand):
         else:
             # +job(s) This part should just display the list of available buckets.
             pass
+
+    def _assign_job(self):
+        """sets self.bucket if it exists in the db"""
+        try:
+            self.job = ev.ChannelDB.objects.get_channel(self.title)
+        except AttributeError:
+            self.caller.msg(_ERROR_PRE + "Job: |w%s|n does not exist." % self.title)
 
     def func(self):
         """This does the work of the jobs command"""
