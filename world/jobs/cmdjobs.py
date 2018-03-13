@@ -319,7 +319,7 @@ class CmdJobs(MuxCommand):
             pass
 
     def _assign_job(self):
-        """sets self.bucket if it exists in the db"""
+        """sets self.job if it exists in the db"""
         try:
             self.job = ev.ChannelDB.objects.get_channel(self.title)
         except AttributeError:
