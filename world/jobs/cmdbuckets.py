@@ -381,8 +381,11 @@ class CmdBuckets(MuxCommand):
 
     def _rename(self, newname):
         """renames a particular bucket"""
-        self.caller.msg(_SUCC_PRE + "Bucket: |w%s|n renamed to |w%s|n." % (self.bucket, newname))
-        self.bucket.key = newname
+        if ju.isbucket(newname):
+            self.caller.msg(_ERROR_PRE) + "Bucket: |w%s|n already exists." % newname)
+        else:
+            self.bucket.key = newname
+            self.caller.msg(_SUCC_PRE + "Bucket: |w%s|n renamed to |w%s|n." % (self.bucket, newname))
 
     def _parse(self, side):
         """parses side for /"""
