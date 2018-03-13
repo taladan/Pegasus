@@ -30,7 +30,6 @@ class Bucket(Channel):
         self.db.approval_board = '0'
         self.db.completion_board = '0'
         self.db.createdby = None
-        self.db.createdon = '{:%m-%d-%Y at %H:%M %Z}'.format(date.utcnow())
         self.db.denial_board = '0'
         self.db.due_timeout = 0
         self.db.timeout_string = "0"

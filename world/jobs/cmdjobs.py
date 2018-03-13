@@ -157,14 +157,13 @@ class CmdJobs(MuxCommand):
                 self.text = text
                 self.bucket = ev.get_channel(self.db.bucket_name)
                 ev.create_channel(self.job_name, typeclass="world.jobs.Job")
-                self._assign_job(self.title)
+                self.job = ju.assign_job(self.title)
             else:
                 msg = _ERROR_PRE + "|w%s|n is an invalid bucket." % bucket
 
             self.db.title = title
             self.db.text = text
-            self.tags.add(bucket, category="jobs")
-            self.db.jobid = bucket + str(len())
+            self.job.tags.add(bucket, category="jobs")
 
         def _delete(self, jobid):
             """Delete a job (Wiz)"""

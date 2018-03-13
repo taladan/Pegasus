@@ -25,14 +25,30 @@ class Utils(object):
         else:
             return None
 
+    def assign_channel(self,obj):
+        return ev.ChannelDB.objects.get_channel(obj)
+
+    def base36encode(integer):
+        """encodes integer to a base 36 number"""
+        chars, encoded, sign = '0123456789abcdefghijklmnopqrstuvwxyz', '', ''
+
+        if (integer < 0):
+            sign = '-'
+            integer = -1 * integer
+
+        elif (integer == 0):
+            sign = '0'
+
+        while integer > 0:
+            integer, remainder = divmod(integer, 36)
+            encoded = chars[remainder] + encoded
+        return sign + encoded
+
     def isbucket(self, obj):
         test = ev.ChannelDB.objects.search_channel(repr(obj))
-        print(test)
         if test is not None:
-            print("True")
             return True
         else:
-            print("False")
             return False
 
     def ischaracter(self, obj):

@@ -190,7 +190,6 @@ class CmdBuckets(MuxCommand):
                 self.character = self.rhs_target
             else:
                 self.character = self.lhs_target
-
         else:
             self.bucket_name = False
             self.action = False
@@ -245,19 +244,16 @@ class CmdBuckets(MuxCommand):
 
         # populate the table.
         if isinstance(buckets, list):
-            if self.switch:
-                for bucket in buckets:
+            for bucket in buckets:
+                if self.caller in bucket.db.per_player_actions or self._pass_lock(self.caller):
                     info = bucket.info()
                     ret.add_row(*info)
-            else:
-                for bucket in self.buckets:
-                    if self.caller in bucket.db.per_player_actions or self._pass_lock(self.caller):
-                        info = bucket.info()
-                        ret.add_row(*info)
+            self.caller.msg(ret)
         else:
             info = buckets.info()
             ret.add_row(*info)
-        self.caller.msg(ret)
+            self.caller.msg(ret)
+
 
     def _can_access(self, action, obj):
         """lock validation falls through to bucket.has_access(action, obj)"""
@@ -358,9 +354,9 @@ class CmdBuckets(MuxCommand):
 
     def _info(self, bucket):
         """Display info for particular bucket"""
-        isbucket = ev.ChannelDB.objects.search_channel(bucket).first()
-        if isbucket:
-            self.caller.msg(self._bucket_table(isbucket))
+        if ju.isbucket(bucket):
+            bucket = ju.assign_channel(bucket)
+            self.caller.msg(self._bucket_table(bucket))
         else:
             self.msg(_ERROR_PRE + "That is not a valid bucket.")
 
@@ -382,7 +378,7 @@ class CmdBuckets(MuxCommand):
     def _rename(self, newname):
         """renames a particular bucket"""
         if ju.isbucket(newname):
-            self.caller.msg(_ERROR_PRE) + "Bucket: |w%s|n already exists." % newname))
+            self.caller.msg(_ERROR_PRE + "Bucket: |w%s|n already exists." % newname)
         else:
             self.bucket.key = newname
             self.caller.msg(_SUCC_PRE + "Bucket: |w%s|n renamed to |w%s|n." % (self.bucket, newname))
@@ -546,6 +542,6 @@ class CmdBuckets(MuxCommand):
                     self._switchhandler()
                 else:
                     self.caller.msg(_ERROR_PRE + "|w%s|n is not a valid character." % self.character)
-                return
+                    return
         else:
             self._switchhandler()
