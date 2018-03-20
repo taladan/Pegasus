@@ -2,6 +2,8 @@
 import hashlib
 import evennia as ev
 from jobutils import Utils
+from bucket import Bucket
+from jobs_settings import _VALID_JOB_ACTIONS
 
 ju = Utils()
 
@@ -11,6 +13,15 @@ class Job(Bucket):
     * Jobs belong to buckets
     * Messages can not belong to a bucket
     * Perhaps allow a "Reply" type functionality that appends messages to extant messages
+        Reply structure:
+
+        +job/reply Job/id=message
+
+        The job will be the listing of the job in the order of self.jobs_list
+
+        Ideas for tiered level commenting system:
+            Each message should have a unique id (hash)
+            Comment children can be handled via tags.
 
         My ideas on access:
             Players who run factions should be able to be tagged as "BucketAdmin" category:"jobs"
@@ -73,23 +84,5 @@ class Job(Bucket):
         """This is done when the bucket is created"""
         # Todo: determine vars needed for a Job obj
         self.valid_actions = _VALID_JOB_ACTIONS
-        self.db.jobid = hashlib.md5(self.db_date_created).hexdigest()
-
-    def create_job(self, **kwargs):
-        """create and populate job instances"""
-        """
-        The steps to create a job:
-        +job/create <Bucket>/<title>=<text>
-        1. The bucket must exist
-        2. The job must have a title
-        3. The job must have text
-        """
-        self.db.bucket_name = self.kwargs.pop("bucket")
-        self.db.title = self.kwargs.pop("title")
-        self.db.text = self.kwargs.pop("text")
-        self.tags.add(bucket, category="jobs")
-
-        if ju.isbucket(self.db.bucket_name):
-            self.bucket = ev.ChannelDB.objects.get_channel(self.db.bucket_name)
 
 

@@ -15,15 +15,15 @@ class Utils(object):
             if '/' in lhs:
                 lhs_obj, lhs_act = lhs.split('/')
             else:
-                lhs_obj, lhs_act = None, None
+                lhs_obj, lhs_act = False, False
             if '/' in rhs:
                 rhs_obj, rhs_act = rhs.split('/')
             else:
-                rhs_obj, rhst_act = None, None
+                rhs_obj, rhs_act = False, False
             ret = (lhs_obj, lhs_act, rhs_obj, rhs_act)
             return ret
         else:
-            return None
+            return False
 
     def assign_channel(self,obj):
         return ev.ChannelDB.objects.get_channel(obj)
@@ -43,13 +43,6 @@ class Utils(object):
             integer, remainder = divmod(integer, 36)
             encoded = chars[remainder] + encoded
         return sign + encoded
-
-    def isbucket(self, obj):
-        test = ev.ChannelDB.objects.search_channel(repr(obj))
-        if test is not None:
-            return True
-        else:
-            return False
 
     def ischaracter(self, obj):
         return ev.utils.utils.inherits_from(obj, "typeclasses.characters.Character")

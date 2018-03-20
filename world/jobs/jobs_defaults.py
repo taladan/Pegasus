@@ -29,8 +29,12 @@ _DEFAULT_TEST_PRE = "|000|[021TESTING>>>|n"
 
 # Actions
 _DEFAULT_VALID_BUCKET_ACTIONS = ("access", "check", "create", "delete", "info", "monitor", "rename", "sort")
-_DEFAULT_VALID_JOB_ACTIONS = ("add", "approve", "complete", "create", "deny", "edit", "give",
-                              "log", "mail", "sort", "stats")
+_DEFAULT_VALID_JOB_ACTIONS = ("act", "add", "all", "approve", "assign", "catchup", "checkin", "checkout",
+                              "claim", "clean", "clone", "complete", "compress", "create", "credits", "delete",
+                              "deny", "due", "edit", "esc", "help", "last", "list", "lock", "log", "mail", "merge",
+                              "mine", "name", "new", "overdue", "publish", "query", "reports", "search", "select",
+                              "set", "sort", "source", "summary", "sumset", "tag", "trans", "unlock", "untag", "who")
+
 # Settings
 _DEFAULT_VALID_BUCKET_SETTINGS =  {"desc": "desc",
                                    "completion" : "completion_board",
@@ -39,3 +43,4 @@ _DEFAULT_VALID_BUCKET_SETTINGS =  {"desc": "desc",
                                    "timeout" : "due_timeout",}
 _DEFAULT_VALID_TIMEOUT_INTERVALS = ("hours", "days", "months", "years")
 _DEFAULT_VALID_JOB_SETTINGS = ()
+

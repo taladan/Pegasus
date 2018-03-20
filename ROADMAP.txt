@@ -2,7 +2,7 @@
 This is the main game document - the masterlist.
 
 Author: taladan@gmail.com
-last edited: 2/24/2018
+last edited: 3/17/2018
 ********************************************************************************
 
 The goal of this document is to contain the masterlist of
@@ -45,7 +45,7 @@ ________________________________________________________________________________
 
 BASE OOC SYSTEMS:(*****)
 
-  * Jobs(****)        - akin to the functionality of anomaly jobs
+  * Jobs(****)        - akin to the functionality of anomaly jobs - Buckets are in, working on jobs
   * BBS (****)        - Handles users to post public/semi-public
                         info for other users to see/comment on
   * Mail(***)         - Allow Users to @mail one another

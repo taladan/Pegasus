@@ -254,7 +254,6 @@ class CmdBuckets(MuxCommand):
             ret.add_row(*info)
             self.caller.msg(ret)
 
-
     def _can_access(self, action, obj):
         """lock validation falls through to bucket.has_access(action, obj)"""
         if self._pass_lock(obj) or (self.bucket is not None and self.bucket.has_access(action, obj)):
@@ -356,7 +355,7 @@ class CmdBuckets(MuxCommand):
         """Display info for particular bucket"""
         if ju.isbucket(bucket):
             bucket = ju.assign_channel(bucket)
-            self.caller.msg(self._bucket_table(bucket))
+            self._bucket_table(bucket)
         else:
             self.msg(_ERROR_PRE + "That is not a valid bucket.")
 
@@ -524,7 +523,7 @@ class CmdBuckets(MuxCommand):
         elif self.switch and not self._can_access(self.switch, self.caller):
             self.caller.msg(_ERROR_PRE + "You may not access that action for Bucket: |w%s|n." % self.bucket)
         else:
-            self.caller.msg(self._bucket_table(self.buckets))
+            self._bucket_table(self.buckets)
 
     def func(self):
         """this does the work of the +buckets command"""
