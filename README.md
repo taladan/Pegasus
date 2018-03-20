@@ -118,77 +118,82 @@ Jobs:(****)
                Code:    (https://tinyurl.com/ycs3b5za)
                Howto:   (https://tinyurl.com/yd46volk)
 
+The following commands do not yet exist:
+```
++jobs <#>                               : Review job #
 
-    +jobs <#>                               : Review job #
++jobs                                   : List jobs.
+............................................................................
+    /<all|mine|new>                     : List all/yours/new jobs
+    /catchup                            : Clears new jobs
+    /clean                              : Remove non-players from job data
+    /credits                            : Display credit information
+    /list <bucket>                      : List all jobs in <bucket>
+    /overdue                            : List overdue jobs
+    /reports [<report>]                 : Get a report
+    /search <pattern>                   : Search jobs for <pattern>
+    /select <expression>                : List jobs matching <expression>
+    /<sort|date|pri>                    : Lists jobs by bucket/mod/pri
+    /who <player>                       : Lists jobs assigned to player
+    /act <#>                            : Display actions on a job
+    /add <#>=<comments>                 : Add comments to a job
+    /all <#>                            : Displays all comments in a job
+    /approve <#>=<comment>              : Approve a player request
+    /assign <#>=<<player>|none>         : Assign a job to player
+    /checkin <#>                        : Checks in a job
+    /checkout <#>                       : Checks out a job
+    /claim <#>                          : Assign a job to yourself
+    /clone <#>                          : Clones a job
+    /complete <#>=<comment>             : Complete a job
+    /create <bucket>/<title>=<comments> : Create a job manually
+    /deny <#>=<comment>                 : Deny a player request
+    /due <#>=<<date>|none>              : Set job due date
+    /edit <#>/<entry#>=<old>/<new>      : Edits a job
+    /esc <#>=<green|yellow|red>         : Escalate a job's priority
+    /help <#>                           : Display help for a job's bucket
+    /last <#>=<X>                       : List last <X> entries in <#>
+    /lock <#>                           : Locks a job and prevents changes
+    /log <#>                            : Logs a job
+    /mail <#>=<message>                 : Mails opener with <message>
+    /merge <source>=<destination>       : Merge <source> into <destination>
+    /name <#>=<name>                    : Rename a job
+    /publish <#>=<comment>              : Publishes a job or <comment>
+    /query <players>/<title>=<query>    : Sends a query to <players>
+    /set <#>=<status>                   : Set progress status on a job
+    /source <#>=<player list>           : Changes opened-by to <player list>
+    /summary <#>                        : Views a job's header & SUMMARY
+    /sumset <#>/<set>=<value>           : Changes a job SUMMARY setting
+    /tag <#>                            : Tags a job for you
+    /tag <#>=<player>                   : Tags a job for <player>
+    /trans <#>=<bucket>                 : Transfer (or undelete) a job
+    /unlock <#>                         : Unlocks a job
+    /untag <#>                          : Untags a job
+    /untag <#>=<player list>            : Untags a job for <player list>
+    /delete <#>                         : Delete a job (Wiz)
+    /compress                           : Compresses job list (Wiz)
+```
 
-    +jobs                                   : List jobs.
-    ............................................................................
-        /<all|mine|new>                     : List all/yours/new jobs
-        /catchup                            : Clears new jobs
-        /clean                              : Remove non-players from job data
-        /credits                            : Display credit information
-        /list <bucket>                      : List all jobs in <bucket>
-        /overdue                            : List overdue jobs
-        /reports [<report>]                 : Get a report
-        /search <pattern>                   : Search jobs for <pattern>
-        /select <expression>                : List jobs matching <expression>
-        /<sort|date|pri>                    : Lists jobs by bucket/mod/pri
-        /who <player>                       : Lists jobs assigned to player
-        /act <#>                            : Display actions on a job
-        /add <#>=<comments>                 : Add comments to a job
-        /all <#>                            : Displays all comments in a job
-        /approve <#>=<comment>              : Approve a player request
-        /assign <#>=<<player>|none>         : Assign a job to player
-        /checkin <#>                        : Checks in a job
-        /checkout <#>                       : Checks out a job
-        /claim <#>                          : Assign a job to yourself
-        /clone <#>                          : Clones a job
-        /complete <#>=<comment>             : Complete a job
-        /create <bucket>/<title>=<comments> : Create a job manually
-        /deny <#>=<comment>                 : Deny a player request
-        /due <#>=<<date>|none>              : Set job due date
-        /edit <#>/<entry#>=<old>/<new>      : Edits a job
-        /esc <#>=<green|yellow|red>         : Escalate a job's priority
-        /help <#>                           : Display help for a job's bucket
-        /last <#>=<X>                       : List last <X> entries in <#>
-        /lock <#>                           : Locks a job and prevents changes
-        /log <#>                            : Logs a job
-        /mail <#>=<message>                 : Mails opener with <message>
-        /merge <source>=<destination>       : Merge <source> into <destination>
-        /name <#>=<name>                    : Rename a job
-        /publish <#>=<comment>              : Publishes a job or <comment>
-        /query <players>/<title>=<query>    : Sends a query to <players>
-        /set <#>=<status>                   : Set progress status on a job
-        /source <#>=<player list>           : Changes opened-by to <player list>
-        /summary <#>                        : Views a job's header & SUMMARY
-        /sumset <#>/<set>=<value>           : Changes a job SUMMARY setting
-        /tag <#>                            : Tags a job for you
-        /tag <#>=<player>                   : Tags a job for <player>
-        /trans <#>=<bucket>                 : Transfer (or undelete) a job
-        /unlock <#>                         : Unlocks a job
-        /untag <#>                          : Untags a job
-        /untag <#>=<player list>            : Untags a job for <player list>
-        /delete <#>                         : Delete a job (Wiz)
-        /compress                           : Compresses job list (Wiz)
+The following commands exist (and function!) for buckets:
+```
++buckets
+    /info <bucket>
+    /monitor <bucket>
+    /create <bucket>=<description>
+    /delete <bucket>
+    /access <player>=<bucket>
+    /check <player>
+    /set <bucket>/<setting>=<value>
+```
 
-    +buckets
-    ............................................................................
+These commands do not yet exist:
+```
++jgroups
 
-        /info <bucket>
-        /monitor <bucket>
-        /create <bucket>=<description>
-        /delete <bucket>
-        /access <player>=<bucket>
-        /check <player>
-        /set <bucket>/<setting>=<value>
-
-    +jgroups
-    ............................................................................
-
-        /info <jgroup>
-        /create <jgroup>=<description>
-        /delete <jgroup>
-        /member <player>=<jgroup>
+    /info <jgroup>
+    /create <jgroup>=<description>
+    /delete <jgroup>
+    /member <player>=<jgroup>
+```
 
 BBS:(****)
 ----------

@@ -374,17 +374,23 @@ class CmdJobs(MuxCommand):
         bucket, title, text = args
 
         # Ensure bucket exists
-        if ju.isbucket(self.lhs_obj):
+        if ju.isbucket(bucket):
             if args:
 
                 # hash has to be unique, will be the job's key from here on out
-                hash = '%s %s %s %s' % (bucket, title, date.now(), str(random.randrange(1,1000000)))
-                id = hashlib.md5(hash.encode(utf-8)).hexdigest()
+                jhash = '%s %s %s %s' % (bucket, title, date.now(), str(random.randrange(1,1000000)))
+                jid = hashlib.md5(jhash.encode(utf-8)).hexdigest()
 
                 # build the job
-                self.job = ev.create_channel(id, desc=text, typeclass="world.jobs.job.Job")
-                self.job.db.title = title
-                self.job.db.text = text
+                self.job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
+
+                # Build the initial message
+                mhash = '%s %s %s %s' % (self.caller, title, date.now(), str(random.randrange(1,1000000)))
+                msgid = hashlib.md5(mhash.encode(utf-8)).hexdigest()
+                message = ev.create_message(self.caller, msgtext,
+                                            channels=bucket, header=msgheader,
+                                            recievers=self.job.db.recievers)
+
                 self.job.tags.add(bucket, category="jobs")
 
                 ret = _SUCC_PRE + "Job: |w%s|n created." % title
