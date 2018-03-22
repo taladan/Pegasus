@@ -462,7 +462,7 @@ class CmdBuckets(MuxCommand):
         else:
             self.caller.msg(_ERROR_PRE + "|w%s|n setting must be an integer." % setting)
 
-    def _switchhandler(self):
+    def switch(self):
         """switch workhorse, hard coding switches is probably bad, but it works right now
        Todo: Figure out if there's a way to cleanly handle sysop added functionality by calling modules
         """
@@ -538,9 +538,9 @@ class CmdBuckets(MuxCommand):
         if self.switch in ("access", "check",):
             if self.lhs:
                 if self._character_validate():
-                    self._switchhandler()
+                    self.switch()
                 else:
                     self.caller.msg(_ERROR_PRE + "|w%s|n is not a valid character." % self.character)
                     return
         else:
-            self._switchhandler()
+            self.switch()

@@ -174,8 +174,40 @@ class CmdJobs(MuxCommand):
     lock = "cmd:perm(Admin)"
     help_category = "Jobs"
 
-    def assign_id(self, id):
-        self.job_id = id
+    def all_jobs(self):
+        """
+       Returns a queryset of jobs the character has access to.
+
+        :return: queryset of jobs
+        """
+        try:
+            character = self.caller.character
+        except AttributeError:
+            character = self.caller
+        jobs = Msg.objects.get_by_tag(category="Jobs").filter(db_receivers_objects=character)
+        return jobs
+
+    def _set_job_number(self, switch):
+        """
+       Parses the switch for jobs needing to be called by id and assigns the appropriate value
+
+        :param switch:
+        :return: job number or false
+        """
+        lhs_id_required = ("act", "all", "checkin", "checkout", "claim", "clone", "delete", "list_untag",
+                           "lock_job", "log", "summary", "tag", "unlock", "untag")
+        rhs_id_required = ("add", "approve", "assign", "complete", "deny", "due",  "esc", "last", "list_untag",
+                           "mail", "player_tag", "publish", "rename", "set", "source", "tag", "trans", "untag")
+
+        if switch == "edit" or self.switch == "sumset":
+            ret = self.lhs_obj
+        elif switch in rhs_id_required:
+            ret = self.lhs
+        elif switch in lhs_id_required:
+            ret = self.lhs
+        else:
+            ret =False
+        return ret
 
     def _action_handler(self, switch, *args):
         """
@@ -189,35 +221,31 @@ class CmdJobs(MuxCommand):
         method = getattr(self, method_name)
 
         if args:
-            lhs_id_required = ("act", "all", "checkin", "checkout", "claim", "clone", "delete", "list_untag",
-                               "lock_job", "log", "summary", "tag", "unlock", "untag")
-            rhs_id_required = ("add", "approve", "assign", "complete", "deny", "due",  "esc", "last", "list_untag",
-                               "mail", "player_tag", "publish", "rename", "set", "source", "tag", "trans", "untag")
-
-            if self.switch == "edit" or self.switch == "sumset":
-                self.assign_id(self.lhs_obj)
-            elif self.switch in rhs_id_required:
-                self.assign_id(self.lhs)
-            elif self.switch in lhs_id_required:
-                self.assign_id(self.lhs)
+            self.job_number = self._set_job_number(self.switch)
+            if self.job_number:
+                self.job = self.set_job(self.job_number)
+                if not self.job:
+                    ret = "%s is not a valid job number" % self.job_number
             else:
-                self.job_id = False
-
+                # Todo: non-id specific job tasks
+                pass
         if not method:
             ret = "%s is not a valid switch for the +job system" % method_name
         else:
             ret = method()
 
-        # if self.job_id.isdigit():
-        #     if len(self.jobs_list) > 0:
-        #         id = int(id) - 1
-        #         self.job_id = self.jobs_list[id]
-        #     else:
-        #         ret = _ERROR_PRE + "There are no jobs in the system"
-        # else:
-        #     ret = _ERROR_PRE + "Job id must be a positive integer between 1 and %s" % len(self.jobs_list)
-
         self.caller.msg(ret)
+
+    def set_job(self, number):
+        """gets and returns the correct job"""
+        jobs_max = max(0, self.jobs_list.count() - 1)
+        try:
+            i = max(0, min(jobs_max, int(number) - 1))
+            ret = self.jobs_list[i]
+        except ValueError, IndexError:
+            ret = False
+
+        return ret
 
     def _act(self, jobid):
       """
@@ -357,6 +385,39 @@ class CmdJobs(MuxCommand):
         """
         return ret
 
+    def _add_msg(self, *kwargs):
+        """
+        Adds a message to a particular job
+
+            _add_msg(jid="", bucket="", title="", msgtext="", action="", parent="")
+
+        :param kwargs: Required kwargs: jid, bucket, title, msgtext, action, parent
+        :return: the message object or false
+        """
+        try:
+            jid = kwargs.pop("jid")
+            bucket = kwargs.pop("bucket")
+            title = kwargs.pop("title")
+            msgtext = kwargs.pop("msgtext")
+            action = kwargs.pop("action")
+            parent= kwargs.pop("parent")
+
+            msgheader = '%s, %s, %s, %s' % (self.caller, date.today().strftime("%B %d, %Y"), title,)
+            msghash = '%s %s %s %s' % (self.caller, date.now(), title, str(random.randrange(1,1000000)))
+            msgid = haslib.md5(msghash.encode(utf-8)).hexdigest()
+            msg = ev.create_message(self.caller, msgtext, channels=bucket, header=msgheader, recievers=self.job.db.recievers)
+
+            msg.tags.add("Job:"+jid, category="jobs")
+            msg.tags.add("MsgID:"+msgid, category="jobs")
+            msg.tags.add("Bucket:"+bucket, category="jobs")
+            msg.tags.add("ACT:"+action, category="jobs")
+            msg.tags.add("Reply:"+parent, category="jobs")
+            msg.tags.add("U", category="jobs")
+            ret = msg
+        except KeyError:
+            ret = False
+        return ret
+
     def _create(self):
         """
         job/create <bucket>/<title>=<comments>
@@ -371,32 +432,24 @@ class CmdJobs(MuxCommand):
 
         # Set up our arguments
         args = [self.lhs_obj, self.lhs_act, self.rhs]
-        bucket, title, text = args
+        bucket, title, msgtext = args
 
-        # Ensure bucket exists
         if ju.isbucket(bucket):
+
             if args:
 
-                # hash has to be unique, will be the job's key from here on out
-                jhash = '%s %s %s %s' % (bucket, title, date.now(), str(random.randrange(1,1000000)))
+                # Job Creation
+                jhash = '%s %s %s %s' % (bucket, title, date.today().strftime(), str(random.randrange(1,1000000)))
                 jid = hashlib.md5(jhash.encode(utf-8)).hexdigest()
-
-                # build the job
                 self.job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
-
-                # Build the initial message
-                mhash = '%s %s %s %s' % (self.caller, title, date.now(), str(random.randrange(1,1000000)))
-                msgid = hashlib.md5(mhash.encode(utf-8)).hexdigest()
-                message = ev.create_message(self.caller, msgtext,
-                                            channels=bucket, header=msgheader,
-                                            recievers=self.job.db.recievers)
-
                 self.job.tags.add(bucket, category="jobs")
-
+                self._add_msg(jid=jid, bucket=bucket, title=title, msgtext=msgtext, action="create", parent=jid)
                 ret = _SUCC_PRE + "Job: |w%s|n created." % title
 
+            # No args
             else:
                 ret = _ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
+        # No bucket
         else:
             ret = _ERROR_PRE + "|w%s|n is an invalid bucket." % bucket
 
@@ -786,26 +839,19 @@ class CmdJobs(MuxCommand):
     def func(self):
         """This does the work of the jobs command"""
         self.valid_actions = _VALID_JOB_ACTIONS
-        self.jobs_list = Job.objects.all()
-
-        # parse self.args
-        if self.args:
-            passargs = ju.argparse(self.lhs, self.rhs)
-
-            if passargs:
-                self.lhs_obj, self.lhs_act, self.rhs_obj, self.rhs_act = passargs
-            else:
-                self.lhs_obj = self.lhs_act = self.rhs_obj = self.rhs_act = False
+        self.jobs_list = self.all_jobs()
 
         if self.switches or self.args:
             if self.switches:
-                # parse and process switches
+                if self.args:
+                    passargs = ju.argparse(self.lhs, self.rhs)
+                    if passargs:
+                        self.lhs_obj, self.lhs_act, self.rhs_obj, self.rhs_act = passargs
+                    else:
+                        self.lhs_obj = self.lhs_act = self.rhs_obj = self.rhs_act = False
                 output = self._action_handler(self.switches[0])
                 return output
-            elif self.args:
-                # This handles @job # - it should display a list of jobs in the bucket. The
-                # arg should match a bucket name or bucket id.
-                pass
+        # No switch, no args
         else:
             # +job(s) This part should just display the list of available buckets.
             for job in self.jobs_list:

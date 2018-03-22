@@ -21,7 +21,7 @@ class Bucket(Channel):
     inherits from the Channel object so that it can use the underlying
     hooks to deliver messages to Users.
     Todo: Work on jobs integration and finish setting up monitoring
-    # self.db.total_jobs = ev.search_tag(self.db.key, category="Jobs")
+    # self.db.total_jobs = ev.search_tag(self.db.key, category="jobs")
     """
 
     def at_channel_creation(self):
