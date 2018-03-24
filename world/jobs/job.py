@@ -1,6 +1,4 @@
 
-import hashlib
-import evennia as ev
 from jobutils import Utils
 from bucket import Bucket
 from jobs_settings import _VALID_JOB_ACTIONS
@@ -78,18 +76,23 @@ class Job(Bucket):
 
                   It should return True for access and False for no access.
     """
-    name = None
-
     def at_channel_creation(self):
         """This is done when the bucket is created"""
         # Todo: determine vars needed for a Job obj
         self.valid_actions = _VALID_JOB_ACTIONS
         self.db.actions_list = {}
+        self.db.assigned_to = False
+        self.db.assigned_by = False
+        self.db.checked_out = False
+        self.db.checker = ""
+        self.db.bucket = ""
+        self.db.due = False
+        self.db.locked = False
+        self.db.status = "new"
         self.db.tagged = []
+        self.db.title = ""
+        self.db.priority = ""
 
-    # def _act(self, jobid):
-    # def _add(self, jobid, comment):
-    # def _all(self, jobid):
     # def _approve(self, jobid, comment):
     # def _assign(self, jobid, player=None):
     # def _catchup(self):

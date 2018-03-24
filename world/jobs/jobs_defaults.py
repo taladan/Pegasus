@@ -31,15 +31,18 @@ _DEFAULT_SUCC_PRE = "|w|[001Game:|n "
 _DEFAULT_TEST_PRE = "|000|[021TESTING>>>|n"
 
 # Actions
-_DEFAULT_VALID_BUCKET_ACTIONS = ("access", "check", "create", "delete", "info", "monitor", "rename", "sort")
+_DEFAULT_VALID_BUCKET_ACTIONS = ("bucket_access", "bucket_check", "bucket_create", "bucket_delete",
+                                 "bucket_info", "bucket_monitor", "bucket_rename", "bucket_sort",
+                                 "job_approve", "job_reply" "job_complete", "job_create", "job_edit",
+                                 "job_log","job_mail", "job_reports",)
 _DEFAULT_VALID_JOB_ACTIONS = ("act", "add", "all", "approve", "assign", "catchup", "checkin", "checkout",
                               "claim", "clean", "clone", "complete", "compress", "create", "credits", "delete",
                               "deny", "due", "edit", "esc", "help", "last", "list", "lock", "log", "mail", "merge",
                               "mine", "name", "new", "overdue", "publish", "query", "reports", "search", "select",
-                              "set", "sort", "source", "summary", "sumset", "tag", "trans", "unlock", "untag", "who")
+                              "set", "sort", "source", "summary", "sumset", "tag", "trans", "unlock", "untag", "who",)
 
 # Sortby
-_DEFAULT_VALID_SORT_METHODS = ("alpha", "date", "priorty")
+_DEFAULT_VALID_SORT_METHODS = ("alpha", "date", "priorty",)
 
 # Settings
 _DEFAULT_VALID_BUCKET_SETTINGS =  {"desc": "desc",
@@ -47,6 +50,6 @@ _DEFAULT_VALID_BUCKET_SETTINGS =  {"desc": "desc",
                                    "approval" : "approval_board",
                                    "denial": "denial_board",
                                    "timeout" : "due_timeout",}
-_DEFAULT_VALID_TIMEOUT_INTERVALS = ("hours", "days", "months", "years")
+_DEFAULT_VALID_TIMEOUT_INTERVALS = ("hours", "days", "months", "years",)
 _DEFAULT_VALID_JOB_SETTINGS = ()
 

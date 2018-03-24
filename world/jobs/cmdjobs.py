@@ -5,6 +5,7 @@ import random
 from datetime import datetime as date
 import evennia as ev
 from evennia import default_cmds
+from evennia.utils import evtable
 from jobutils import Utils
 from jobs_settings import _VALID_JOB_ACTIONS
 from jobs_settings import _TEST_PRE
@@ -16,7 +17,6 @@ from jobs_settings import _VALID_SORT_METHODS
 
 ju = Utils()
 MuxCommand = default_cmds.MuxCommand
-# args = [self.lhs, self.lhs_obj, self.lhs_act, self.rhs, self.rhs_obj, self.rhs_act]
 """
 argless_actions = ("all", "catchup", "clean", "compress", "credits", "mine", "new", "overdue", "sort")
 lhs_only_actions = ("act", "all", "checkin", "checkout", "claim", "clone", "delete", "help", "list",
@@ -106,7 +106,6 @@ LHS commands:
         +job/<sort|date|pri>                : Lists jobs by bucket/mod/pri
         +job/compress                       : Compresses job list (Wiz)
 """
-
 
 
 class CmdJobs(MuxCommand):
@@ -211,6 +210,14 @@ class CmdJobs(MuxCommand):
             ret =False
         return ret
 
+    def _update_actions(self, function):
+        """decorator function to update actions on a job automatically"""
+        if function == self._create:
+            pass
+        elif function == self._reply:
+            pass
+        elif function ==
+
     def _action_handler(self, switch, *args):
         """
         The action handler munges up the switch and then runs it.
@@ -249,14 +256,35 @@ class CmdJobs(MuxCommand):
 
         return ret
 
-    def _act(self, jobid):
+    def table(self, header, data):
+        """
+        Builds a table with header from data
+        :param header: tuple(string1, string2, ... )
+        :param data: iterable
+        :return: formatted table
+        """
+        Y, m, d= self.job.db_date_created.split(' ')[0].split('-')
+
+        header = ("Bucket: %s" % self.job.dbbucket,
+                  "Due: %s" % self.job.db.due,
+                  "Title: %s" % self.job.db.title,
+                  "Priority: %s" % self.job.db.priority,
+                  "Created on: %s-%s-%s" % (d, m, y),
+                  "Assigned to: %s" % self.job.db.assigned_to,
+                  "Created by: %s" % self.job.db.createdby,
+                  "Tagged Players: %s" % (','.join(self.job.db.tagged)))
+
+        # Todo: Finish building table
+        ret = evtable.EvTable.(header,)
+
+    def _act(self):
       """
         +job/act <#>
-      Display actions on a job
+      Displays a summary of actions that have been peformed on a job.
       :param self:
-      :param jobid:
-      :return:
+      :return: job action summary or error
       """
+
       return ret
 
     def _add(self, jobid, comment):

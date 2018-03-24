@@ -2,8 +2,8 @@
 
 from datetime import datetime
 import evennia as ev
-from typeclasses.channels import Channel
 from evennia.utils import lazy_property
+from typeclasses.channels import Channel
 from jobutils import Utils
 import jobs_settings as settings
 
@@ -50,6 +50,7 @@ class Bucket(Channel):
     def associated(self):
         """search for and return any jobs associated with this bucket"""
         jobs = []
+        for job in
         for job in ev.search_tag(self.key, category="jobs"):
             jobs.append(job)
         return len(jobs)
