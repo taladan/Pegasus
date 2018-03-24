@@ -21,6 +21,9 @@ _DEFAULT_BORDER_BOTTOM_CHAR = "|b═|n"
 _DEFAULT_HEADER_BOTTOM_LEFT_CHAR = "|b╠|n"
 _DEFAULT_HEADER_BOTTOM_RIGHT_CHAR = "|b╣|n"
 _DEFAULT_HEADER_LINE_CHAR = "|y╼|n"
+_DEFAULT_SORT_METHOD = "date"
+_DEFAULT_SORT_DIRECTION = "des" # asc for ascending, des for descending
+_DEFAULT_TEXT_COLOR = "|w"
 
 # Prefixes
 _DEFAULT_ERROR_PRE = "|w|[200Game:|n "
@@ -34,6 +37,9 @@ _DEFAULT_VALID_JOB_ACTIONS = ("act", "add", "all", "approve", "assign", "catchup
                               "deny", "due", "edit", "esc", "help", "last", "list", "lock", "log", "mail", "merge",
                               "mine", "name", "new", "overdue", "publish", "query", "reports", "search", "select",
                               "set", "sort", "source", "summary", "sumset", "tag", "trans", "unlock", "untag", "who")
+
+# Sortby
+_DEFAULT_VALID_SORT_METHODS = ("alpha", "date", "priorty")
 
 # Settings
 _DEFAULT_VALID_BUCKET_SETTINGS =  {"desc": "desc",

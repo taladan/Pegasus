@@ -6,11 +6,13 @@ from datetime import datetime as date
 import evennia as ev
 from evennia import default_cmds
 from jobutils import Utils
-from job import Job
 from jobs_settings import _VALID_JOB_ACTIONS
 from jobs_settings import _TEST_PRE
 from jobs_settings import _SUCC_PRE
 from jobs_settings import _ERROR_PRE
+from jobs_settings import _SORT_DIRECTION
+from jobs_settings import _SORT_METHOD
+from jobs_settings import _VALID_SORT_METHODS
 
 ju = Utils()
 MuxCommand = default_cmds.MuxCommand
@@ -184,7 +186,7 @@ class CmdJobs(MuxCommand):
             character = self.caller.character
         except AttributeError:
             character = self.caller
-        jobs = Msg.objects.get_by_tag(category="Jobs").filter(db_receivers_objects=character)
+        jobs = ev.Msg.objects.get_by_tag(category="jobs").filter(db_receivers_objects=character)
         return jobs
 
     def _set_job_number(self, switch):
@@ -444,14 +446,14 @@ class CmdJobs(MuxCommand):
                 self.job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
                 self.job.tags.add(bucket, category="jobs")
                 self._add_msg(jid=jid, bucket=bucket, title=title, msgtext=msgtext, action="create", parent=jid)
-                ret = _SUCC_PRE + "Job: |w%s|n created." % title
+                ret = _SUCC_PRE + "Job: %s created." % ju.decorate(title)
 
             # No args
             else:
                 ret = _ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
         # No bucket
         else:
-            ret = _ERROR_PRE + "|w%s|n is an invalid bucket." % bucket
+            ret = _ERROR_PRE + "%s is an invalid bucket." % ju.decorate(bucket)
 
         return ret
 
@@ -509,6 +511,23 @@ class CmdJobs(MuxCommand):
         :param priority:
         :return:
         """
+        return ret
+
+    def get_sortby(self, character):
+        """
+        Retrieves jsort attribute from a character (if it exists) and returns the method
+        and sorting direction.  If the attribute does not exist, it returns the default
+        sortby method and direction.
+
+        :param character: the object db.jsort is pulled from
+        :return: (method, direction)
+        """
+        sort = character.db.jsort
+        if sort:
+            method, direction = sort.split(':')
+            return (method, direction)
+        else:
+            ret = (_SORT_METHOD, _SORT_DIRECTION)
         return ret
 
     def _help(self, jobid):
@@ -726,15 +745,44 @@ class CmdJobs(MuxCommand):
         """
         return ret
 
-    def _sort(self, sorttype):
+    def _sortby(self):
         """
-        +job/sort
-        Lists jobs by bucket/mod/pri
+        +job/sortby [Alpha|Date|Priority][/][asc|des]
+        Without arguments, this displays the character's current
+        sortby method for displaying jobs (+jobs/all, +jobs/mine, +jobs/new)
+
+        Alpha    - Sorts alphabetically by bucket
+        Date     - Sorts by date due
+        Priorty  - Sorts by priorty
+
+            /asc - sorts ascending
+            /des - sorts descending (default)
 
         :param self:
         :param sorttype:
         :return:
         """
+        # Sortby and Direction
+        if self.lhs_obj and self.lhs_act:
+            sortby = self.lhs_obj
+            direction = self.lhs_act
+            sortby = sortby.lower()
+            direction = direction.lower()
+
+            if sortby in _VALID_SORT_METHODS and direction in ("asc", "des"):
+                self.caller.db.jsort=sortby + ":" + direction
+                ret = _SUCC_PRE + "Sortby method set to %s, %s" % (ju.decorate(sortby), 'descending' if direction=='des' else 'ascending')
+            else:
+                ret = _ERROR_PRE + "Method must be one of: %s Direction must be 'asc' or 'des' or left blank." % ju.decorate(_VALID_SORT_METHODS)
+        # Sortby only
+        elif self.lhs:
+            sortby = self.lhs_obj
+            sortby = sortby.lower()
+            if sortby in _VALID_SORT_METHODS:
+                self.caller.db.jsort=sortby + ":" + "des"
+                ret = _SUCC_PRE + "Sortby method set to %s, descending" % sortby
+        else:
+            ret = self.get_sortby(self.caller)
         return ret
 
     def _source(self, jobid, player_list):
@@ -834,7 +882,7 @@ class CmdJobs(MuxCommand):
         try:
             self.job = ev.ChannelDB.objects.get_channel(self.title)
         except AttributeError:
-            self.caller.msg(_ERROR_PRE + "Job: |w%s|n does not exist." % self.title)
+            self.caller.msg(_ERROR_PRE + "Job: %s does not exist." % ju.decorate(self.title))
 
     def func(self):
         """This does the work of the jobs command"""

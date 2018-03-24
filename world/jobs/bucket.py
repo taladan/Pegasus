@@ -43,7 +43,7 @@ class Bucket(Channel):
         self.db.resolution_time = 0
         self.db.valid_actions = _VALID_BUCKET_ACTIONS
         self.db.valid_settings = _VALID_BUCKET_SETTINGS
-        self.db.default_notification = _SUCC_PRE + "A new job has been posted to |w%s|n" % self.db.key
+        self.db.default_notification = _SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
         self.db.group = "admin"
 
     @lazy_property
