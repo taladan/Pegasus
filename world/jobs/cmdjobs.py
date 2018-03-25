@@ -175,49 +175,789 @@ class CmdJobs(MuxCommand):
     lock = "cmd:perm(Admin)"
     help_category = "Jobs"
 
-    def all_jobs(self):
-        """
-       Returns a queryset of jobs the character has access to.
 
-        :return: queryset of jobs
-        """
-        try:
-            character = self.caller.character
-        except AttributeError:
-            character = self.caller
-        jobs = ev.Msg.objects.get_by_tag(category="jobs").filter(db_receivers_objects=character)
-        return jobs
+# decorator
+    class actupdate(object):
+        """decorator class to update actions on a job automatically
 
-    def _set_job_number(self, switch):
-        """
-       Parses the switch for jobs needing to be called by id and assigns the appropriate value
+        This decorator takes the returned output from specific commands and
+        appends the actioncode (act) along with the caller, the exit status,
+        and the message passed and appends a formatted header and body to the
+        job's actions list.  It will return the output of the function on
+        to the outter part of the system.
 
-        :param switch:
-        :return: job number or false
-        """
-        lhs_id_required = ("act", "all", "checkin", "checkout", "claim", "clone", "delete", "list_untag",
-                           "lock_job", "log", "summary", "tag", "unlock", "untag")
-        rhs_id_required = ("add", "approve", "assign", "complete", "deny", "due",  "esc", "last", "list_untag",
-                           "mail", "player_tag", "publish", "rename", "set", "source", "tag", "trans", "untag")
 
-        if switch == "edit" or self.switch == "sumset":
-            ret = self.lhs_obj
-        elif switch in rhs_id_required:
-            ret = self.lhs
-        elif switch in lhs_id_required:
-            ret = self.lhs
-        else:
-            ret =False
+        :return:  returns the value of the output of the function wrapped
+        """
+        # Todo: testing of decorator
+        def __init__(self, f):
+            self.f = f
+
+        def __call__(self, f):
+            """ takes function as a parameter, decorates and returns wrapped function"""
+            # Always start from 0
+            actid = len(actlist) + 1 if len(actlist) < 0 else len(actlist)
+            time = '%s' % date.today().strftime("%B %d, %Y at %H:%M")
+            output = function()
+            act = output.get("act")
+            actlist = output.get("actlist")
+            caller = output.get("caller")
+            msg = output.get("msg")
+            actheader = (time, act, caller, msg[0:40])
+            actlist.append(actid + ":" + actheader)
+
+# switches go here
+    def _act(self):
+      """
+      Displays a summary of actions that have been peformed on a job.
+        +job/act <#>
+      :param self:
+      :return: job action summary or error
+      """
+      ret = {}
+      ret[msg] = {"act": act, "caller": self.caller, "stat": exit_status, "msg": msg}
+      return ret
+
+    def _all(self):
+        """
+        +job/all
+        +job/all <#>
+        Displays all comments in a job
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
         return ret
 
-    def _update_actions(self, function):
-        """decorator function to update actions on a job automatically"""
-        if function == self._create:
-            pass
-        elif function == self._reply:
-            pass
-        elif function ==
+    @actupdate
+    def _approve(self):
+        """
+        job/approve <#>=<comment>
+        Approves a job with a comment.
+        :param self:
+        :param jobid:
+        :param comment:
+        :return:
+        """
+        ret = {}
+        job = self.job
+        msg = self.rhs
+        title = self.job.db.title,
+        creator = self.job.db.createdby
+        header = "Your job %s has been approved by %s." % ju.decorate(title, self.caller)
+        self._mail(creator, header, body)
+        # package message for decorator
+        act = "apr"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
 
+    @actupdate
+    def _assign(self):
+        """
+        job/assign <#>=<<player>|none>
+        Assign a job to player
+        :param self:
+        :param jobid:
+        :param player:
+        :return:
+        """
+        ret = {}
+        act = "asn"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _catchup(self):
+        """
+        job/catchup
+        Clears new jobs
+
+        :param self:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _clean(self):
+        """ job/checkout <#>
+        Remove non-players from job data
+
+        :param self:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _checkin(self):
+        """
+        job/checkin <#>
+        Checks in a job
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "cki"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _checkout(self):
+        """
+        +job/checkout <#>
+
+        Allows a user to checkout a job and lock it against changes for the duration that it is checked out.
+        """
+        ret = {}
+        act = "cko"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _claim(self):
+        """
+        job/claim <#>
+        Allows a user to claim a job, assigning it to that user.
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "asn"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _clone(self):
+        """
+        job/clone <#>
+        Clones a job
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "cln"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _complete(self):
+        """
+        job/complete <#>=<comment>
+        Completes a job with comment
+        """
+        ret = {}
+        act = "com"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _create(self):
+        """
+        job/create <bucket>/<title>=<comments>
+        Creates a new job in Bucket with Title and Comments
+
+        :param self:
+        :param bucket:
+        :param title:
+        :param text:
+        :return:
+        """
+
+        # Set up our arguments
+        args = [self.lhs_obj, self.lhs_act, self.rhs]
+        bucket, title, msgtext = args
+
+        if ju.isbucket(bucket):
+
+            if args:
+
+                # Job Creation
+                jhash = '%s %s %s %s' % (bucket, title, date.today().strftime(), str(random.randrange(1,1000000)))
+                jid = hashlib.md5(jhash.encode(utf-8)).hexdigest()
+                self.job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
+                self.job.tags.add(bucket, category="jobs")
+                self._add_msg(jid=jid, bucket=bucket, title=title, msgtext=msgtext, action="create", parent=jid)
+                ret = _SUCC_PRE + "Job: %s created." % ju.decorate(title)
+
+            # No args
+            else:
+                sysmsg = _ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
+        # No bucket
+        else:
+            sysmsg = _ERROR_PRE + "%s is an invalid bucket." % ju.decorate(bucket)
+
+        ret = {}
+        act = "cre"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _credits(self):
+        """
+        job/credits
+        Display credits information
+
+        :param self:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _delete(self, jobid):
+        """
+        job/delete <#>
+        deletes a job
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "del"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _deny(self, jobid, comment):
+        """
+        job/deny <#>=<comment>
+        Denies a job with comment
+
+        :param self:
+        :param jobid:
+        :param comment:
+        :return:
+        """
+        ret = {}
+        act = "dny"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _due(self, jobid, date=None):
+        """
+        job/due <#>=<<date>|none>
+        Sets a due date on a job
+        """
+        ret = {}
+        act = "due"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _edit(self, jobid, entryid, old, new):
+        """
+        job/edit <#>/<entry #>=<old>/<new>
+        Edits a specific entry on a job
+
+        :param self:
+        :param jobid:
+        :param entryid:
+        :param old:
+        :param new:
+        :return:
+        """
+        ret = {}
+        act = "edt"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _esc(self, jobid, priority):
+        """
+        job/esc <#>=<green|yellow|red>
+        Sets the priority of a job
+
+        :param self:
+        :param jobid:
+        :param priority:
+        :return:
+        """
+        ret = {}
+        act = "sta"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def get_sortby(self, character):
+        """
+        Retrieves jsort attribute from a character (if it exists) and returns the method
+        and sorting direction.  If the attribute does not exist, it returns the default
+        sortby method and direction.
+
+        :param character: the object db.jsort is pulled from
+        :return: (method, direction)
+        """
+        # Todo: fix return
+        sort = character.db.jsort
+        if sort:
+            method, direction = sort.split(':')
+            return (method, direction)
+        else:
+            ret = (_SORT_METHOD, _SORT_DIRECTION)
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _help(self, jobid):
+        """
+        job/help <#>
+        Displays help for a job's bucket.
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _joblist(self, *args, **kwargs):
+        """
+        +job/all
+        +job/mine
+        +job/new
+        List all/yours/new jobs
+
+        :param self:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _last(self, jobid, num):
+        """
+        job/last <#>=<x>
+        this shows the last x entries on a job
+
+        :param self:
+        :param jobid:
+        :param num:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+        """
+        job/untag <#>=<player list>
+        untags a list of players from a job
+        """
+        return ret
+
+    def _list(self, bucket):
+        """
+        job/list <bucket>
+        displays the list of jobs in bucket.
+
+        :param self:
+        :param bucket:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _lock_job(self, jobid):
+        """
+        job/lock <#>
+        locks a job from any further modification
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "lok"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _log(self, jobid):
+        """
+        job/log <#>
+        Logs a particular job - want to add email functionality to this.
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "log"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _mail(self, creator, header, body):
+        """
+        job/mail <#>=<message>
+        Sends mail to the jobs source(s)
+
+        :param self:
+        :param jobid:
+        :param message:
+        :return:
+        """
+        ret = {}
+        act = "mai"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _merge(self, source, destination):
+        """
+        job/merge <source>=<destination>
+        Merges one job (source) into another (destination)
+
+        :param self:
+        :param source:
+        :param destination:
+        :return:
+        """
+        ret = {}
+        act = "mrg"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _overdue(self):
+        """
+        job/overdue
+        Displays only a list of overdue jobs
+
+        :param self:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _pri(self):
+        """
+        +job/pri
+        Sorts job by priority in descending order
+
+        :param self:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _publish(self, jobid, comment):
+        """
+        +job/publish <#>[=<comment>]
+        publishes a comment on a job if a comment is
+        indicated, otherwise publishes a job.
+
+        :param self:
+        :param jobid:
+        :param comment:
+        :return:
+        """
+        ret = {}
+        act = "pub"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _query(self, player_list, title, query):
+        """
+        +job/query <players>/<title>=<query>
+        Sends a query to <players>
+
+        :param self:
+        :param player_list:
+        :param title:
+        :param query:
+        :return:
+        """
+        ret = {}
+        act = "qry"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _rename(self, jobid, name):
+        """
+        +job/rename <#>=<name>
+        Rename a job
+
+        :param self:
+        :param jobid:
+        :param name:
+        :return:
+        """
+        ret = {}
+        act = "nam"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _reports(self, report=None):
+        """
+        +job/reports [<report>]
+        Get a report
+
+        :param self:
+        :param report:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _search(self, pattern):
+        """
+        +job/search <pattern>
+        Search jobs for <pattern>
+
+        :param self:
+        :param pattern:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _select(self, expression):
+        """
+        +job/select <expression>
+        List jobs matching <expression>
+
+        :param self:
+        :param expression:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _set(self, jobid, status):
+        """
+        +job/set <#>=<status>
+        Set progress status on a job
+
+        :param self:
+        :param jobid:
+        :param status:
+        :return:
+        """
+        ret = {}
+        act = "sta"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _sortby(self):
+        """
+        +job/sortby [Alpha|Date|Priority][/][asc|des]
+        Without arguments, this displays the character's current
+        sortby method for displaying jobs (+jobs/all, +jobs/mine, +jobs/new)
+
+        Alpha    - Sorts alphabetically by bucket
+        Date     - Sorts by date due
+        Priorty  - Sorts by priorty
+
+            /asc - sorts ascending
+            /des - sorts descending (default)
+
+        :param self:
+        :param sorttype:
+        :return:
+        """
+        # Todo: fix ret
+        # Sortby and Direction
+        if self.lhs_obj and self.lhs_act:
+            sortby = self.lhs_obj
+            direction = self.lhs_act
+            sortby = sortby.lower()
+            direction = direction.lower()
+
+            if sortby in _VALID_SORT_METHODS and direction in ("asc", "des"):
+                self.caller.db.jsort=sortby + ":" + direction
+                ret = _SUCC_PRE + "Sortby method set to %s, %s" % (ju.decorate(sortby), 'descending' if direction=='des' else 'ascending')
+            else:
+                ret = _ERROR_PRE + "Method must be one of: %s Direction must be 'asc' or 'des' or left blank." % ju.decorate(_VALID_SORT_METHODS)
+        # Sortby only
+        elif self.lhs:
+            sortby = self.lhs_obj
+            sortby = sortby.lower()
+            if sortby in _VALID_SORT_METHODS:
+                self.caller.db.jsort=sortby + ":" + "des"
+                ret = _SUCC_PRE + "Sortby method set to %s, descending" % sortby
+        else:
+            ret = self.get_sortby(self.caller)
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _source(self, jobid, player_list):
+        """
+        +job/source <#>=<player list>
+        Changes opened-by to <player list>
+
+        :param self:
+        :param jobid:
+        :param player_list:
+        :return:
+        """
+        ret = {}
+        act = "src"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _summary(self, jobid):
+        """
+        +job/summary <#>
+        Views a job's header & SUMMARY
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _sumset(self, jobid, sumset, value):
+        """
+        +job/sumset <#>/<set>=<value>
+        Changes a job SUMMARY setting
+
+        :param self:
+        :param jobid:
+        :param sumset:
+        :param value:
+        :return:
+        """
+        ret = {}
+        act = "sum"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _tag(self, jobid):
+        """
+        +job/tag <#>
+        Tags a job for you
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "tag"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _trans(self, jobid, bucket):
+        """
+        +job/trans <#>=<bucket>
+        Transfer (or undelete) a job
+
+        :param self:
+        :param jobid:
+        :param bucket:
+        :return:
+        """
+        ret = {}
+        act = "trn"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _unlock(self, jobid):
+        """
+        +job/unlock <#>
+        Unlocks a job
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        act = "lok"
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    @actupdate
+    def _untag(self):
+        """
+        +job/untag <#>=<player>
+        Untags a job
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        charname = self.rhs
+        job = self.jobid
+        if ju.ischaracter(charname):
+            ret = {}
+            act = "tag"
+            character = ev.ObjectDB.objects.search(charname)
+            character.tags.remove(job, category="jobs")
+            msg = "%s untagged %s from job %s" % (self.caller, charname, job)
+            exit_status = _SUCC_PRE
+        else:
+            act = False
+            exit_status = _ERROR_PRE
+            msg = _ERROR_PRE + "%s is not a valid character." % charname
+
+        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    def _who(self, jobid):
+        """
+        +job/who <player>
+        Lists jobs assigned to player
+
+        :param self:
+        :param jobid:
+        :return:
+        """
+        ret = {}
+        ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
+        return ret
+
+    """Executes when command is run"""
+    def func(self):
+        """This does the work of the jobs command"""
+        self.valid_actions = _VALID_JOB_ACTIONS
+        self.jobs_list = self.all_jobs()
+
+        if self.switches or self.args:
+            if self.switches:
+                if self.args:
+                    passargs = ju.argparse(self.lhs, self.rhs)
+                    if passargs:
+                        self.lhs_obj, self.lhs_act, self.rhs_obj, self.rhs_act = passargs
+                    else:
+                        self.lhs_obj = self.lhs_act = self.rhs_obj = self.rhs_act = False
+                output = self._action_handler(self.switches[0])
+                return output
+        # No switch, no args
+        else:
+            # +job(s) This part should just display the list of available buckets.
+            for job in self.jobs_list:
+               self.caller.msg(_TEST_PRE + "%s" % job)
+
+    """Utility Functions"""
     def _action_handler(self, switch, *args):
         """
         The action handler munges up the switch and then runs it.
@@ -245,175 +985,18 @@ class CmdJobs(MuxCommand):
 
         self.caller.msg(ret)
 
-    def set_job(self, number):
-        """gets and returns the correct job"""
-        jobs_max = max(0, self.jobs_list.count() - 1)
+    def all_jobs(self):
+        """
+       Returns a queryset of jobs the character has access to.
+
+        :return: queryset of jobs
+        """
         try:
-            i = max(0, min(jobs_max, int(number) - 1))
-            ret = self.jobs_list[i]
-        except ValueError, IndexError:
-            ret = False
-
-        return ret
-
-    def table(self, header, data):
-        """
-        Builds a table with header from data
-        :param header: tuple(string1, string2, ... )
-        :param data: iterable
-        :return: formatted table
-        """
-        Y, m, d= self.job.db_date_created.split(' ')[0].split('-')
-
-        header = ("Bucket: %s" % self.job.dbbucket,
-                  "Due: %s" % self.job.db.due,
-                  "Title: %s" % self.job.db.title,
-                  "Priority: %s" % self.job.db.priority,
-                  "Created on: %s-%s-%s" % (d, m, y),
-                  "Assigned to: %s" % self.job.db.assigned_to,
-                  "Created by: %s" % self.job.db.createdby,
-                  "Tagged Players: %s" % (','.join(self.job.db.tagged)))
-
-        # Todo: Finish building table
-        ret = evtable.EvTable.(header,)
-
-    def _act(self):
-      """
-        +job/act <#>
-      Displays a summary of actions that have been peformed on a job.
-      :param self:
-      :return: job action summary or error
-      """
-
-      return ret
-
-    def _add(self, jobid, comment):
-       """
-        +job/add <#>=<comments>
-        Add comments to a job
-       :param self:
-       :param jobid:
-       :param comment:
-       :return:
-       """
-       return ret
-
-    def _all(self, jobid):
-        """
-        +job/all
-        +job/all <#>
-        Displays all comments in a job
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _approve(self, jobid, comment):
-        """
-        job/approve <#>=<comment>
-        Approves a job with a comment.
-        :param self:
-        :param jobid:
-        :param comment:
-        :return:
-        """
-        return ret
-
-    def _assign(self, jobid, player=None):
-        """
-        job/assign <#>=<<player>|none>
-        Assign a job to player
-        :param self:
-        :param jobid:
-        :param player:
-        :return:
-        """
-        return ret
-
-    def _catchup(self):
-        """
-        job/catchup
-        Clears new jobs
-
-        :param self:
-        :return:
-        """
-        return ret
-
-    def _checkin(self, jobid):
-        """
-        job/checkin <#>
-        Checks in a job
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _clean(self):
-        """ job/checkout <#>
-        Remove non-players from job data
-
-        :param self:
-        :return:
-        """
-        return ret
-
-    def _credits(self):
-        """
-        job/credits
-        Display credits information
-
-        :param self:
-        :return:
-        """
-        return ret
-
-    def _checkout(self, jobid):
-        """
-        +job/checkout <#>
-
-        Allows a user to checkout a job and lock it against changes for the duration that it is checked out.
-        """
-        return ret
-
-    def _claim(self, jobid):
-        """
-        job/claim <#>
-        Allows a user to claim a job, assigning it to that user.
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _clone(self, jobid):
-        """
-        job/clone <#>
-        Clones a job
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _complete(self, jobid, comment):
-        """
-        job/complete <#>=<comment>
-        Completes a job with comment
-        """
-        return ret
-
-    def _compress(self):
-        """
-        +job/compress
-        Compresses the jobs system - may be unnecessary
-        """
-        return ret
+            character = self.caller.character
+        except AttributeError:
+            character = self.caller
+        jobs = ev.Msg.objects.get_by_tag(category="jobs").filter(db_receivers_objects=character)
+        return jobs
 
     def _add_msg(self, *kwargs):
         """
@@ -448,463 +1031,6 @@ class CmdJobs(MuxCommand):
             ret = False
         return ret
 
-    def _create(self):
-        """
-        job/create <bucket>/<title>=<comments>
-        Creates a new job in Bucket with Title and Comments
-
-        :param self:
-        :param bucket:
-        :param title:
-        :param text:
-        :return:
-        """
-
-        # Set up our arguments
-        args = [self.lhs_obj, self.lhs_act, self.rhs]
-        bucket, title, msgtext = args
-
-        if ju.isbucket(bucket):
-
-            if args:
-
-                # Job Creation
-                jhash = '%s %s %s %s' % (bucket, title, date.today().strftime(), str(random.randrange(1,1000000)))
-                jid = hashlib.md5(jhash.encode(utf-8)).hexdigest()
-                self.job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
-                self.job.tags.add(bucket, category="jobs")
-                self._add_msg(jid=jid, bucket=bucket, title=title, msgtext=msgtext, action="create", parent=jid)
-                ret = _SUCC_PRE + "Job: %s created." % ju.decorate(title)
-
-            # No args
-            else:
-                ret = _ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
-        # No bucket
-        else:
-            ret = _ERROR_PRE + "%s is an invalid bucket." % ju.decorate(bucket)
-
-        return ret
-
-    def _delete(self, jobid):
-        """
-        job/delete <#>
-        deletes a job
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _deny(self, jobid, comment):
-        """
-        job/deny <#>=<comment>
-        Denies a job with comment
-
-        :param self:
-        :param jobid:
-        :param comment:
-        :return:
-        """
-        return ret
-
-    def _due(self, jobid, date=None):
-        """
-        job/due <#>=<<date>|none>
-        Sets a due date on a job
-        """
-        return ret
-
-    def _edit(self, jobid, entryid, old, new):
-        """
-        job/edit <#>/<entry #>=<old>/<new>
-        Edits a specific entry on a job
-
-        :param self:
-        :param jobid:
-        :param entryid:
-        :param old:
-        :param new:
-        :return:
-        """
-        return ret
-
-    def _esc(self, jobid, priority):
-        """
-        job/esc <#>=<green|yellow|red>
-        Sets the priority of a job
-
-        :param self:
-        :param jobid:
-        :param priority:
-        :return:
-        """
-        return ret
-
-    def get_sortby(self, character):
-        """
-        Retrieves jsort attribute from a character (if it exists) and returns the method
-        and sorting direction.  If the attribute does not exist, it returns the default
-        sortby method and direction.
-
-        :param character: the object db.jsort is pulled from
-        :return: (method, direction)
-        """
-        sort = character.db.jsort
-        if sort:
-            method, direction = sort.split(':')
-            return (method, direction)
-        else:
-            ret = (_SORT_METHOD, _SORT_DIRECTION)
-        return ret
-
-    def _help(self, jobid):
-        """
-        job/help <#>
-        Displays help for a job's bucket.
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _joblist(self, *args, **kwargs):
-        """
-        +job/all
-        +job/mine
-        +job/new
-        List all/yours/new jobs
-
-        :param self:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        return ret
-
-    def _last(self, jobid, num):
-        """
-        job/last <#>=<X>
-        This shows the last X entries on a job
-
-        :param self:
-        :param jobid:
-        :param num:
-        :return:
-        """
-        return ret
-
-    def _list_untag(self, jobid, player_list):
-        """
-        job/untag <#>=<player list>
-        Untags a list of players from a job
-        """
-        return ret
-
-    def _list(self, bucket):
-        """
-        job/list <bucket>
-        Displays the list of jobs in Bucket.
-
-        :param self:
-        :param bucket:
-        :return:
-        """
-        return ret
-
-    def _lock_job(self, jobid):
-        """
-        job/lock <#>
-        Locks a job from any further modification
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _log(self, jobid):
-        """
-        job/log <#>
-        Logs a particular job - want to add email functionality to this.
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _mail(self, jobid, message):
-        """
-        job/mail <#>=<message>
-        Sends mail to the jobs source(s)
-
-        :param self:
-        :param jobid:
-        :param message:
-        :return:
-        """
-        return ret
-
-    def _merge(self, source, destination):
-        """
-        job/merge <source>=<destination>
-        Merges one job (source) into another (destination)
-
-        :param self:
-        :param source:
-        :param destination:
-        :return:
-        """
-        return ret
-
-    def _overdue(self):
-        """
-        job/overdue
-        Displays only a list of overdue jobs
-
-        :param self:
-        :return:
-        """
-        return ret
-
-    def _player_tag(self, jobid, player):
-        """
-        job/tag <#>=<player>
-        tags a job for a player or players
-
-        :param self:
-        :param jobid:
-        :param player:
-        :return:
-        """
-        return ret
-
-    def _pri(self):
-        """
-        +job/pri
-        Sorts job by priority in descending order
-
-        :param self:
-        :return:
-        """
-        return ret
-
-    def _publish(self, jobid, comment):
-        """
-        +job/publish <#>[=<comment>]
-        publishes a comment on a job if a comment is
-        indicated, otherwise publishes a job.
-
-        :param self:
-        :param jobid:
-        :param comment:
-        :return:
-        """
-        return ret
-
-    def _query(self, player_list, title, query):
-        """
-        +job/query <players>/<title>=<query>
-        Sends a query to <players>
-
-        :param self:
-        :param player_list:
-        :param title:
-        :param query:
-        :return:
-        """
-        return ret
-
-    def _rename(self, jobid, name):
-        """
-        +job/rename <#>=<name>
-        Rename a job
-
-        :param self:
-        :param jobid:
-        :param name:
-        :return:
-        """
-        return ret
-
-    def _reports(self, report=None):
-        """
-        +job/reports [<report>]
-        Get a report
-
-        :param self:
-        :param report:
-        :return:
-        """
-        return ret
-
-    def _search(self, pattern):
-        """
-        +job/search <pattern>
-        Search jobs for <pattern>
-
-        :param self:
-        :param pattern:
-        :return:
-        """
-        return ret
-
-    def _select(self, expression):
-        """
-        +job/select <expression>
-        List jobs matching <expression>
-
-        :param self:
-        :param expression:
-        :return:
-        """
-        return ret
-
-    def _set(self, jobid, status):
-        """
-        +job/set <#>=<status>
-        Set progress status on a job
-
-        :param self:
-        :param jobid:
-        :param status:
-        :return:
-        """
-        return ret
-
-    def _sortby(self):
-        """
-        +job/sortby [Alpha|Date|Priority][/][asc|des]
-        Without arguments, this displays the character's current
-        sortby method for displaying jobs (+jobs/all, +jobs/mine, +jobs/new)
-
-        Alpha    - Sorts alphabetically by bucket
-        Date     - Sorts by date due
-        Priorty  - Sorts by priorty
-
-            /asc - sorts ascending
-            /des - sorts descending (default)
-
-        :param self:
-        :param sorttype:
-        :return:
-        """
-        # Sortby and Direction
-        if self.lhs_obj and self.lhs_act:
-            sortby = self.lhs_obj
-            direction = self.lhs_act
-            sortby = sortby.lower()
-            direction = direction.lower()
-
-            if sortby in _VALID_SORT_METHODS and direction in ("asc", "des"):
-                self.caller.db.jsort=sortby + ":" + direction
-                ret = _SUCC_PRE + "Sortby method set to %s, %s" % (ju.decorate(sortby), 'descending' if direction=='des' else 'ascending')
-            else:
-                ret = _ERROR_PRE + "Method must be one of: %s Direction must be 'asc' or 'des' or left blank." % ju.decorate(_VALID_SORT_METHODS)
-        # Sortby only
-        elif self.lhs:
-            sortby = self.lhs_obj
-            sortby = sortby.lower()
-            if sortby in _VALID_SORT_METHODS:
-                self.caller.db.jsort=sortby + ":" + "des"
-                ret = _SUCC_PRE + "Sortby method set to %s, descending" % sortby
-        else:
-            ret = self.get_sortby(self.caller)
-        return ret
-
-    def _source(self, jobid, player_list):
-        """
-        +job/source <#>=<player list>
-        Changes opened-by to <player list>
-
-        :param self:
-        :param jobid:
-        :param player_list:
-        :return:
-        """
-        return ret
-
-    def _summary(self, jobid):
-        """
-        +job/summary <#>
-        Views a job's header & SUMMARY
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _sumset(self, jobid, sumset, value):
-        """
-        +job/sumset <#>/<set>=<value>
-        Changes a job SUMMARY setting
-
-        :param self:
-        :param jobid:
-        :param sumset:
-        :param value:
-        :return:
-        """
-        return ret
-
-    def _tag(self, jobid):
-        """
-        +job/tag <#>
-        Tags a job for you
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _trans(self, jobid, bucket):
-        """
-        +job/trans <#>=<bucket>
-        Transfer (or undelete) a job
-
-        :param self:
-        :param jobid:
-        :param bucket:
-        :return:
-        """
-        return ret
-
-    def _unlock(self, jobid):
-        """
-        +job/unlock <#>
-        Unlocks a job
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _untag(self, jobid):
-        """
-        +job/untag <#>
-        Untags a job
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
-    def _who(self, jobid):
-        """
-        +job/who <player>
-        Lists jobs assigned to player
-
-        :param self:
-        :param jobid:
-        :return:
-        """
-        return ret
-
     def _assign_job(self):
         """sets self.job if it exists in the db"""
         try:
@@ -912,24 +1038,57 @@ class CmdJobs(MuxCommand):
         except AttributeError:
             self.caller.msg(_ERROR_PRE + "Job: %s does not exist." % ju.decorate(self.title))
 
-    def func(self):
-        """This does the work of the jobs command"""
-        self.valid_actions = _VALID_JOB_ACTIONS
-        self.jobs_list = self.all_jobs()
+    def _set_job_number(self, switch):
+        """
+       Parses the switch for jobs needing to be called by id and assigns the appropriate value
 
-        if self.switches or self.args:
-            if self.switches:
-                if self.args:
-                    passargs = ju.argparse(self.lhs, self.rhs)
-                    if passargs:
-                        self.lhs_obj, self.lhs_act, self.rhs_obj, self.rhs_act = passargs
-                    else:
-                        self.lhs_obj = self.lhs_act = self.rhs_obj = self.rhs_act = False
-                output = self._action_handler(self.switches[0])
-                return output
-        # No switch, no args
+        :param switch:
+        :return: job number or false
+        """
+        lhs_id_required = ("act", "all", "checkin", "checkout", "claim", "clone", "delete", "list_untag",
+                           "lock_job", "log", "summary", "tag", "unlock", "untag")
+        rhs_id_required = ("add", "approve", "assign", "complete", "deny", "due",  "esc", "last", "list_untag",
+                           "mail", "player_tag", "publish", "rename", "set", "source", "tag", "trans", "untag")
+
+        if switch == "edit" or self.switch == "sumset":
+            ret = self.lhs_obj
+        elif switch in rhs_id_required:
+            ret = self.lhs
+        elif switch in lhs_id_required:
+            ret = self.lhs
         else:
-            # +job(s) This part should just display the list of available buckets.
-            for job in self.jobs_list:
-               self.caller.msg(_TEST_PRE + "%s" % job)
+            ret =False
+        return ret
+
+    def set_job(self, number):
+        """gets and returns the correct job"""
+        jobs_max = max(0, self.jobs_list.count() - 1)
+        try:
+            i = max(0, min(jobs_max, int(number) - 1))
+            ret = self.jobs_list[i]
+        except ValueError, IndexError:
+            ret = False
+
+        return ret
+
+    def table(self, header, data):
+        """
+        Builds a table with header from data
+        :param header: tuple(string1, string2, ... )
+        :param data: iterable
+        :return: formatted table
+        """
+        Y, m, d= self.job.db_date_created.split(' ')[0].split('-')
+
+        header = ("Bucket: %s" % self.job.dbbucket,
+                  "Due: %s" % self.job.db.due,
+                  "Title: %s" % self.job.db.title,
+                  "Priority: %s" % self.job.db.priority,
+                  "Created on: %s-%s-%s" % (d, m, y),
+                  "Assigned to: %s" % self.job.db.assigned_to,
+                  "Created by: %s" % self.job.db.createdby,
+                  "Tagged Players: %s" % (','.join(self.job.db.tagged)))
+
+        # Todo: Finish building table
+        # ret = evtable.EvTable.(header,)
 

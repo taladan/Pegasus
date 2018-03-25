@@ -50,7 +50,7 @@ class Bucket(Channel):
     def associated(self):
         """search for and return any jobs associated with this bucket"""
         jobs = []
-        for job in
+        # Todo: fix search for jobs
         for job in ev.search_tag(self.key, category="jobs"):
             jobs.append(job)
         return len(jobs)
