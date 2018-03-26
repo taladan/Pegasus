@@ -159,6 +159,7 @@ class CmdBuckets(MuxCommand):
 
     def _access(self, caller):
         """grants player access to a specific bucket"""
+        # Todo: fix adding multiple identical access types to bucket
         action = self.lhs_text.lower()
         if not ju.ischaracter(self.character):
             self.caller.msg(_ERROR_PRE + "%s is not a valid character." % ju.decorate(self.character))
@@ -263,6 +264,7 @@ class CmdBuckets(MuxCommand):
 
     def _check(self, obj):
         """displays bucket actions that an object has access to"""
+        # Todo: Fix bucket check not displaying properly
         buckets = []
         actions = []
         if self._pass_lock(self.caller):

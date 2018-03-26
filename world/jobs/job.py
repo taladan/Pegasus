@@ -93,6 +93,14 @@ class Job(Bucket):
         self.db.title = ""
         self.db.priority = ""
 
+    def info(self):
+        ret = (self.db.bucket,
+               self.db.title,
+               self.db.createdby,
+               self.db.due,
+               self.db.assigned_to)
+        return ret
+
     # def _approve(self, jobid, comment):
     # def _assign(self, jobid, player=None):
     # def _catchup(self):

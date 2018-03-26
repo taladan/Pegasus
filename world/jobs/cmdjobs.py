@@ -7,6 +7,7 @@ import evennia as ev
 from evennia import default_cmds
 from evennia.utils import evtable
 from jobutils import Utils
+import jobs_settings as jobset
 from jobs_settings import _VALID_JOB_ACTIONS
 from jobs_settings import _TEST_PRE
 from jobs_settings import _SUCC_PRE
@@ -206,7 +207,7 @@ class CmdJobs(MuxCommand):
             actheader = (time, act, caller, msg[0:40])
             actlist.append(actid + ":" + actheader)
 
-# switches go here
+    # switches go here
     def _act(self):
       """
       Displays a summary of actions that have been peformed on a job.
@@ -935,12 +936,13 @@ class CmdJobs(MuxCommand):
         ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
         return ret
 
-    """Executes when command is run"""
+    # Executes when command is run
     def func(self):
         """This does the work of the jobs command"""
         self.valid_actions = _VALID_JOB_ACTIONS
         self.jobs_list = self.all_jobs()
 
+        # No switch, no args
         if self.switches or self.args:
             if self.switches:
                 if self.args:
@@ -951,13 +953,11 @@ class CmdJobs(MuxCommand):
                         self.lhs_obj = self.lhs_act = self.rhs_obj = self.rhs_act = False
                 output = self._action_handler(self.switches[0])
                 return output
-        # No switch, no args
+        # +job(s) This part should just display the list of available buckets.
         else:
-            # +job(s) This part should just display the list of available buckets.
-            for job in self.jobs_list:
-               self.caller.msg(_TEST_PRE + "%s" % job)
+            self.caller.msg(self.table())
 
-    """Utility Functions"""
+    # Utility Functions
     def _action_handler(self, switch, *args):
         """
         The action handler munges up the switch and then runs it.
@@ -1071,24 +1071,71 @@ class CmdJobs(MuxCommand):
 
         return ret
 
-    def table(self, header, data):
+    def table(self, head=False, body=False, layout=False):
         """
         Builds a table with header from data
         :param header: tuple(string1, string2, ... )
         :param data: iterable
         :return: formatted table
         """
-        Y, m, d= self.job.db_date_created.split(' ')[0].split('-')
-
-        header = ("Bucket: %s" % self.job.dbbucket,
-                  "Due: %s" % self.job.db.due,
-                  "Title: %s" % self.job.db.title,
-                  "Priority: %s" % self.job.db.priority,
-                  "Created on: %s-%s-%s" % (d, m, y),
-                  "Assigned to: %s" % self.job.db.assigned_to,
-                  "Created by: %s" % self.job.db.createdby,
-                  "Tagged Players: %s" % (','.join(self.job.db.tagged)))
-
         # Todo: Finish building table
-        # ret = evtable.EvTable.(header,)
+        # Create the table
+        if head:
+            pass
+        else:
+            head = "Bucket", "Due", "Title", "Priority", "Created on", "Assigned to", "Created by", "Tagged Players"
+
+        if body:
+            pass
+        else:
+            from job import Job
+            body = Job.objects.all()
+
+        # Create the table
+        table = evtable.EvTable()
+
+        # Add columns
+        for i in head:
+            table.add_column(i)
+
+        # Add rows
+        for i in body:
+            info = job.info()
+            table.addrow(*info)
+
+        if layout:
+            pass
+        else:
+            import jobs_settings as jset
+            h = True
+            b = "table"
+            hlc = jset._HEADER_LINE_CHAR
+            w = 110
+            ctlc = jset._CORNER_TOP_LEFT_CHAR
+            ctrc = jset._CORNER_TOP_RIGHT_CHAR
+            cblc = jset._CORNER_BOTTOM_LEFT_CHAR
+            cbrc = jset._CORNER_BOTTOM_RIGHT_CHAR
+            blc = jset._BORDER_LEFT_CHAR
+            brc = jset._BORDER_RIGHT_CHAR
+            btc = jset._BORDER_TOP_CHAR
+            bbc = jset._BORDER_BOTTOM_CHAR
+            layout = """header=%s, border=%s, header_line_char=%s, width=%s, corner_top_left_char=%s,
+                          corner_top_right_char=%s, corner_bottom_left_char=%s, corner_bottom_right_char=%s,
+                          border_left_char=%s, border_right_char=%s, border_top_char=%s,
+                          border_bottom_char=%s, """ % (h, b, hlc, w, ctlc, ctrc, cblc, cbrc, blc, brc, btc, bbc,)
+            table.header=h
+            table.border=b
+            table.header_line_char=hlc
+            table.width=w
+            table.corner_top_left_char=ctlc
+            table.corner_top_right_char=ctrc
+            table.corner_bottom_left_char=cblc
+            table.corner_bottom_right_char=cbrc
+            table.border_left_char=blc
+            table.border_right_char=brc
+            table.border_top_char=btc
+            table. border_bottom_char=bbc
+
+        return table
+
 
