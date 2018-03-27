@@ -1,7 +1,7 @@
 
 from jobutils import Utils
 from bucket import Bucket
-from jobs_settings import _VALID_JOB_ACTIONS
+from jobs_settings import VALID_JOB_ACTIONS
 
 ju = Utils()
 
@@ -77,14 +77,37 @@ class Job(Bucket):
                   It should return True for access and False for no access.
     """
     def at_channel_creation(self):
-        """This is done when the bucket is created"""
+        """This is done when the bucket is created
+
+        The following attributes are inherited from Bucket:
+
+        self.db.approval_board = '0'
+        self.db.completion_board = '0'
+        self.db.createdby = None
+        self.db.denial_board = '0'
+        self.db.due_timeout = 0
+        self.db.timeout_string = "0"
+        self.db.num_completed_jobs = 0
+        self.db.num_approved_jobs = 0
+        self.db.num_denied_jobs = 0
+        self.db.num_of_jobs = self.associated
+        self.db.total_jobs = self._total_jobs
+        self.db.per_player_actions = {}
+        self.db.percent_complete = self._pct_complete
+        self.db.resolution_time = 0
+        self.db.valid_actions = VALID_BUCKET_ACTIONS
+        self.db.valid_settings = VALID_BUCKET_SETTINGS
+        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
+        self.db.group = "admin"
+        """
         # Todo: determine vars needed for a Job obj
-        self.valid_actions = _VALID_JOB_ACTIONS
+        self.valid_actions = VALID_JOB_ACTIONS
         self.db.actions_list = {}
         self.db.assigned_to = False
         self.db.assigned_by = False
         self.db.checked_out = False
         self.db.checker = ""
+        self.db.comments = {}
         self.db.bucket = ""
         self.db.due = False
         self.db.locked = False
@@ -92,6 +115,7 @@ class Job(Bucket):
         self.db.tagged = []
         self.db.title = ""
         self.db.priority = ""
+        self.ndb.all = self._all()
 
     def info(self):
         ret = (self.db.bucket,

@@ -1,15 +1,19 @@
 
-
 from datetime import datetime
+
 import evennia as ev
-from evennia.utils import lazy_property
-from typeclasses.channels import Channel
-from jobutils import Utils
 import jobs_settings as settings
 
-_VALID_BUCKET_SETTINGS = settings._VALID_BUCKET_SETTINGS
-_VALID_BUCKET_ACTIONS = settings._VALID_BUCKET_ACTIONS
-_SUCC_PRE = settings._SUCC_PRE
+from evennia.utils import utils as eu
+from evennia.utils import lazy_property
+from typeclasses.channels import Channel
+from evennia.typeclasses.models import Msg
+from jobutils import Utils
+from world.jobs.job import Job
+
+_VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
+_VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
+_SUCC_PRE = settings.SUCC_PRE
 
 date = datetime
 ju = Utils()
@@ -23,6 +27,27 @@ class Bucket(Channel):
     Todo: Work on jobs integration and finish setting up monitoring
     # self.db.total_jobs = ev.search_tag(self.db.key, category="jobs")
     """
+
+    def __add__(self, other):
+        def addjob(add):
+            from evennia.comms.models import Msg
+            if eu.inherits_from(add, Msg):
+                id = add.get_tag("msgid", category=)
+                self.db.comments[add.db.key] = add.db.message
+            else:
+                raise TypeError("Msg object expected, received %s instead." % type(add))
+
+        def addbucket(add):
+            if eu.inherits_from(add, Bucket):
+                self.db.
+            pass
+
+        if eu.inherits_from(self, Job):
+            addjob(other)
+        elif eu.inherits_from(self, self):
+            addbucket(other)
+        else:
+            raise TypeError("Expected a Bucket or Job typed object, recieved %s typed object instead." % type(self))
 
     def at_channel_creation(self):
         """This is done when the bucket is created"""
@@ -45,6 +70,15 @@ class Bucket(Channel):
         self.db.valid_settings = _VALID_BUCKET_SETTINGS
         self.db.default_notification = _SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
         self.db.group = "admin"
+
+        # non db-values
+        self.ndb.all = self._all
+
+    def _all(self):
+        if utils.inherits_from(self,Job):
+            ret = self.Job.objects.all()
+        else:
+            ret = self.objects.all()
 
     @lazy_property
     def associated(self):
@@ -112,6 +146,9 @@ class Bucket(Channel):
             return True
         except KeyError:
             return false
+
+    def jobids(self):
+        return ev.search_tag(self.db.key, category="jobs")
 
     def set(self, setting, value, **kwargs):
         """used to change settings on a particular bucket"""

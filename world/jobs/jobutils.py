@@ -66,7 +66,7 @@ class Utils(object):
         """Takes any num of args and returns them decorated with the desired color code"""
         ret = []
         for text in args:
-            ret.append(settings._TEXT_COLOR + str(text) + "|n")
+            ret.append(settings.TEXT_COLOR + str(text) + "|n")
         return tuple(ret)
 
     def ischaracter(self, string):

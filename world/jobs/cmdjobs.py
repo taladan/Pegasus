@@ -8,13 +8,13 @@ from evennia import default_cmds
 from evennia.utils import evtable
 from jobutils import Utils
 import jobs_settings as jobset
-from jobs_settings import _VALID_JOB_ACTIONS
-from jobs_settings import _TEST_PRE
-from jobs_settings import _SUCC_PRE
-from jobs_settings import _ERROR_PRE
-from jobs_settings import _SORT_DIRECTION
-from jobs_settings import _SORT_METHOD
-from jobs_settings import _VALID_SORT_METHODS
+from jobs_settings import VALID_JOB_ACTIONS
+from jobs_settings import TEST_PRE
+from jobs_settings import SUCC_PRE
+from jobs_settings import ERROR_PRE
+from jobs_settings import SORT_DIRECTION
+from jobs_settings import SORT_METHOD
+from jobs_settings import VALID_SORT_METHODS
 
 ju = Utils()
 MuxCommand = default_cmds.MuxCommand
@@ -34,7 +34,7 @@ elif self.switch in lhs_only_actions:
 elif self.switch in rhs_lhs_actions:
     pass
 else:
-    self.caller.msg(_ERROR_PRE + "|w%s|n is not a valid switch for the +jobs command." % self.switch)
+    self.caller.msg(ERROR_PRE + "|w%s|n is not a valid switch for the +jobs command." % self.switch)
 
 RHS commands:
 
@@ -386,15 +386,16 @@ class CmdJobs(MuxCommand):
                 jid = hashlib.md5(jhash.encode(utf-8)).hexdigest()
                 self.job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
                 self.job.tags.add(bucket, category="jobs")
+                self.job.tags.add(job, category="jobs")
                 self._add_msg(jid=jid, bucket=bucket, title=title, msgtext=msgtext, action="create", parent=jid)
-                ret = _SUCC_PRE + "Job: %s created." % ju.decorate(title)
+                ret = SUCC_PRE + "Job: %s created." % ju.decorate(title)
 
             # No args
             else:
-                sysmsg = _ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
+                sysmsg = ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
         # No bucket
         else:
-            sysmsg = _ERROR_PRE + "%s is an invalid bucket." % ju.decorate(bucket)
+            sysmsg = ERROR_PRE + "%s is an invalid bucket." % ju.decorate(bucket)
 
         ret = {}
         act = "cre"
@@ -504,7 +505,7 @@ class CmdJobs(MuxCommand):
             method, direction = sort.split(':')
             return (method, direction)
         else:
-            ret = (_SORT_METHOD, _SORT_DIRECTION)
+            ret = (SORT_METHOD, SORT_DIRECTION)
         ret = {}
         ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
         return ret
@@ -786,18 +787,18 @@ class CmdJobs(MuxCommand):
             sortby = sortby.lower()
             direction = direction.lower()
 
-            if sortby in _VALID_SORT_METHODS and direction in ("asc", "des"):
+            if sortby in VALID_SORT_METHODS and direction in ("asc", "des"):
                 self.caller.db.jsort=sortby + ":" + direction
-                ret = _SUCC_PRE + "Sortby method set to %s, %s" % (ju.decorate(sortby), 'descending' if direction=='des' else 'ascending')
+                ret = SUCC_PRE + "Sortby method set to %s, %s" % (ju.decorate(sortby), 'descending' if direction == 'des' else 'ascending')
             else:
-                ret = _ERROR_PRE + "Method must be one of: %s Direction must be 'asc' or 'des' or left blank." % ju.decorate(_VALID_SORT_METHODS)
+                ret = ERROR_PRE + "Method must be one of: %s Direction must be 'asc' or 'des' or left blank." % ju.decorate(VALID_SORT_METHODS)
         # Sortby only
         elif self.lhs:
             sortby = self.lhs_obj
             sortby = sortby.lower()
-            if sortby in _VALID_SORT_METHODS:
+            if sortby in VALID_SORT_METHODS:
                 self.caller.db.jsort=sortby + ":" + "des"
-                ret = _SUCC_PRE + "Sortby method set to %s, descending" % sortby
+                ret = SUCC_PRE + "Sortby method set to %s, descending" % sortby
         else:
             ret = self.get_sortby(self.caller)
         ret = {}
@@ -914,11 +915,11 @@ class CmdJobs(MuxCommand):
             character = ev.ObjectDB.objects.search(charname)
             character.tags.remove(job, category="jobs")
             msg = "%s untagged %s from job %s" % (self.caller, charname, job)
-            exit_status = _SUCC_PRE
+            exit_status = SUCC_PRE
         else:
             act = False
-            exit_status = _ERROR_PRE
-            msg = _ERROR_PRE + "%s is not a valid character." % charname
+            exit_status = ERROR_PRE
+            msg = ERROR_PRE + "%s is not a valid character." % charname
 
         ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
         return ret
@@ -939,7 +940,7 @@ class CmdJobs(MuxCommand):
     # Executes when command is run
     def func(self):
         """This does the work of the jobs command"""
-        self.valid_actions = _VALID_JOB_ACTIONS
+        self.valid_actions = VALID_JOB_ACTIONS
         self.jobs_list = self.all_jobs()
 
         # No switch, no args
@@ -956,6 +957,28 @@ class CmdJobs(MuxCommand):
         # +job(s) This part should just display the list of available buckets.
         else:
             self.caller.msg(self.table())
+        """
+        The following attributes are inherited from Bucket:
+
+        self.db.approval_board = '0'
+        self.db.completion_board = '0'
+        self.db.createdby = None
+        self.db.denial_board = '0'
+        self.db.due_timeout = 0
+        self.db.timeout_string = "0"
+        self.db.num_completed_jobs = 0
+        self.db.num_approved_jobs = 0
+        self.db.num_denied_jobs = 0
+        self.db.num_of_jobs = self.associated
+        self.db.total_jobs = self._total_jobs
+        self.db.per_player_actions = {}
+        self.db.percent_complete = self._pct_complete
+        self.db.resolution_time = 0
+        self.db.valid_actions = VALID_BUCKET_ACTIONS
+        self.db.valid_settings = VALID_BUCKET_SETTINGS
+        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
+        self.db.group = "admin"
+        """
 
     # Utility Functions
     def _action_handler(self, switch, *args):
@@ -1020,12 +1043,13 @@ class CmdJobs(MuxCommand):
             msgid = haslib.md5(msghash.encode(utf-8)).hexdigest()
             msg = ev.create_message(self.caller, msgtext, channels=bucket, header=msgheader, recievers=self.job.db.recievers)
 
-            msg.tags.add("Job:"+jid, category="jobs")
-            msg.tags.add("MsgID:"+msgid, category="jobs")
-            msg.tags.add("Bucket:"+bucket, category="jobs")
-            msg.tags.add("ACT:"+action, category="jobs")
-            msg.tags.add("Reply:"+parent, category="jobs")
-            msg.tags.add("U", category="jobs")
+            msg.tags.add("job:"+jid, category="jobs")
+            msg.tags.add("msg", category="jobs")
+            msg.tags.add("msgid:"+msgid, category="jobs")
+            msg.tags.add("bucket:"+bucket, category="jobs")
+            msg.tags.add("act:"+action, category="jobs")
+            msg.tags.add("reply:"+parent, category="jobs")
+            msg.tags.add("u", category="jobs")
             ret = msg
         except KeyError:
             ret = False
@@ -1036,7 +1060,7 @@ class CmdJobs(MuxCommand):
         try:
             self.job = ev.ChannelDB.objects.get_channel(self.title)
         except AttributeError:
-            self.caller.msg(_ERROR_PRE + "Job: %s does not exist." % ju.decorate(self.title))
+            self.caller.msg(ERROR_PRE + "Job: %s does not exist." % ju.decorate(self.title))
 
     def _set_job_number(self, switch):
         """
@@ -1071,6 +1095,23 @@ class CmdJobs(MuxCommand):
 
         return ret
 
+    class default_table(object):
+        def __init__(self):
+            from job import Job
+            self.head = "Bucket", "Due", "Title", "Priority", "Created on", "Assigned to", "Created by", "Tagged Players"
+            self.jobs = Job.objects.all()
+
+            """
+            ######What are the steps to getting a job?
+            
+            * get list of all jobs
+            * 
+            * Caller must have access to a particular job
+            * 
+            """
+            # self.body =
+
+
     def table(self, head=False, body=False, layout=False):
         """
         Builds a table with header from data
@@ -1079,17 +1120,21 @@ class CmdJobs(MuxCommand):
         :return: formatted table
         """
         # Todo: Finish building table
+
+        dt = self.default_table()
         # Create the table
         if head:
             pass
         else:
-            head = "Bucket", "Due", "Title", "Priority", "Created on", "Assigned to", "Created by", "Tagged Players"
+            head = dt.head
 
         if body:
             pass
         else:
             from job import Job
-            body = Job.objects.all()
+            jobs = Job.objects.all()
+            # Todo: munge jobs to test for access
+            body = jobs
 
         # Create the table
         table = evtable.EvTable()
@@ -1107,34 +1152,18 @@ class CmdJobs(MuxCommand):
             pass
         else:
             import jobs_settings as jset
-            h = True
-            b = "table"
-            hlc = jset._HEADER_LINE_CHAR
-            w = 110
-            ctlc = jset._CORNER_TOP_LEFT_CHAR
-            ctrc = jset._CORNER_TOP_RIGHT_CHAR
-            cblc = jset._CORNER_BOTTOM_LEFT_CHAR
-            cbrc = jset._CORNER_BOTTOM_RIGHT_CHAR
-            blc = jset._BORDER_LEFT_CHAR
-            brc = jset._BORDER_RIGHT_CHAR
-            btc = jset._BORDER_TOP_CHAR
-            bbc = jset._BORDER_BOTTOM_CHAR
-            layout = """header=%s, border=%s, header_line_char=%s, width=%s, corner_top_left_char=%s,
-                          corner_top_right_char=%s, corner_bottom_left_char=%s, corner_bottom_right_char=%s,
-                          border_left_char=%s, border_right_char=%s, border_top_char=%s,
-                          border_bottom_char=%s, """ % (h, b, hlc, w, ctlc, ctrc, cblc, cbrc, blc, brc, btc, bbc,)
-            table.header=h
-            table.border=b
-            table.header_line_char=hlc
-            table.width=w
-            table.corner_top_left_char=ctlc
-            table.corner_top_right_char=ctrc
-            table.corner_bottom_left_char=cblc
-            table.corner_bottom_right_char=cbrc
-            table.border_left_char=blc
-            table.border_right_char=brc
-            table.border_top_char=btc
-            table. border_bottom_char=bbc
+            table.header = True
+            table.border = "table"
+            table.header_line_char = jset.HEADER_LINE_CHAR
+            table.width = jset.TABLE_WIDTH
+            table.corner_top_left_char = jset.CORNER_TOP_LEFT_CHAR
+            table.corner_top_right_char = jset.CORNER_TOP_RIGHT_CHAR
+            table.corner_bottom_left_char = jset.CORNER_BOTTOM_LEFT_CHAR
+            table.corner_bottom_right_char = jset.CORNER_BOTTOM_RIGHT_CHAR
+            table.border_left_char = jset.BORDER_LEFT_CHAR
+            table.border_right_char = jset.BORDER_RIGHT_CHAR
+            table.border_top_char = jset.BORDER_TOP_CHAR
+            table. border_bottom_char = jset.BORDER_BOTTOM_CHAR
 
         return table
 
