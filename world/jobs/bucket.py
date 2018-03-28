@@ -2,8 +2,8 @@
 from datetime import datetime
 
 import evennia as ev
+import evennia.utils.Utils
 import jobs_settings as settings
-from evennia.utils import utils as eu
 from evennia.utils import lazy_property
 from typeclasses.channels import Channel
 from jobutils import Utils
@@ -14,6 +14,7 @@ SUCC_PRE = settings.SUCC_PRE
 
 date = datetime
 ju = Utils()
+eu = evennia.utils.Utils
 
 
 class Bucket(Channel):
