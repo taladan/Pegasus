@@ -3,17 +3,14 @@ from datetime import datetime
 
 import evennia as ev
 import jobs_settings as settings
-
 from evennia.utils import utils as eu
 from evennia.utils import lazy_property
 from typeclasses.channels import Channel
-from evennia.typeclasses.models import Msg
 from jobutils import Utils
-from world.jobs.job import Job
 
-_VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
-_VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
-_SUCC_PRE = settings.SUCC_PRE
+VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
+VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
+SUCC_PRE = settings.SUCC_PRE
 
 date = datetime
 ju = Utils()
@@ -32,19 +29,19 @@ class Bucket(Channel):
         def addjob(add):
             from evennia.comms.models import Msg
             if eu.inherits_from(add, Msg):
-                id = add.get_tag("msgid", category=)
+                id = add.get_tag("msgid", category="jobs")
                 self.db.comments[add.db.key] = add.db.message
             else:
                 raise TypeError("Msg object expected, received %s instead." % type(add))
 
         def addbucket(add):
             if eu.inherits_from(add, Bucket):
-                self.db.
-            pass
+                # self.db.
+                pass
 
-        if eu.inherits_from(self, Job):
+        if eu.inherits_from(add, Job):
             addjob(other)
-        elif eu.inherits_from(self, self):
+        elif eu.inherits_from(add, self):
             addbucket(other)
         else:
             raise TypeError("Expected a Bucket or Job typed object, recieved %s typed object instead." % type(self))
@@ -57,36 +54,41 @@ class Bucket(Channel):
         self.db.createdby = None
         self.db.denial_board = '0'
         self.db.due_timeout = 0
-        self.db.timeout_string = "0"
+        self.db.group = "admin"
+        self.db.locked = False
         self.db.num_completed_jobs = 0
         self.db.num_approved_jobs = 0
         self.db.num_denied_jobs = 0
         self.db.num_of_jobs = self.associated
-        self.db.total_jobs = self._total_jobs
+        self.db.resolution_time = 0
         self.db.per_player_actions = {}
         self.db.percent_complete = self._pct_complete
-        self.db.resolution_time = 0
-        self.db.valid_actions = _VALID_BUCKET_ACTIONS
-        self.db.valid_settings = _VALID_BUCKET_SETTINGS
-        self.db.default_notification = _SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
-        self.db.group = "admin"
+        # self.db.timeout_string = "0"
+        self.db.total_jobs = self._total_jobs
+        self.db.valid_actions = VALID_BUCKET_ACTIONS
+        self.db.valid_settings = VALID_BUCKET_SETTINGS
+        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
 
-        # non db-values
-        self.ndb.all = self._all
-
-    def _all(self):
-        if utils.inherits_from(self,Job):
-            ret = self.Job.objects.all()
-        else:
-            ret = self.objects.all()
+    @staticmethod
+    def all():
+        # Todo: fix all so that it returns a list of all objects of the same type as the caller that they have access to
+        # if eu.inherits_from(, Job):
+        #     ret = self.Job.objects.all()
+        # elif eu.inherits_from(, Bucket):
+        #     ret = self.objects.all()
+        # else:
+        #     raise TypeError("Unexpected caller of type: %s" % repr(cls))
+        pass
 
     @lazy_property
     def associated(self):
         """search for and return any jobs associated with this bucket"""
         jobs = []
         # Todo: fix search for jobs
-        for job in ev.search_tag(self.key, category="jobs"):
-            jobs.append(job)
+        from job import Job
+        for job in Job.all():
+            if job.db.bucket == self:
+                jobs.append(job)
         return len(jobs)
 
     def check_access(self, obj):
@@ -158,7 +160,7 @@ class Bucket(Channel):
             self.db.interval = interval
             self.db.timeout_string = str(self.db.due_timeout) + " " + self.db.interval
         else:
-            attr = "self.db." + _VALID_BUCKET_SETTINGS[setting]
+            attr = "self.db." + VALID_BUCKET_SETTINGS[setting]
             exec("%s = '%s'" % (attr, str(value).capitalize()))
 
     @lazy_property

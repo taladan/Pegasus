@@ -7,9 +7,7 @@ import evennia as ev
 from evennia import default_cmds
 from evennia.utils import evtable
 from jobutils import Utils
-import jobs_settings as jobset
 from jobs_settings import VALID_JOB_ACTIONS
-from jobs_settings import TEST_PRE
 from jobs_settings import SUCC_PRE
 from jobs_settings import ERROR_PRE
 from jobs_settings import SORT_DIRECTION
@@ -1098,7 +1096,7 @@ class CmdJobs(MuxCommand):
     class default_table(object):
         def __init__(self):
             from job import Job
-            self.head = "Bucket", "Due", "Title", "Priority", "Created on", "Assigned to", "Created by", "Tagged Players"
+            self.head = "Job", "Type", "Title", "Opened By", "Due on", "Assigned to"
             self.jobs = Job.objects.all()
 
             """

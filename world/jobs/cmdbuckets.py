@@ -59,25 +59,25 @@ from bucket import Bucket
 MuxCommand = default_cmds.MuxCommand
 ju = Utils()
 date = datetime
-_CORNER_TOP_LEFT_CHAR = settings.CORNER_TOP_LEFT_CHAR
-_CORNER_TOP_RIGHT_CHAR = settings.CORNER_TOP_RIGHT_CHAR
-_CORNER_BOTTOM_LEFT_CHAR = settings.CORNER_BOTTOM_LEFT_CHAR
-_CORNER_BOTTOM_RIGHT_CHAR = settings.CORNER_BOTTOM_RIGHT_CHAR
-_BORDER_LEFT_CHAR = settings.BORDER_LEFT_CHAR
-_BORDER_RIGHT_CHAR = settings.BORDER_RIGHT_CHAR
-_BORDER_TOP_CHAR = settings.BORDER_TOP_CHAR
-_BORDER_BOTTOM_CHAR = settings.BORDER_BOTTOM_CHAR
-_HEADER_BOTTOM_LEFT_CHAR = settings.HEADER_BOTTOM_LEFT_CHAR
-_HEADER_BOTTOM_RIGHT_CHAR = settings.HEADER_BOTTOM_RIGHT_CHAR
-_HEADER_LINE_CHAR = settings.HEADER_LINE_CHAR
-_ERROR_PRE = settings.ERROR_PRE
-_SUCC_PRE = settings.SUCC_PRE
-_TEST_PRE = settings.TEST_PRE
-_VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
-_VALID_JOB_ACTIONS = settings.VALID_JOB_ACTIONS
-_VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
-_VALID_JOB_SETTINGS = settings.VALID_JOB_SETTINGS
-_VALID_TIMEOUT_INTERVALS = settings.VALID_TIMEOUT_INTERVALS
+CORNER_TOP_LEFT_CHAR = settings.CORNER_TOP_LEFT_CHAR
+CORNER_TOP_RIGHT_CHAR = settings.CORNER_TOP_RIGHT_CHAR
+CORNER_BOTTOM_LEFT_CHAR = settings.CORNER_BOTTOM_LEFT_CHAR
+CORNER_BOTTOM_RIGHT_CHAR = settings.CORNER_BOTTOM_RIGHT_CHAR
+BORDER_LEFT_CHAR = settings.BORDER_LEFT_CHAR
+BORDER_RIGHT_CHAR = settings.BORDER_RIGHT_CHAR
+BORDER_TOP_CHAR = settings.BORDER_TOP_CHAR
+BORDER_BOTTOM_CHAR = settings.BORDER_BOTTOM_CHAR
+HEADER_BOTTOM_LEFT_CHAR = settings.HEADER_BOTTOM_LEFT_CHAR
+HEADER_BOTTOM_RIGHT_CHAR = settings.HEADER_BOTTOM_RIGHT_CHAR
+HEADER_LINE_CHAR = settings.HEADER_LINE_CHAR
+ERROR_PRE = settings.ERROR_PRE
+SUCC_PRE = settings.SUCC_PRE
+TEST_PRE = settings.TEST_PRE
+VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
+VALID_JOB_ACTIONS = settings.VALID_JOB_ACTIONS
+VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
+VALID_JOB_SETTINGS = settings.VALID_JOB_SETTINGS
+VALID_TIMEOUT_INTERVALS = settings.VALID_TIMEOUT_INTERVALS
 
 
 class CmdBuckets(MuxCommand):
@@ -162,21 +162,21 @@ class CmdBuckets(MuxCommand):
         # Todo: fix adding multiple identical access types to bucket
         action = self.lhs_text.lower()
         if not ju.ischaracter(self.character):
-            self.caller.msg(_ERROR_PRE + "%s is not a valid character." % ju.decorate(self.character))
+            self.caller.msg(ERROR_PRE + "%s is not a valid character." % ju.decorate(self.character))
         if self.bucket.has_access(action, self.character):
             self.bucket.remove_access(action, self.character)
-            caller.msg(_SUCC_PRE + "Removing access to %s bucket action %s from %s"
+            caller.msg(SUCC_PRE + "Removing access to %s bucket action %s from %s"
                        % ju.decorate(self.bucket_name, action, self.character))
         elif action in self.valid_actions:
             self.bucket.grant_access(action, self.character)
-            caller.msg(_SUCC_PRE + "Granting access to %s bucket action %s to %s."
+            caller.msg(SUCC_PRE + "Granting access to %s bucket action %s to %s."
                        % (ju.decorate(self.bucket_name, action), self.character))
         elif action == 'all':
-            caller.msg(_SUCC_PRE + "Granting %s access to all bucket actions for %s %s"
+            caller.msg(SUCC_PRE + "Granting %s access to all bucket actions for %s %s"
                        % ju.decorate(self.character, self.bucket_name, self.valid_actions))
             self.bucket.grant_access(self.valid_actions, self.character)
         else:
-            self.caller.msg(_ERROR_PRE + "%s is not a valid action for Bucket: %s" % ju.decorate(action, self.bucket_name))
+            self.caller.msg(ERROR_PRE + "%s is not a valid action for Bucket: %s" % ju.decorate(action, self.bucket_name))
 
     def _argparse(self):
         """Check args and parse a little more tightly"""
@@ -210,23 +210,23 @@ class CmdBuckets(MuxCommand):
         try:
             self.bucket = ev.ChannelDB.objects.get_channel(bucket)
         except AttributeError:
-            self.caller.msg(_ERROR_PRE + "Bucket: %s does not exist." % ju.decorate(bucket))
+            self.caller.msg(ERROR_PRE + "Bucket: %s does not exist." % ju.decorate(bucket))
 
     def _bucket_table(self, buckets):
         """creates and returns the populated table of bucket info"""
         ret = evtable.EvTable("Bucket", "Description", "# Jobs", "Pct", "C", "A", "D", "Due", "ARTS",
                               header=True,
                               border="table",
-                              header_line_char=_HEADER_LINE_CHAR,
+                              header_line_char=HEADER_LINE_CHAR,
                               width=110,
-                              corner_top_left_char=_CORNER_TOP_LEFT_CHAR,
-                              corner_top_right_char=_CORNER_TOP_RIGHT_CHAR,
-                              corner_bottom_left_char=_CORNER_BOTTOM_LEFT_CHAR,
-                              corner_bottom_right_char=_CORNER_BOTTOM_RIGHT_CHAR,
-                              border_left_char=_BORDER_LEFT_CHAR,
-                              border_right_char=_BORDER_RIGHT_CHAR,
-                              border_top_char=_BORDER_TOP_CHAR,
-                              border_bottom_char=_BORDER_BOTTOM_CHAR)
+                              corner_top_left_char=CORNER_TOP_LEFT_CHAR,
+                              corner_top_right_char=CORNER_TOP_RIGHT_CHAR,
+                              corner_bottom_left_char=CORNER_BOTTOM_LEFT_CHAR,
+                              corner_bottom_right_char=CORNER_BOTTOM_RIGHT_CHAR,
+                              border_left_char=BORDER_LEFT_CHAR,
+                              border_right_char=BORDER_RIGHT_CHAR,
+                              border_top_char=BORDER_TOP_CHAR,
+                              border_bottom_char=BORDER_BOTTOM_CHAR)
 
         # layout the column widths
         ret.reformat_column(0, width=12, align="l")  # Bucket
@@ -240,8 +240,8 @@ class CmdBuckets(MuxCommand):
         ret.reformat_column(8, width=10, align="r")   # Average Resolution Times
 
         # fix header corners
-        ret.table[0][0].reformat(corner_bottom_left_char=_HEADER_BOTTOM_LEFT_CHAR)
-        ret.table[8][0].reformat(corner_bottom_right_char=_HEADER_BOTTOM_RIGHT_CHAR)
+        ret.table[0][0].reformat(corner_bottom_left_char=HEADER_BOTTOM_LEFT_CHAR)
+        ret.table[8][0].reformat(corner_bottom_right_char=HEADER_BOTTOM_RIGHT_CHAR)
 
         # populate the table.
         if isinstance(buckets, list):
@@ -276,9 +276,9 @@ class CmdBuckets(MuxCommand):
             if actions:
                 ret = self._check_table(buckets)
             else:
-                ret = _SUCC_PRE + "%s can not perform any actions on any bucket." % self.character
+                ret = SUCC_PRE + "%s can not perform any actions on any bucket." % self.character
         else:
-            ret = _ERROR_PRE + "You do not have administrator access to the bucket system."
+            ret = ERROR_PRE + "You do not have administrator access to the bucket system."
 
         self.caller.msg(ret)
 
@@ -297,20 +297,20 @@ class CmdBuckets(MuxCommand):
                               border="table",
                               header_line_char="-",
                               width=95,
-                              corner_top_left_char=_CORNER_TOP_LEFT_CHAR,
-                              corner_top_right_char=_CORNER_TOP_RIGHT_CHAR,
-                              corner_bottom_left_char=_CORNER_BOTTOM_LEFT_CHAR,
-                              corner_bottom_right_char=_CORNER_BOTTOM_RIGHT_CHAR,
-                              border_left_char=_BORDER_LEFT_CHAR,
-                              border_right_char=_BORDER_RIGHT_CHAR,
-                              border_top_char=_BORDER_TOP_CHAR,
-                              border_bottom_char=_BORDER_BOTTOM_CHAR,)
+                              corner_top_left_char=CORNER_TOP_LEFT_CHAR,
+                              corner_top_right_char=CORNER_TOP_RIGHT_CHAR,
+                              corner_bottom_left_char=CORNER_BOTTOM_LEFT_CHAR,
+                              corner_bottom_right_char=CORNER_BOTTOM_RIGHT_CHAR,
+                              border_left_char=BORDER_LEFT_CHAR,
+                              border_right_char=BORDER_RIGHT_CHAR,
+                              border_top_char=BORDER_TOP_CHAR,
+                              border_bottom_char=BORDER_BOTTOM_CHAR, )
         # layout the column widths
         ret.reformat_column(0, width=40, align="l")   # Buckets target can access
         ret.reformat_column(1, width=55, align="c")   # Actions available to target
         # fix header corners
-        ret.table[0][0].reformat(corner_bottom_left_char=_HEADER_BOTTOM_LEFT_CHAR)
-        ret.table[1][0].reformat(corner_bottom_right_char=_HEADER_BOTTOM_RIGHT_CHAR)
+        ret.table[0][0].reformat(corner_bottom_left_char=HEADER_BOTTOM_LEFT_CHAR)
+        ret.table[1][0].reformat(corner_bottom_right_char=HEADER_BOTTOM_RIGHT_CHAR)
         # populate the table.
         if isinstance(bucket, list):
             for buck in bucket:
@@ -331,26 +331,26 @@ class CmdBuckets(MuxCommand):
     def _create(self):
         """creates buckets unless they already exist"""
         if self.bucket:
-            self.caller.msg(_ERROR_PRE + "Bucket: %s already exists." % ju.decorate(self.bucket_name))
+            self.caller.msg(ERROR_PRE + "Bucket: %s already exists." % ju.decorate(self.bucket_name))
             return
         else:
             ev.create_channel(self.bucket_name, desc=self.rhs, typeclass="world.jobs.bucket.Bucket")
             self._assign_bucket(self.bucket_name)
             self.bucket.db.createdby = self.caller
-            self.caller.msg(_SUCC_PRE + "Bucket: %s has been created." % ju.decorate(self.bucket_name))
+            self.caller.msg(SUCC_PRE + "Bucket: %s has been created." % ju.decorate(self.bucket_name))
 
     def _delete(self):
         """Deletes bucket.  Bucket may not have any jobs inside of bucket"""
         if self.bucket is not None:
             if not self.bucket.has_jobs():
                 # Todo: check bucket for jobs first
-                self.caller.msg(_SUCC_PRE + "Bucket: %s deleted." % ju.decorate(self.bucket_name))
+                self.caller.msg(SUCC_PRE + "Bucket: %s deleted." % ju.decorate(self.bucket_name))
                 ev.search_channel(self.bucket_name).first().delete()
             else:
-                self.caller.msg(_ERROR_PRE + "Cannot delete Bucket: %s, jobs are associated with that bucket"
-                           % ju.decorate(self.bucket_name))
+                self.caller.msg(ERROR_PRE + "Cannot delete Bucket: %s, jobs are associated with that bucket"
+                                % ju.decorate(self.bucket_name))
         else:
-            self.caller.msg(_ERROR_PRE + "Bucket: %s does not exist." % ju.decorate(self.bucket_name))
+            self.caller.msg(ERROR_PRE + "Bucket: %s does not exist." % ju.decorate(self.bucket_name))
             return
 
     def _info(self, bucket):
@@ -359,7 +359,7 @@ class CmdBuckets(MuxCommand):
             bucket = ju.assign_channel(bucket)
             self._bucket_table(bucket)
         else:
-            self.msg(_ERROR_PRE + "That is not a valid bucket.")
+            self.msg(ERROR_PRE + "That is not a valid bucket.")
 
     def _monitor(self, obj):
         """toggles monitoring of a particular bucket"""
@@ -374,15 +374,15 @@ class CmdBuckets(MuxCommand):
         else:
             status = 'On'
             self.bucket.connect(obj)
-        self.caller.msg(_SUCC_PRE + "Toggling monitor for bucket: %s %s" % ju.decorate(self.bucket_name, status))
+        self.caller.msg(SUCC_PRE + "Toggling monitor for bucket: %s %s" % ju.decorate(self.bucket_name, status))
 
     def _rename(self, newname):
         """renames a particular bucket"""
         if ju.isbucket(newname):
-            self.caller.msg(_ERROR_PRE + "Bucket: %s already exists." % ju.decorate(newname))
+            self.caller.msg(ERROR_PRE + "Bucket: %s already exists." % ju.decorate(newname))
         else:
             self.bucket.key = newname
-            self.caller.msg(_SUCC_PRE + "Bucket: %s renamed to %s." % ju.decorate(self.bucket, newname))
+            self.caller.msg(SUCC_PRE + "Bucket: %s renamed to %s." % ju.decorate(self.bucket, newname))
 
     def _parse(self, side):
         """parses side for /"""
@@ -428,41 +428,41 @@ class CmdBuckets(MuxCommand):
 
     def _set(self, setting, value):
         """sets options on the bucket"""
-        if setting in _VALID_BUCKET_SETTINGS.keys():
+        if setting in VALID_BUCKET_SETTINGS.keys():
             self._setting_validate(setting, value)
         else:
-            self.caller.msg(_ERROR_PRE + "%s is not a valid setting for bucket %s" % ju.decorate(setting, self.bucket_name))
+            self.caller.msg(ERROR_PRE + "%s is not a valid setting for bucket %s" % ju.decorate(setting, self.bucket_name))
 
     def _set_timeout(self, setting, value):
         """timeout is a special thing.  Handle it seperately"""
         parts = value.split(" ")
         time = parts[0]
         ival = parts[1]
-        if ival.lower() in _VALID_TIMEOUT_INTERVALS:
+        if ival.lower() in VALID_TIMEOUT_INTERVALS:
             if time.isdigit():
                self.bucket.set(setting, int(time), interval=ival)
-               self.caller.msg(_SUCC_PRE + "Timeout for bucket %s set to: %s."
+               self.caller.msg(SUCC_PRE + "Timeout for bucket %s set to: %s."
                                % ju.decorate(self.bucket_name, self.bucket.db.timeout_string))
             else:
-               self.caller.msg(_ERROR_PRE + "The timeout must be an integer")
+               self.caller.msg(ERROR_PRE + "The timeout must be an integer")
         else:
-            self.caller.msg(_ERROR_PRE + "The interval must be 'hours', 'days', 'months', or 'years'.")
+            self.caller.msg(ERROR_PRE + "The interval must be 'hours', 'days', 'months', or 'years'.")
 
     def _setting_validate(self, setting, value):
         """ensures that only allowed settings get run"""
         if setting == "desc":
             if len(value)>45:
                 self.bucket.set(setting, value)
-                self.caller.msg(_SUCC_PRE + "Bucket: %s description set to: %s" % ju.decorate(self.bucket_name, value))
+                self.caller.msg(SUCC_PRE + "Bucket: %s description set to: %s" % ju.decorate(self.bucket_name, value))
             else:
-                self.caller.msg(_ERROR_PRE + "Bucket descriptions must be less than 45 characters.")
+                self.caller.msg(ERROR_PRE + "Bucket descriptions must be less than 45 characters.")
         elif setting == "timeout":
             self._set_timeout(setting, value)
         elif value.isdigit():
             self.bucket.set(setting, int(value))
-            self.caller.msg(_SUCC_PRE + "Bucket %s: %s set to %s" % ju.decorate(self.bucket_name, setting, value))
+            self.caller.msg(SUCC_PRE + "Bucket %s: %s set to %s" % ju.decorate(self.bucket_name, setting, value))
         else:
-            self.caller.msg(_ERROR_PRE + "%s setting must be an integer." % ju.decorate(setting))
+            self.caller.msg(ERROR_PRE + "%s setting must be an integer." % ju.decorate(setting))
 
     def switchparse(self):
         """switch workhorse, hard coding switches is probably bad, but it works right now
@@ -474,62 +474,62 @@ class CmdBuckets(MuxCommand):
                 if self.lhs_target and self.rhs:
                     self._create()
                 else:
-                    self.caller.msg(_ERROR_PRE +
+                    self.caller.msg(ERROR_PRE +
                                     "The syntax for the create command is +bucket/create <Bucket> = <Description>")
             # check
             elif self.switch == "check":
                 if self.lhs:
                     self._check(self.character)
                 else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the check command is +bucket/check <Character>")
+                    self.caller.msg(ERROR_PRE + "The syntax for the check command is +bucket/check <Character>")
             # access
             elif self.switch == "access":
                 if self.lhs and self.rhs:
                     self._access(self.caller)
                 else:
-                    self.caller.msg(_ERROR_PRE +
+                    self.caller.msg(ERROR_PRE +
                                     "The syntax for the access command is +bucket/access <Bucket>/<action>=<Character>")
             # delete
             elif self.switch == "delete":
                 if self.lhs:
                     self._delete()
                 else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the delete command is +bucket/delete <Bucket>")
+                    self.caller.msg(ERROR_PRE + "The syntax for the delete command is +bucket/delete <Bucket>")
             # info
             elif self.switch == "info":
                 if self.bucket_name:
                     self._info(self.bucket_name)
                 else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the info command is +bucket/info <Bucket>")
+                    self.caller.msg(ERROR_PRE + "The syntax for the info command is +bucket/info <Bucket>")
             # monitor
             elif self.switch == "monitor":
                 if self.bucket_name:
                     self._monitor(self.caller)
                 else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the monitor command is +bucket/monitor <Bucket>")
+                    self.caller.msg(ERROR_PRE + "The syntax for the monitor command is +bucket/monitor <Bucket>")
             # rename
             elif self.switch == "rename":
                 if self.rhs:
                     self._rename(self.rhs)
                 else:
-                    self.caller.msg(_ERROR_PRE + "The syntax for the rename command is +bucket/rename <Bucket>=<value")
+                    self.caller.msg(ERROR_PRE + "The syntax for the rename command is +bucket/rename <Bucket>=<value")
             # set
             elif self.switch == "set":
                 if self.lhs and self.rhs:
                     self._set(self.lhs_text.lower(), self.rhs_text.lower())
                 else:
-                    self.caller.msg(_ERROR_PRE +
+                    self.caller.msg(ERROR_PRE +
                                     "The syntax for the set command is +bucket/set <Bucket>/<setting>=<value")
             else:
-                self.caller.msg(_ERROR_PRE + "That is not a valid bucket action. See +help buckets.")
+                self.caller.msg(ERROR_PRE + "That is not a valid bucket action. See +help buckets.")
         elif self.switch and not self._can_access(self.switch, self.caller):
-            self.caller.msg(_ERROR_PRE + "You may not access that action for Bucket: %s." % ju.decorate(self.bucket))
+            self.caller.msg(ERROR_PRE + "You may not access that action for Bucket: %s." % ju.decorate(self.bucket))
         else:
             self._bucket_table(self.buckets)
 
     def func(self):
         """this does the work of the +buckets command"""
-        self.valid_actions = _VALID_BUCKET_ACTIONS
+        self.valid_actions = VALID_BUCKET_ACTIONS
 
         self.buckets = []
         for bucket in Bucket.objects.all():
@@ -542,7 +542,7 @@ class CmdBuckets(MuxCommand):
                 if self._character_validate():
                     self.switchparse()
                 else:
-                    self.caller.msg(_ERROR_PRE + "%s is not a valid character." % ju.decorate(self.character))
+                    self.caller.msg(ERROR_PRE + "%s is not a valid character." % ju.decorate(self.character))
                     return
         else:
             self.switchparse()
