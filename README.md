@@ -492,8 +492,3 @@ Rumors network  - NPC's spread public rumors, guild/faction npcs and players in 
 
 Lore system     - maybe similar to rumors but for more esoteric world lore.  Could have different levels
                   of lore that need to be unlocked before the higher levels can be accessed.  Tiered.
-
-Test1|Test2
------|-----
-Test3|Test4
-Test5|Test6
