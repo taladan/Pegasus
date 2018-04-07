@@ -1,20 +1,18 @@
 
 from datetime import datetime
-
 import evennia as ev
-import evennia.utils.Utils
 import jobs_settings as settings
 from evennia.utils import lazy_property
+import evennia.utils as eu
 from typeclasses.channels import Channel
-from jobutils import Utils
+import jobutils as ju
 
 VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
 VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
 SUCC_PRE = settings.SUCC_PRE
 
 date = datetime
-ju = Utils()
-eu = evennia.utils.Utils
+# eu = evennia.utils.Utils
 
 
 class Bucket(Channel):
@@ -68,7 +66,7 @@ class Bucket(Channel):
         self.db.total_jobs = self._total_jobs
         self.db.valid_actions = VALID_BUCKET_ACTIONS
         self.db.valid_settings = VALID_BUCKET_SETTINGS
-        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
+        self.db.default_notification = SUCC_PRE + "A new job has been posted to {0}".format(ju.decorate(self.db.key))
 
     @staticmethod
     def all():
@@ -87,10 +85,18 @@ class Bucket(Channel):
         jobs = []
         # Todo: fix search for jobs
         from job import Job
-        for job in Job.all():
-            if job.db.bucket == self:
-                jobs.append(job)
+        try:
+            for job in Job.all():
+                if job.db.bucket == self:
+                    jobs.append(job)
+        except Exception as e:
+            template = "Caught exception of type: {0}, Arguments: {1}".format(type(e), e.args)
         return len(jobs)
+
+    def create(self):
+        """create bucket"""
+        # Todo: add creation code to `class Bucket`
+        pass
 
     def check_access(self, obj):
         """return whether the caller is in the actions dict"""

@@ -48,16 +48,16 @@ Command steps:
 
 Author: taladan@gmail.com
 """
+
 from datetime import datetime
 import evennia as ev
-from jobutils import Utils
 from evennia import default_cmds
 from evennia.utils import evtable
+import jobutils as ju
 import jobs_settings as settings
-from bucket import Bucket
+from world.jobs.bucket import Bucket
 
 MuxCommand = default_cmds.MuxCommand
-ju = Utils()
 date = datetime
 CORNER_TOP_LEFT_CHAR = settings.CORNER_TOP_LEFT_CHAR
 CORNER_TOP_RIGHT_CHAR = settings.CORNER_TOP_RIGHT_CHAR
@@ -334,8 +334,8 @@ class CmdBuckets(MuxCommand):
             self.caller.msg(ERROR_PRE + "Bucket: %s already exists." % ju.decorate(self.bucket_name))
             return
         else:
-            ev.create_channel(self.bucket_name, desc=self.rhs, typeclass="world.jobs.bucket.Bucket")
-            self._assign_bucket(self.bucket_name)
+            self.bucket = ev.create_channel(self.bucket_name, desc=self.rhs, typeclass=Bucket)
+            # self._assign_bucket(self.bucket_name)
             self.bucket.db.createdby = self.caller
             self.caller.msg(SUCC_PRE + "Bucket: %s has been created." % ju.decorate(self.bucket_name))
 

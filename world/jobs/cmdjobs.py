@@ -6,15 +6,16 @@ from datetime import datetime as date
 import evennia as ev
 from evennia import default_cmds
 from evennia.utils import evtable
-from jobutils import Utils
+import jobutils as ju
 from jobs_settings import VALID_JOB_ACTIONS
 from jobs_settings import SUCC_PRE
 from jobs_settings import ERROR_PRE
 from jobs_settings import SORT_DIRECTION
 from jobs_settings import SORT_METHOD
 from jobs_settings import VALID_SORT_METHODS
+from world.jobs.job import Job
+from world.jobs.bucket import Bucket
 
-ju = Utils()
 MuxCommand = default_cmds.MuxCommand
 """
 argless_actions = ("all", "catchup", "clean", "compress", "credits", "mine", "new", "overdue", "sort")
@@ -175,7 +176,6 @@ class CmdJobs(MuxCommand):
     help_category = "Jobs"
 
 
-# decorator
     class actupdate(object):
         """decorator class to update actions on a job automatically
 
@@ -197,7 +197,7 @@ class CmdJobs(MuxCommand):
             # Always start from 0
             actid = len(actlist) + 1 if len(actlist) < 0 else len(actlist)
             time = '%s' % date.today().strftime("%B %d, %Y at %H:%M")
-            output = function()
+            output = self.f()
             act = output.get("act")
             actlist = output.get("actlist")
             caller = output.get("caller")
@@ -207,39 +207,20 @@ class CmdJobs(MuxCommand):
 
     # switches go here
     def _act(self):
-      """
-      Displays a summary of actions that have been peformed on a job.
-        +job/act <#>
-      :param self:
-      :return: job action summary or error
-      """
+      """return display information about actions performed on this job"""
       ret = {}
       ret[msg] = {"act": act, "caller": self.caller, "stat": exit_status, "msg": msg}
       return ret
 
     def _all(self):
-        """
-        +job/all
-        +job/all <#>
-        Displays all comments in a job
-        :param self:
-        :param jobid:
-        :return:
-        """
+        """return all comments on job"""
         ret = {}
         ret[msg] = {"caller": self.caller, "stat": exit_status, "msg": msg}
         return ret
 
     @actupdate
     def _approve(self):
-        """
-        job/approve <#>=<comment>
-        Approves a job with a comment.
-        :param self:
-        :param jobid:
-        :param comment:
-        :return:
-        """
+        """approve hook, return message"""
         ret = {}
         job = self.job
         msg = self.rhs
@@ -370,34 +351,24 @@ class CmdJobs(MuxCommand):
         :param text:
         :return:
         """
-
-        # Set up our arguments
+        # arguments from +job/create Bucket/Title=Text
         args = [self.lhs_obj, self.lhs_act, self.rhs]
         bucket, title, msgtext = args
 
+        # If it's a bucket and args are all true, create a job else error
         if ju.isbucket(bucket):
-
             if args:
-
-                # Job Creation
-                jhash = '%s %s %s %s' % (bucket, title, date.today().strftime(), str(random.randrange(1,1000000)))
-                jid = hashlib.md5(jhash.encode(utf-8)).hexdigest()
-                self.job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
-                self.job.tags.add(bucket, category="jobs")
-                self.job.tags.add(job, category="jobs")
-                self._add_msg(jid=jid, bucket=bucket, title=title, msgtext=msgtext, action="create", parent=jid)
-                ret = SUCC_PRE + "Job: %s created." % ju.decorate(title)
-
-            # No args
+                res = Job.create(bucket, title, msgtext)
+                act = res.pop("act")
+                exit_status = res.pop("exit_status")
+                sysmsg = res.pop("sysmsg")
+                job = res.pop("job")
             else:
                 sysmsg = ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
-        # No bucket
         else:
             sysmsg = ERROR_PRE + "%s is an invalid bucket." % ju.decorate(bucket)
 
-        ret = {}
-        act = "cre"
-        ret[msg] = {"act": act, "actlist": self.job.db.actions_list, "caller": self.caller, "stat": exit_status, "msg": msg}
+        ret = {"act": act, "caller": self.caller, "stat": exit_status, "msg": sysmsg}
         return ret
 
     def _credits(self):
@@ -980,11 +951,7 @@ class CmdJobs(MuxCommand):
 
     # Utility Functions
     def _action_handler(self, switch, *args):
-        """
-        The action handler munges up the switch and then runs it.
-        The switches are function calls.  It should also parse
-        through the args and assign them correctly.
-        """
+        """process switch and execute"""
 
         # set the method we're going to call against
         method_name = '_' + str(switch)
@@ -1007,11 +974,7 @@ class CmdJobs(MuxCommand):
         self.caller.msg(ret)
 
     def all_jobs(self):
-        """
-       Returns a queryset of jobs the character has access to.
-
-        :return: queryset of jobs
-        """
+        """:return: Job queryset """
         try:
             character = self.caller.character
         except AttributeError:
@@ -1020,14 +983,7 @@ class CmdJobs(MuxCommand):
         return jobs
 
     def _add_msg(self, *kwargs):
-        """
-        Adds a message to a particular job
-
-            _add_msg(jid="", bucket="", title="", msgtext="", action="", parent="")
-
-        :param kwargs: Required kwargs: jid, bucket, title, msgtext, action, parent
-        :return: the message object or false
-        """
+        """add message to job"""
         try:
             jid = kwargs.pop("jid")
             bucket = kwargs.pop("bucket")
@@ -1054,19 +1010,16 @@ class CmdJobs(MuxCommand):
         return ret
 
     def _assign_job(self):
-        """sets self.job if it exists in the db"""
+        """set self.job if it exists in the db
+        :raise:AttributeError
+        """
         try:
             self.job = ev.ChannelDB.objects.get_channel(self.title)
         except AttributeError:
             self.caller.msg(ERROR_PRE + "Job: %s does not exist." % ju.decorate(self.title))
 
     def _set_job_number(self, switch):
-        """
-       Parses the switch for jobs needing to be called by id and assigns the appropriate value
-
-        :param switch:
-        :return: job number or false
-        """
+        """parse switch for jobs needing to be called by id and assign the appropriate value"""
         lhs_id_required = ("act", "all", "checkin", "checkout", "claim", "clone", "delete", "list_untag",
                            "lock_job", "log", "summary", "tag", "unlock", "untag")
         rhs_id_required = ("add", "approve", "assign", "complete", "deny", "due",  "esc", "last", "list_untag",
@@ -1083,7 +1036,7 @@ class CmdJobs(MuxCommand):
         return ret
 
     def set_job(self, number):
-        """gets and returns the correct job"""
+        """get and return the correct job"""
         jobs_max = max(0, self.jobs_list.count() - 1)
         try:
             i = max(0, min(jobs_max, int(number) - 1))
@@ -1093,7 +1046,7 @@ class CmdJobs(MuxCommand):
 
         return ret
 
-    class default_table(object):
+    class DefaultTable(object):
         def __init__(self):
             from job import Job
             self.head = "Job", "Type", "Title", "Opened By", "Due on", "Assigned to"
@@ -1109,10 +1062,9 @@ class CmdJobs(MuxCommand):
             """
             # self.body =
 
-
     def table(self, head=False, body=False, layout=False):
         """
-        Builds a table with header from data
+        Build table
         :param header: tuple(string1, string2, ... )
         :param data: iterable
         :return: formatted table

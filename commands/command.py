@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
     """
     pass
-
+"""test cruft below"""
 # -------------------------------------------------------------
 #
 # The default commands inherit from
@@ -186,256 +186,273 @@ class Command(BaseCommand):
 #             else:
 #                 self.character = None
 
+# class CmdSmile(BaseCommand):
+#     """
+#     A smile command
+#
+#     Usage:
+#       smile [at] [<someone>]
+#       grin [at] [<someone>]
+#
+#     Smiles to someone in your vicinity or to the room
+#     in general.
+#
+#     (This initial string (The __doc__ string)
+#     is also used to auto-generate the help
+#     for this command)
+#     """
+#
+#     key = "smile"
+#     aliases = ["smile at", "grin", "grin at",]
+#     locks = "cmd:all()"
+#     help_category = "General"
+#
+#     def parse(self):
+#         "very trivial parser"
+#         self.target = self.args.strip()
+#
+#     def func(self):
+#         "This actually does things"
+#         caller = self.caller
+#         if not self.target or self.target == "here":
+#             string = "%s smiles." % caller.name
+#             caller.location.msg_contents(string, exclude=caller)
+#             caller.msg("You smile.")
+#         else:
+#             target = caller.search(self.target)
+#             if not target:
+#                 # caller.search handles error messages
+#                 return
+#             string = "%s smiles at you." % caller.name
+#             target.msg(string)
+#             string = "You smile at %s" % target.name
+#             caller.msg(string)
+#             string = "%s smiles at %s." % (caller.name, target.name)
+#             caller.location.msg_contents(string, exclude=[caller, target])
+#
+#
+# class CmdWait(BaseCommand):
+#     """
+#     A dummy command to show how to wait
+#
+#     Usage:
+#       wait
+#
+#     """
+#
+#     key = "wait"
+#     locks = "cmd:all()"
+#     help_category = "General"
+#
+#     def func(self):
+#         """Command execution."""
+#         self.msg("Starting to wait ...")
+#         yield 5
+#         self.msg("... This shows after 5 seconds.  Waiting ...")
+#         yield 2
+#         self.msg("... And now another 2 seconds have passed.")
+#
+# class CmdConfirm(BaseCommand):
+#     """
+#     A dummy command to show confirmation.
+#
+#     Usage:
+#       confirm
+#
+#     """
+#
+#     key = "confirm"
+#
+#     def func(self):
+#         answer = yield("Are you sure you want to go on?")
+#         if answer.strip().lower() in ("yes", "y"):
+#             self.msg("Yes!")
+#         else:
+#             self.msg("No!")
+#
+# class CmdSetPower(Command):
+#     """
+#     set the power of a character
+#
+#     Usage:
+#     +setpower <1-10>
+#
+#     This sets the pwoer of the current character.  This can only be
+#     used during character generation.
+#     """
+#
+#     key = "+setpower"
+#     help_category = "mush"
+#
+#     def func(self):
+#         "This performs the actual command"
+#         errmsg = "You must supply a number between 1 and 10."
+#         if not self.args:
+#             self.caller.msg(errmsg)
+#             return
+#         try:
+#             power = int(self.args)
+#         except ValueError:
+#             self.caller.msg(errmsg)
+#             return
+#         if not (1 <= power <= 10):
+#             self.caller.msg(errmsg)
+#             return
+#         # At this point the argument is tested as valid.  Let's set it.
+#         self.caller.db.power = power
+#         self.caller.msg("Your Power was set to %i." % power)
+#
+#
+# class CmdAttack(Command):
+#     """
+#     Issues an attack
+#
+#     Usage:
+#       +attack
+#
+#     This will calculate a new combat score based on your Power.
+#     Your combat score is visible to everyone in the same location.
+#     """
+#     key = "+attack"
+#     help_category = "mush"
+#
+#     def func(self):
+#         "Calculate the random score between 1-10*Power"
+#         caller = self.caller
+#         power = caller.db.power
+#         if not power:
+#             # This can happen if caller is not of
+#             # our custom Character typeclass
+#             power = 1
+#         combat_score = random.randint(1, 10 * power)
+#         caller.db.combat_score = combat_score
+#
+#         # annouce
+#         message = "%s +attacks %s with a combat score of %s!"
+#         caller.msg(message % ("You", "", combat_score))
+#         caller.location.msg_contents(message %
+#                                      (caller.key, "s", combat_score),
+#                                      exclude=caller)
+#
+# class CmdCreateNPC(Command):
+#     """
+#     create a new npc
+#
+#     Usage:
+#       +createNPC <name>
+#
+#     Creates a new, named NPC.  The NPC will start with a Power of 1.
+#     """
+#     key = "+createnpc"
+#     aliases = ["+createNPC"]
+#     locks = "call:not perm(nonpcs)"
+#     help_category = "mush"
+#
+#     def func(self):
+#         "Creates the object and names it"
+#         caller = self.caller
+#         if not self.args:
+#             caller.msg("Usage: +createNPC <name>")
+#             return
+#         if not caller.location:
+#             # may not create npc when OOC
+#             caller.msg("You must have a location to create an npc.")
+#             return
+#         # Make name always start with capital letter
+#         name = self.args.strip().capitalize()
+#         # Create npc in caller's location
+#         npc = create_object("characters.Character",
+#                             key=name,
+#                             location=caller.location,
+#                             locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
+#         # announce the creation
+#         message = "%s created the NPC '%s'."
+#         caller.msg(message % ("You", name))
+#         caller.location.msg_contents(message % (caller.key, name), exclude=caller)
+#
+# class CmdEditNPC(Command):
+#     """
+#     Edit an existing NPC
+#
+#     Usage:
+#       +editnpc <name>[/<attribute> [= value]]
+#
+#     Examples:
+#       +editnpc mynpc/power = 5  - Sets your npc's power to 5
+#       +editnpc mynpc/power      - Displays power value
+#       +editnpc mynpc            - Shows all editable
+#                                   attributes and values
+#
+#     This command edits an existing NPC.  You must have
+#     permission to edit the NPC to use this.
+#     """
+#     key = "+editnpc"
+#     aliases = ["+editNPC"]
+#     locks = "cmd:not perm(nonpcs)"
+#     help_category = "mush"
+#
+#     def parse(self):
+#         "We need to do some parsing here"
+#         args = self.args
+#         propname, propval = None, None
+#         if "=" in args:
+#             args, propval = [part.strip() for part in args.rsplit("=", 1)]
+#         if "/" in args:
+#             args, propname = [part.strip() for part in args.rsplit("/", 1)]
+#         # store, so we can access it below in func()
+#         self.name = args
+#         self.propname = propname
+#         # a propval without a propname is meaningless
+#         self.propval = propval if propname else None
+#
+#     def func(self):
+#         "Do the editing"
+#
+#         allowed_propnames = ("power", "attribute1", "attribute2")
+#
+#         caller = self.caller
+#         if not self.args or not self.name:
+#             caller.msg("Usage: +editnpc name[/propname][=propval]")
+#             return
+#         npc = caller.search(self.name)
+#         if not npc:
+#             return
+#         if not npc.access(caller, "edit"):
+#             caller.msg("You cannot change this NPC.")
+#             return
+#         if not self.propname:
+#             # this means we just list the values
+#             output = "Properties of %s:" % npc.key
+#             for propname in allowed_propnames:
+#                 propvalue = npc.attributes.get(propname, default="N/A")
+#                 output += "\n %s = %s" % (propname, propvalue)
+#             caller.msg(output)
+#         elif self.propname not in allowed_propnames:
+#             caller.msg("You may only change %s." % ", ".join(allowed_propnames))
+#         elif self.propval:
+#             # assigning a new propvalue
+#             # in this example, the properties are all integers...
+#             intpropval = int(self.propval)
+#             npc.attributes.add(self.propname, intpropval)
+#             caller.msg("Set %s's property '%s' to %s" % (npc.key, self.propname, self.propval))
+#         else:
+#             # propname set, but not propval - show current value
+#             caller.msg("%s has property %s = %s" % (npc.key, self.propname, npc.attributes.get(self.propname, default="N/A")))
 
-class CmdSmile(BaseCommand):
-    """
-    A smile command
-
+class CmdAbilities(Command):
+    """List abilities
     Usage:
-      smile [at] [<someone>]
-      grin [at] [<someone>]
+        [+]abilities
 
-    Smiles to someone in your vicinity or to the room
-    in general.
-
-    (This initial string (The __doc__ string)
-    is also used to auto-generate the help
-    for this command)
+    Displays a list of your current ability values.
     """
-
-    key = "smile"
-    aliases = ["smile at", "grin", "grin at",]
-    locks = "cmd:all()"
+    key = "abilities"
+    aliases = ["abi", "abil"]
+    lock = "cmd:all()"
     help_category = "General"
 
-    def parse(self):
-        "very trivial parser"
-        self.target = self.args.strip()
-
     def func(self):
-        "This actually does things"
-        caller = self.caller
-        if not self.target or self.target == "here":
-            string = "%s smiles." % caller.name
-            caller.location.msg_contents(string, exclude=caller)
-            caller.msg("You smile.")
-        else:
-            target = caller.search(self.target)
-            if not target:
-                # caller.search handles error messages
-                return
-            string = "%s smiles at you." % caller.name
-            target.msg(string)
-            string = "You smile at %s" % target.name
-            caller.msg(string)
-            string = "%s smiles at %s." % (caller.name, target.name)
-            caller.location.msg_contents(string, exclude=[caller, target])
-
-
-class CmdWait(BaseCommand):
-    """
-    A dummy command to show how to wait
-
-    Usage:
-      wait
-
-    """
-
-    key = "wait"
-    locks = "cmd:all()"
-    help_category = "General"
-
-    def func(self):
-        """Command execution."""
-        self.msg("Starting to wait ...")
-        yield 5
-        self.msg("... This shows after 5 seconds.  Waiting ...")
-        yield 2
-        self.msg("... And now another 2 seconds have passed.")
-
-class CmdConfirm(BaseCommand):
-    """
-    A dummy command to show confirmation.
-
-    Usage:
-      confirm
-
-    """
-
-    key = "confirm"
-
-    def func(self):
-        answer = yield("Are you sure you want to go on?")
-        if answer.strip().lower() in ("yes", "y"):
-            self.msg("Yes!")
-        else:
-            self.msg("No!")
-
-class CmdSetPower(Command):
-    """
-    set the power of a character
-
-    Usage:
-    +setpower <1-10>
-
-    This sets the pwoer of the current character.  This can only be
-    used during character generation.
-    """
-
-    key = "+setpower"
-    help_category = "mush"
-
-    def func(self):
-        "This performs the actual command"
-        errmsg = "You must supply a number between 1 and 10."
-        if not self.args:
-            self.caller.msg(errmsg)
-            return
-        try:
-            power = int(self.args)
-        except ValueError:
-            self.caller.msg(errmsg)
-            return
-        if not (1 <= power <= 10):
-            self.caller.msg(errmsg)
-            return
-        # At this point the argument is tested as valid.  Let's set it.
-        self.caller.db.power = power
-        self.caller.msg("Your Power was set to %i." % power)
-
-
-class CmdAttack(Command):
-    """
-    Issues an attack
-
-    Usage:
-      +attack
-
-    This will calculate a new combat score based on your Power.
-    Your combat score is visible to everyone in the same location.
-    """
-    key = "+attack"
-    help_category = "mush"
-
-    def func(self):
-        "Calculate the random score between 1-10*Power"
-        caller = self.caller
-        power = caller.db.power
-        if not power:
-            # This can happen if caller is not of
-            # our custom Character typeclass
-            power = 1
-        combat_score = random.randint(1, 10 * power)
-        caller.db.combat_score = combat_score
-
-        # annouce
-        message = "%s +attacks %s with a combat score of %s!"
-        caller.msg(message % ("You", "", combat_score))
-        caller.location.msg_contents(message % 
-                                     (caller.key, "s", combat_score),
-                                     exclude=caller)
-
-class CmdCreateNPC(Command):
-    """
-    create a new npc
-
-    Usage:
-      +createNPC <name>
-
-    Creates a new, named NPC.  The NPC will start with a Power of 1.
-    """
-    key = "+createnpc"
-    aliases = ["+createNPC"]
-    locks = "call:not perm(nonpcs)"
-    help_category = "mush"
-
-    def func(self):
-        "Creates the object and names it"
-        caller = self.caller
-        if not self.args:
-            caller.msg("Usage: +createNPC <name>")
-            return
-        if not caller.location:
-            # may not create npc when OOC
-            caller.msg("You must have a location to create an npc.")
-            return
-        # Make name always start with capital letter
-        name = self.args.strip().capitalize()
-        # Create npc in caller's location
-        npc = create_object("characters.Character",
-                            key=name,
-                            location=caller.location,
-                            locks="edit:id(%i) and perm(Builders);call:false()" % caller.id)
-        # announce the creation
-        message = "%s created the NPC '%s'."
-        caller.msg(message % ("You", name))
-        caller.location.msg_contents(message % (caller.key, name), exclude=caller)
-
-class CmdEditNPC(Command):
-    """
-    Edit an existing NPC
-
-    Usage:
-      +editnpc <name>[/<attribute> [= value]]
-
-    Examples:
-      +editnpc mynpc/power = 5  - Sets your npc's power to 5
-      +editnpc mynpc/power      - Displays power value
-      +editnpc mynpc            - Shows all editable
-                                  attributes and values
-
-    This command edits an existing NPC.  You must have
-    permission to edit the NPC to use this.
-    """
-    key = "+editnpc"
-    aliases = ["+editNPC"]
-    locks = "cmd:not perm(nonpcs)"
-    help_category = "mush"
-
-    def parse(self):
-        "We need to do some parsing here"
-        args = self.args
-        propname, propval = None, None
-        if "=" in args:
-            args, propval = [part.strip() for part in args.rsplit("=", 1)]
-        if "/" in args:
-            args, propname = [part.strip() for part in args.rsplit("/", 1)]
-        # store, so we can access it below in func()
-        self.name = args
-        self.propname = propname
-        # a propval without a propname is meaningless
-        self.propval = propval if propname else None
-
-    def func(self):
-        "Do the editing"
-
-        allowed_propnames = ("power", "attribute1", "attribute2")
-
-        caller = self.caller
-        if not self.args or not self.name:
-            caller.msg("Usage: +editnpc name[/propname][=propval]")
-            return
-        npc = caller.search(self.name)
-        if not npc:
-            return
-        if not npc.access(caller, "edit"):
-            caller.msg("You cannot change this NPC.")
-            return
-        if not self.propname:
-            # this means we just list the values
-            output = "Properties of %s:" % npc.key
-            for propname in allowed_propnames:
-                propvalue = npc.attributes.get(propname, default="N/A")
-                output += "\n %s = %s" % (propname, propvalue)
-            caller.msg(output)
-        elif self.propname not in allowed_propnames:
-            caller.msg("You may only change %s." % ", ".join(allowed_propnames))
-        elif self.propval:
-            # assigning a new propvalue
-            # in this example, the properties are all integers...
-            intpropval = int(self.propval)
-            npc.attributes.add(self.propname, intpropval)
-            caller.msg("Set %s's property '%s' to %s" % (npc.key, self.propname, self.propval))
-        else:
-            # propname set, but not propval - show current value
-            caller.msg("%s has property %s = %s" % (npc.key, self.propname, npc.attributes.get(self.propname, default="N/A")))
+        """implements the functionality of CmdAbilities"""
+        str, agi, mag = self.caller.get_abilities()
+        string = "STR: %s, AGI: %s, MAG: %s" % (str, agi, mag)
+        self.caller.msg(string)

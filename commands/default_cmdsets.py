@@ -17,6 +17,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 from evennia import CmdSet
 from commands import command
+from commands import CmdAbilities
 from evennia.contrib.mail import CmdMail
 from world.jobs.cmdbuckets import CmdBuckets
 from world.jobs.cmdjobs import CmdJobs
@@ -39,12 +40,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
-        self.add(command.CmdSmile())
-        self.add(command.CmdWait())
-        self.add(command.CmdConfirm())
-        self.add(command.CmdAttack())
-        self.add(command.CmdCreateNPC())
-        self.add(command.CmdEditNPC())
+        self.add(CmdAbilities())
         self.add(CmdMail())
         self.add(CmdBuckets())
         self.add(CmdJobs())
