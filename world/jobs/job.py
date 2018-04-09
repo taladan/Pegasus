@@ -108,7 +108,7 @@ class Job(Bucket):
         sysmsg = "{0} error".format(object)
         job = False
 
-        # Are there any buckets?
+        # Is it a bucket?
         if ju.isbucket(bucket):
             try:
                 # set return options
