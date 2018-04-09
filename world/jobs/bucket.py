@@ -3,6 +3,7 @@ from datetime import datetime
 import evennia as ev
 import jobs_settings as settings
 from evennia.utils import lazy_property
+from evennia.utils import logger as log
 import evennia.utils as eu
 from typeclasses.channels import Channel
 import jobutils as ju
@@ -10,6 +11,7 @@ import jobutils as ju
 VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
 VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
 SUCC_PRE = settings.SUCC_PRE
+ERROR_PRE = settings.ERROR_PRE
 
 date = datetime
 # eu = evennia.utils.Utils
@@ -68,17 +70,6 @@ class Bucket(Channel):
         self.db.valid_settings = VALID_BUCKET_SETTINGS
         self.db.default_notification = SUCC_PRE + "A new job has been posted to {0}".format(ju.decorate(self.db.key))
 
-    @staticmethod
-    def all():
-        # Todo: fix all so that it returns a list of all objects of the same type as the caller that they have access to
-        # if eu.inherits_from(, Job):
-        #     ret = self.Job.objects.all()
-        # elif eu.inherits_from(, Bucket):
-        #     ret = self.objects.all()
-        # else:
-        #     raise TypeError("Unexpected caller of type: %s" % repr(cls))
-        pass
-
     @lazy_property
     def associated(self):
         """search for and return any jobs associated with this bucket"""
@@ -86,17 +77,49 @@ class Bucket(Channel):
         # Todo: fix search for jobs
         from job import Job
         try:
-            for job in Job.all():
+            for job in Job.objects.all():
                 if job.db.bucket == self:
                     jobs.append(job)
         except Exception as e:
             template = "Caught exception of type: {0}, Arguments: {1}".format(type(e), e.args)
         return len(jobs)
 
-    def create(self):
-        """create bucket"""
-        # Todo: add creation code to `class Bucket`
-        pass
+    def create(self, **kwargs):
+        """create bucket if it doesn't exist
+
+       :return: dict with message
+        """
+        bucket = kwargs.pop("bucket").capitalize()
+        desc = kwargs.pop("desc")
+
+        # Bucket exists?
+        if ju.isbucket(bucket):
+            code = ERROR_PRE
+            sysmsg = "Bucket: {0} already exists".format(ju.decorate(bucket))
+        else:
+            try:
+                # Package the message
+                code = SUCC_PRE
+                sysmsg = "Bucket: {0} created".format(ju.decorate(bucket))
+
+                # create the bucket
+                self.bucket = ev.create_channel(bucket, desc=desc, typeclass=Bucket)
+            # Bad juju beyond
+            except Exception as e:
+                # build the stack for trace
+                time = log.timeformat()
+                code = ERROR_PRE
+                sysmsg = "Unexpected error of type: {0}, Arguments: {1}".format(type(e).__name__, e.args)
+                stack = time + "-->" + code + sysmsg
+
+                #log
+                log.log_trace(stack)
+
+                # Reraise the error
+                raise
+
+        ret = {"bucket": self.bucket, "code": code, "sysmsg": sysmsg}
+        return ret
 
     def check_access(self, obj):
         """return whether the caller is in the actions dict"""
@@ -156,8 +179,17 @@ class Bucket(Channel):
         except KeyError:
             return false
 
-    def jobids(self):
+    @staticmethod
+    def my_jobs(self):
         return ev.search_tag(self.db.key, category="jobs")
+
+    def jobids(self):
+        buckets = Bucket.objects.all()
+        jobs = []
+        for bucket in buckets:
+           jobs.extend(job for job in bucket.my_jobs)
+        return jobs
+
 
     def set(self, setting, value, **kwargs):
         """used to change settings on a particular bucket"""

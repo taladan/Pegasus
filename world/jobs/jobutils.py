@@ -4,7 +4,7 @@
 import evennia as ev
 import jobs_settings as settings
 
-def argparse(self, lhs, rhs):
+def argparse(lhs, rhs):
     """
     :param lhs: Arguments from the left side of an = (self.lhs)
     :param rhs: Arguments from the right side of an = (self.rhs)
@@ -24,14 +24,14 @@ def argparse(self, lhs, rhs):
         ret = False
     return ret
 
-def assign_channel(self, string):
+def assign_channel(string):
     """
     :param string: Any string name of a channel object
     :return: Channel object matching string
     """
     return ev.ChannelDB.objects.get_channel(string)
 
-def base36encode(self, integer):
+def base36encode(integer):
     """encodes integer to a base 36 number"""
     chars, encoded, sign = '0123456789abcdefghijklmnopqrstuvwxyz', '', ''
 
@@ -47,7 +47,7 @@ def base36encode(self, integer):
         encoded = chars[remainder] + encoded
     return sign + encoded
 
-def exists(self, *args):
+def exists(*args):
     """
     Tests args for None
     :param args:
@@ -56,24 +56,24 @@ def exists(self, *args):
     """
     return all(v is not None for v in args)
 
-def decorate(self, *args):
+def decorate(*args):
     """Takes any num of args and returns them decorated with the desired color code"""
     ret = []
     for text in args:
         ret.append(settings.TEXT_COLOR + str(text) + "|n")
     return tuple(ret)
 
-def ischaracter(self, string):
+def ischaracter(string):
     return ev.utils.utils.inherits_from(string, "typeclasses.characters.Character")
 
-def isaccount(self, string):
+def isaccount(string):
     return ev.utils.utils.inherits_from(string, "typeclasses.accounts.Account")
 
-def isbucket(self, string):
+def isbucket(string):
     """search and return true if obj string is a bucket"""
     return ev.utils.utils.inherits_from(ev.search_channel(string).first(), "world.jobs.bucket.Bucket")
 
-def isjob(self, string):
+def isjob(string):
     """search and return true if obj string is a job"""
     return ev.utils.utils.inherits_from(ev.search_channel(string).first(), "world.job.Job")
 

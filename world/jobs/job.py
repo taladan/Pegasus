@@ -41,15 +41,16 @@ class Job(Bucket):
         self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
         self.db.group = "admin"
         """
-        # Todo: determine vars needed for a Job obj
+
+        # db values
         self.valid_actions = VALID_JOB_ACTIONS
         self.db.actions_list = {}
         self.db.assigned_to = False
         self.db.assigned_by = False
+        self.db.bucket = ""
         self.db.checked_out = False
         self.db.checker = ""
         self.db.comments = {}
-        self.db.bucket = ""
         self.db.due = False
         self.db.locked = False
         self.db.messages = {}
@@ -57,7 +58,25 @@ class Job(Bucket):
         self.db.tagged = []
         self.db.title = ""
         self.db.priority = ""
+
+        # non-db values
         self.ndb.all = self._all
+        self.ndb.list_pos = lambda: _getpos()
+
+    def _getpos(self, sort):
+        """returns the position of the job in the bucket listing"""
+        # sort_types = ("list", "bucket_view",)
+        # job_list =
+        # try:
+        #     for job in job_list:
+        #         if job.db.id == self.db.id:
+        #             pos = job_list.index(job)+1
+        #             return pos
+        # except Exception as e:
+        #     log.log_trace(log.timeformat() + " " + SYSTEM + " --> " + e)
+        #     raise
+        pass
+
 
     def create(self, bucket, title, msgtext):
         """Create new job
@@ -77,39 +96,57 @@ class Job(Bucket):
                     "sysmsg": Message (str),
                     }
         """
-
         from jobs_settings import ERROR_PRE
         from jobs_settings import SUCC_PRE
 
-        try:
-            # return message data
-            act = "cre"
-            code = SUCC_PRE
-            sysmsg = "Job: {0} created".format(ju.decorate(title))
+        # ignore case
+        bucket = bucket.capitalize()
 
-            # hash the job for an id
-            jid = self._hashobj(bucket=bucket, title=title)
+        # default errors
+        act = False
+        code = ERROR_PRE
+        sysmsg = "{0} error".format(object)
+        job = False
 
-            # create the job
-            job = ev.create_channel(jid, desc=title, typeclass="world.jobs.job.Job")
+        # Are there any buckets?
+        if ju.isbucket(bucket):
+            try:
+                # set return options
+                act = "cre"
+                code = SUCC_PRE
+                sysmsg = "Job: {0} created".format(ju.decorate(title))
 
-            # add creation metadata
-            job.db.id = jid
-            job.tags.add(bucket, category="jobs")
-            job.tags.add(jid, category="jobs")
+                # hash the job for an id
+                jid = self._hashobj(bucket=bucket, title=title)
 
-            # add the actual message
-            job._add_msg(jid=jid, bucket=bucket, title=title, msgtext=msgtext, action=act, parent=jid)
+                # create the job
+                self.job = ev.create_channel(jid, desc=title, typeclass=Job)
+                # _update_actlist(act)
 
-        except Exception as e:
-            # Capture exception data for processing and returning
-            act = False
-            code = ERROR_PRE
-            sysmsg = "Unexpected error of type: {0}, Arguments: {1}".format(type(e).__name__, e.args)
-            job = False
-            # Reraise the error
-            raise
-        ret = {"act": act, "exit_status": code, "msg": sysmsg, "job": job,}
+                # add creation metadata
+                self.job.db.id = jid
+                self.job.tags.add(bucket, category="jobs")
+                self.job.tags.add(jid, category="jobs")
+                # self.job.ndb.creation_message = ACT + ":" + caller + "created this job on " + "April 8, 2018 at 10:00pm"
+
+                # add the actual message
+                self.job._add_msg(
+                    jid=jid,
+                    bucket=bucket,
+                    title=title,
+                    msgtext=msgtext,
+                    action=act,
+                    parent=jid,
+                )
+            # Capture exception data and reraise
+            except Exception as e:
+                sysmsg = "Unexpected error of type: {0}, Arguments: {1}".format(type(e).__name__, e.args)
+                raise
+        # Not a bucket
+        else:
+            sysmsg = "{0} is not a valid bucket".format(bucket.capitalize())
+
+        ret = {"act": act, "exit_status": code, "msg": sysmsg, "job": self.job,}
         return ret
 
     def info(self):
@@ -123,6 +160,9 @@ class Job(Bucket):
                self.db.due,
                self.db.assigned_to)
         return ret
+
+    def _update_actlist(self, msghash, act):
+        self.db.actions_list[len(job.db.actions_list)] = act
 
     @lazy_property
     def _all(self):
@@ -150,9 +190,6 @@ class Job(Bucket):
         # Create the hash
         hash = hashlib.md5(hashable.encode("utf-8")).hexdigest()
         return hash
-
-    def _act_update(self, i, act):
-        self.db.actions_list[i] = act
 
     def _add_msg(self,**kwargs):
         """add message to job

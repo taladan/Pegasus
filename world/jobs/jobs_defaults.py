@@ -55,3 +55,5 @@ DEFAULT_VALID_BUCKET_SETTINGS =  {"desc": "desc",
 DEFAULT_VALID_TIMEOUT_INTERVALS = ("hours", "days", "months", "years",)
 DEFAULT_VALID_JOB_SETTINGS = ()
 
+# System variables
+DEFAULT_SYSTEM = "Jobs"
