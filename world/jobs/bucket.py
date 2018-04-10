@@ -7,6 +7,7 @@ from evennia.utils import logger as log
 import evennia.utils as eu
 from typeclasses.channels import Channel
 import jobutils as ju
+import world.utilities.pegasus_utilities as pegasus
 
 VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
 VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
@@ -56,13 +57,13 @@ class Bucket(Channel):
         self.db.denial_board = '0'
         self.db.due_timeout = 0
         self.db.group = "admin"
+        self.db.hash = pegasus.hashobj(key=self.db.key, string=self.db.desc)
         self.db.locked = False
         self.db.num_completed_jobs = 0
         self.db.num_approved_jobs = 0
         self.db.num_denied_jobs = 0
         self.db.num_of_jobs = self.associated
         self.db.resolution_time = 0
-        self.db.per_player_actions = {}
         self.db.percent_complete = self._pct_complete
         # self.db.timeout_string = "0"
         self.db.total_jobs = self._total_jobs
@@ -83,6 +84,12 @@ class Bucket(Channel):
         except Exception as e:
             template = "Caught exception of type: {0}, Arguments: {1}".format(type(e), e.args)
         return len(jobs)
+
+    @lazy_property
+    def per_player_actions(self, character):
+        hash = self.db.hash
+        ret = character.db.hash
+        return ret
 
     def create(self, **kwargs):
         """create bucket if it doesn't exist
@@ -121,29 +128,24 @@ class Bucket(Channel):
         ret = {"bucket": self.bucket, "code": code, "sysmsg": sysmsg}
         return ret
 
-    def check_access(self, obj):
-        """return whether the caller is in the actions dict"""
-        if self.db.per_player_actions.keys() is not None:
-            return obj in self.db.per_player_actions.keys()
-
-    def grant_access(self, action, obj):
-        """give an object access to a bucket"""
+    def grant_access(self, action, character):
+        """give a character access to a bucket"""
+       # Todo: Refactor grant_access.  I want to take access off the bucket and create a lockstring that somehow parses which buckets a player has access to and what actions they can perform.  This may take some time.
         action = [action]
-        ppa = self.db.per_player_actions
+        actions = self.db.per_player_actions(character)
         for act in action:
-            if obj in ppa.keys():
-                ppa[obj].append(act)
-            else:
-                ppa[obj] = [act]
+            if act not in actions:
+                actions.appenc(act)
 
     def has_jobs(self):
         """return true if the bucket has any jobs on it, false if not"""
         return self.db.num_of_jobs < 0
 
-    def has_access(self, action, obj):
+    def has_access(self, action, character):
         """if self.caller is on the access list, allow this action"""
-        ppa = self.db.per_player_actions.get(obj)
-        return ppa and action in ppa
+        # Todo: refactor for per_player_actions()
+        actions = self.db.per_player_actions(character)
+        return action in actions
 
     def info(self):
         """returns bucket info as a list"""
@@ -171,10 +173,11 @@ class Bucket(Channel):
         else:
             return 0
 
-    def remove_access(self,action, obj):
+    def remove_access(self, action, character):
         """removes action access from obj for bucket"""
         try:
-            self.db.per_player_actions[obj].remove(action)
+            # Todo: refactor for per_player_actions()
+            self.db.per_player_actions[character].remove(action)
             return True
         except KeyError:
             return false
