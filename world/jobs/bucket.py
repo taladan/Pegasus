@@ -57,7 +57,7 @@ class Bucket(Channel):
         self.db.denial_board = '0'
         self.db.due_timeout = 0
         self.db.group = "admin"
-        self.db.hash = pegasus.hashobj(key=self.db.key, string=self.db.desc)
+        self.db.hash = pegasus.hash(key=self.db.key, string=self.db.desc)
         self.db.locked = False
         self.db.num_completed_jobs = 0
         self.db.num_approved_jobs = 0
@@ -130,7 +130,6 @@ class Bucket(Channel):
 
     def grant_access(self, action, character):
         """give a character access to a bucket"""
-       # Todo: Refactor grant_access.  I want to take access off the bucket and create a lockstring that somehow parses which buckets a player has access to and what actions they can perform.  This may take some time.
         action = [action]
         actions = self.db.per_player_actions(character)
         for act in action:

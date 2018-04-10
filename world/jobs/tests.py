@@ -15,20 +15,21 @@ class TestSuite(unittest.TestSuite):
     def run(self, result, debug=False):
         pass
 
-class TestJgroup(EvenniaTest):
-    """Test the Jgroup portion of the system"""
+class TestUtilties(EvenniaTest):
 
-    def setUp(self):
-        super(EvenniaTest, self).setUp()
-        pass
+    def test_hash(self):
+        """hash returns unique hash, even if given identical strings"""
+        from world.utilities import pegasus_utilities as pegasus
+        hash_a = pegasus.hash(key="test", string="test")
+        hash_b = pegasus.hash(key="test", string="test")
+        self.assertNotEqual(hash_a, hash_b)
 
-    def tearDown(self):
-        pass
 
 class TestBucket(EvenniaTest):
     """Test the Bucket portion of the system"""
 
     def setUp(self):
+        """set up test buckets"""
         super(EvenniaTest, self).setUp()
         self.bucket = Bucket()
         self.buckets = []
@@ -36,10 +37,12 @@ class TestBucket(EvenniaTest):
         self.buckets.append(self.bucket)
 
     def tearDown(self):
+        """remove buckets"""
         for bucket in Bucket.objects.all():
             del bucket
 
     def test_bucket_create_pass(self):
+        """Test bucket creation with correct parameters"""
         bucket, desc = "Jamie", "Test bucket."
         self.Bucket = Bucket()
         x_exit_status = SUCC_PRE
@@ -52,6 +55,7 @@ class TestBucket(EvenniaTest):
         self.assertEqual(expected,actual)
 
     def test_bucket_create_fail_exists(self):
+        """Test bucket creation with invalid parameters"""
         self.Bucket = Bucket()
         bucket, desc = "Code", "Test bucket"
         bucket = bucket.capitalize()
@@ -162,7 +166,6 @@ class TestJob(EvenniaTest):
 
     def test_create_CmdJobs_fail(self):
         pass
-
 
     def test_assign_job(self):
         """test assigning a job"""

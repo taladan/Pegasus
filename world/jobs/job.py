@@ -118,7 +118,7 @@ class Job(Bucket):
                 sysmsg = "Job: {0} created".format(ju.decorate(title))
 
                 # hash the job for an id
-                jid = pegasus.hashobj(key=bucket, string=title)
+                jid = pegasus.hash(key=bucket, string=title)
 
                 # create the job
                 self.job = ev.create_channel(jid, desc=title, typeclass=Job)
@@ -188,7 +188,7 @@ class Job(Bucket):
         msgtext = kwargs.pop("msgtext")
 
         # Id the message
-        msghash = pegasus.hashobj(key=self.db.bucket, string=self.db.title)
+        msghash = pegasus.hash(key=self.db.bucket, string=self.db.title)
         self.db.messages[msghash] = msgtext
 
         # update the action list
