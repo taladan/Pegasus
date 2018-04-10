@@ -4,6 +4,7 @@ from evennia.utils import lazy_property
 from jobs_settings import VALID_JOB_ACTIONS
 import jobutils as ju
 from world.jobs.bucket import Bucket
+from world.utilities import pegasus_utilities as pegasus
 
 class Job(Bucket):
     """Job object for holding messages and replies
@@ -117,7 +118,7 @@ class Job(Bucket):
                 sysmsg = "Job: {0} created".format(ju.decorate(title))
 
                 # hash the job for an id
-                jid = self._hashobj(bucket=bucket, title=title)
+                jid = pegasus.hashobj(key=bucket, string=title)
 
                 # create the job
                 self.job = ev.create_channel(jid, desc=title, typeclass=Job)
@@ -168,29 +169,6 @@ class Job(Bucket):
     def _all(self):
         return True
 
-    def _hashobj(self, **kwargs):
-        """create a hash and return it"""
-        import hashlib
-        import random
-        from datetime import datetime as date
-
-        # Grab the arguments
-        bucket = kwargs.pop("bucket")
-        title = kwargs.pop("title")
-
-
-        # What we're hashing - uses date.today() and repr(random.random()) to get a unique hash.
-        hashable = "{0}, {1}, {2}, {3}".format(
-            bucket,
-            title,
-            date.today().strftime("%B %d, %Y at %H:%M:%S"),
-            repr(random.random()),
-        )
-
-        # Create the hash
-        hash = hashlib.md5(hashable.encode("utf-8")).hexdigest()
-        return hash
-
     def _add_msg(self,**kwargs):
         """add message to job
 
@@ -210,7 +188,7 @@ class Job(Bucket):
         msgtext = kwargs.pop("msgtext")
 
         # Id the message
-        msghash = self._hashobj(bucket=self.db.bucket, title=self.db.title)
+        msghash = pegasus.hashobj(key=self.db.bucket, string=self.db.title)
         self.db.messages[msghash] = msgtext
 
         # update the action list

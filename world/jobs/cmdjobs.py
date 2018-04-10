@@ -1,6 +1,5 @@
 
 
-import hashlib
 import random
 from datetime import datetime as date
 import evennia as ev
@@ -15,6 +14,7 @@ from jobs_settings import SORT_METHOD
 from jobs_settings import VALID_SORT_METHODS
 from world.jobs.job import Job
 from world.jobs.bucket import Bucket
+from world.utilities import pegasus_utilities as pegasus
 
 MuxCommand = default_cmds.MuxCommand
 """
@@ -994,7 +994,7 @@ class CmdJobs(MuxCommand):
 
             msgheader = '%s, %s, %s, %s' % (self.caller, date.today().strftime("%B %d, %Y"), title,)
             msghash = '%s %s %s %s' % (self.caller, date.now(), title, str(random.randrange(1,1000000)))
-            msgid = haslib.md5(msghash.encode(utf-8)).hexdigest()
+            msgid = pegasus.hashobj(key=msgheader, string=msghash)
             msg = ev.create_message(self.caller, msgtext, channels=bucket, header=msgheader, recievers=self.job.db.recievers)
 
             msg.tags.add("job:"+jid, category="jobs")
