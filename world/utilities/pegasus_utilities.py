@@ -16,6 +16,108 @@ __maintainer__ = "Jamie Crosby"
 __email__ = "taladan@gmail.com"
 __status__ = "Prototype"
 
+
+class StringTools(object):
+    """general tools for dealing with strings across the Pegasus framework"""
+    def __init__(self, *args):
+        self.string = args
+
+    def junk(self, segment):
+        def _pack(segment):
+            """parse for '/' :return: list (pack)"""
+            ret = []
+
+            if "/" in segment:
+                noun, verb = segment.split("/")
+            else:
+                noun = segment
+                verb = False
+
+            pack = noun, verb
+            ret.append(pack)
+            return ret
+
+        ret = []
+        # rhs & lhs
+        if "=" in string:
+            strings = (first, last) = string.split('=')
+            for string in strings:
+                res = _pack(string)
+                for i in res:
+                    ret.append(_pack(string))
+        # lhs only
+        elif '/' in string:
+            strings = (first, last) = string.split('/')
+            for string in strings:
+                res =_pack(string)
+                for i in res:
+                    ret.append(_pack(string))
+
+            # RHS doesn't exist
+            noun = False
+            verb = False
+            ret.append(rhs_noun)
+            ret.append(rhs_verb)
+        else:
+            ret = string, False, False, False
+
+        return tuple(ret)
+
+    def parse_args(self, string):
+        """split args at '=' and '/'
+
+         :return: noun/verb pairs for any segment in args
+         """
+        def _slash(string):
+            if "/" in string:
+                noun, verb = string.split("/")
+            else:
+                noun, verb = string, False
+            ret = noun, verb
+            return ret
+
+        def _eq(string):
+            if "=" in string:
+                lhs, rhs = string.split("=")
+                lhs_noun, lhs_verb = _slash(lhs)
+                rhs_noun, rhs_verb = _slash(rhs)
+            else:
+                lhs = string
+                lhs_noun, lhs_verb = _slash(lhs)
+                rhs_noun, rhs_verb = False, False
+            ret = lhs_noun, lhs_verb, rhs_noun, rhs_verb
+            return ret
+
+        ret = _eq(string)
+        return ret
+
+def is_date(string):
+    """determine if string is a date"""
+    from dateutil.parser import parse
+    try:
+        parse(string)
+        ret = True
+    except ValueError:
+        ret = False
+    return ret
+
+def days_past(date):
+    """return how many days have passed since date"""
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    # Todo: finish
+    # if date.lower() == "now":
+    #     pass
+    # else:
+    #     pass
+
+def days_until(date):
+    """return how many days until date"""
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    # Todo: finish
+
+
 def hash(**kwargs):
     """create a hash and return it
 

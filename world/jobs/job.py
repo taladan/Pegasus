@@ -78,7 +78,6 @@ class Job(Bucket):
         #     raise
         pass
 
-
     def create(self, bucket, title, msgtext):
         """Create new job
         Syntax:

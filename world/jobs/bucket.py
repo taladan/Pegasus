@@ -1,10 +1,8 @@
 
-from datetime import datetime
 import evennia as ev
 import jobs_settings as settings
 from evennia.utils import lazy_property
 from evennia.utils import logger as log
-import evennia.utils as eu
 from typeclasses.channels import Channel
 import jobutils as ju
 import world.utilities.pegasus_utilities as pegasus
@@ -13,9 +11,6 @@ VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
 VALID_BUCKET_ACTIONS = settings.VALID_BUCKET_ACTIONS
 SUCC_PRE = settings.SUCC_PRE
 ERROR_PRE = settings.ERROR_PRE
-
-date = datetime
-# eu = evennia.utils.Utils
 
 
 class Bucket(Channel):
@@ -26,28 +21,6 @@ class Bucket(Channel):
     Todo: Work on jobs integration and finish setting up monitoring
     # self.db.total_jobs = ev.search_tag(self.db.key, category="jobs")
     """
-
-    def __add__(self, other):
-        def addjob(add):
-            from evennia.comms.models import Msg
-            if eu.inherits_from(add, Msg):
-                id = add.get_tag("msgid", category="jobs")
-                self.db.comments[add.db.key] = add.db.message
-            else:
-                raise TypeError("Msg object expected, received %s instead." % type(add))
-
-        def addbucket(add):
-            if eu.inherits_from(add, Bucket):
-                # self.db.
-                pass
-
-        if eu.inherits_from(add, Job):
-            addjob(other)
-        elif eu.inherits_from(add, self):
-            addbucket(other)
-        else:
-            raise TypeError("Expected a Bucket or Job typed object, recieved %s typed object instead." % type(self))
-
     def at_channel_creation(self):
         """This is done when the bucket is created"""
         # set sane defaults
@@ -85,7 +58,6 @@ class Bucket(Channel):
             template = "Caught exception of type: {0}, Arguments: {1}".format(type(e), e.args)
         return len(jobs)
 
-    @lazy_property
     def per_player_actions(self, character):
         hash = self.db.hash
         ret = character.db.hash
@@ -175,11 +147,13 @@ class Bucket(Channel):
     def remove_access(self, action, character):
         """removes action access from obj for bucket"""
         try:
-            # Todo: refactor for per_player_actions()
-            self.db.per_player_actions[character].remove(action)
-            return True
-        except KeyError:
-            return false
+            action = action.lower()
+            actions = self.db.per_player_actions(character)
+            actions.remove(action)
+            ret = True
+        except ValueError:
+            ret = False
+        return ret
 
     @staticmethod
     def my_jobs(self):

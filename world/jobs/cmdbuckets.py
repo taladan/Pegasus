@@ -79,6 +79,7 @@ VALID_BUCKET_SETTINGS = settings.VALID_BUCKET_SETTINGS
 VALID_JOB_SETTINGS = settings.VALID_JOB_SETTINGS
 VALID_TIMEOUT_INTERVALS = settings.VALID_TIMEOUT_INTERVALS
 
+decorate = ju.decorate
 
 class CmdBuckets(MuxCommand):
     """
@@ -159,24 +160,35 @@ class CmdBuckets(MuxCommand):
 
     def _access(self, caller):
         """grants player access to a specific bucket"""
-        # Todo: fix adding multiple identical access types to bucket
         action = self.lhs_text.lower()
+
         if not ju.ischaracter(self.character):
-            self.caller.msg(ERROR_PRE + "%s is not a valid character." % ju.decorate(self.character))
+            code = ERROR_PRE
+            sysmsg = "{0} is not a valid character.".format(decorate(self.character))
+
         if self.bucket.has_access(action, self.character):
-            self.bucket.remove_access(action, self.character)
-            caller.msg(SUCC_PRE + "Removing access to %s bucket action %s from %s"
-                       % ju.decorate(self.bucket_name, action, self.character))
+            removed = self.bucket.remove_access(action, self.character)
+            if removed:
+                code = SUCC_PRE
+                sysmsg = "Removing access to {0} bucket action {1} from {2}".format(decorate(self.bucket_name), decorate(action), self.character)
+
         elif action in self.valid_actions:
             self.bucket.grant_access(action, self.character)
-            caller.msg(SUCC_PRE + "Granting access to %s bucket action %s to %s."
-                       % (ju.decorate(self.bucket_name, action), self.character))
+            code = SUCC_PRE
+            sysmsg = "Granting access to {0} bucket action {1} to {2}.".format(decorate(self.bucket_name), decorate(action), self.character)
+
         elif action == 'all':
-            caller.msg(SUCC_PRE + "Granting %s access to all bucket actions for %s %s"
-                       % ju.decorate(self.character, self.bucket_name, self.valid_actions))
+            code = SUCC_PRE
+            sysmsg = "Granting {0} access to all bucket actions for {1} bucket.".format(decorate(self.character), decorate(self.bucket_name))
             self.bucket.grant_access(self.valid_actions, self.character)
+
         else:
-            self.caller.msg(ERROR_PRE + "%s is not a valid action for Bucket: %s" % ju.decorate(action, self.bucket_name))
+            code = ERROR_PRE
+            sysmsg = "{0} is not a valid action for Bucket: {1}".format(decorate(action), decorate(self.bucket_name))
+
+        ret = {"exit_status":code, "sysmsg":sysmsg}
+        return ret
+
 
     def _argparse(self):
         """Check args and parse a little more tightly"""
@@ -210,7 +222,7 @@ class CmdBuckets(MuxCommand):
         try:
             self.bucket = ev.ChannelDB.objects.get_channel(bucket)
         except AttributeError:
-            self.caller.msg(ERROR_PRE + "Bucket: %s does not exist." % ju.decorate(bucket))
+            self.caller.msg(ERROR_PRE + "Bucket: %s does not exist." % decorate(bucket))
 
     def _bucket_table(self, buckets):
         """creates and returns the populated table of bucket info"""
@@ -331,26 +343,26 @@ class CmdBuckets(MuxCommand):
     def _create(self):
         """creates buckets unless they already exist"""
         if self.bucket:
-            self.caller.msg(ERROR_PRE + "Bucket: %s already exists." % ju.decorate(self.bucket_name))
+            self.caller.msg(ERROR_PRE + "Bucket: %s already exists." % decorate(self.bucket_name))
             return
         else:
             self.bucket = ev.create_channel(self.bucket_name, desc=self.rhs, typeclass=Bucket)
             # self._assign_bucket(self.bucket_name)
             self.bucket.db.createdby = self.caller
-            self.caller.msg(SUCC_PRE + "Bucket: %s has been created." % ju.decorate(self.bucket_name))
+            self.caller.msg(SUCC_PRE + "Bucket: %s has been created." % decorate(self.bucket_name))
 
     def _delete(self):
         """Deletes bucket.  Bucket may not have any jobs inside of bucket"""
         if self.bucket is not None:
             if not self.bucket.has_jobs():
                 # Todo: check bucket for jobs first
-                self.caller.msg(SUCC_PRE + "Bucket: %s deleted." % ju.decorate(self.bucket_name))
+                self.caller.msg(SUCC_PRE + "Bucket: %s deleted." % decorate(self.bucket_name))
                 ev.search_channel(self.bucket_name).first().delete()
             else:
                 self.caller.msg(ERROR_PRE + "Cannot delete Bucket: %s, jobs are associated with that bucket"
-                                % ju.decorate(self.bucket_name))
+                                % decorate(self.bucket_name))
         else:
-            self.caller.msg(ERROR_PRE + "Bucket: %s does not exist." % ju.decorate(self.bucket_name))
+            self.caller.msg(ERROR_PRE + "Bucket: %s does not exist." % decorate(self.bucket_name))
             return
 
     def _info(self, bucket):
@@ -374,15 +386,15 @@ class CmdBuckets(MuxCommand):
         else:
             status = 'On'
             self.bucket.connect(obj)
-        self.caller.msg(SUCC_PRE + "Toggling monitor for bucket: %s %s" % ju.decorate(self.bucket_name, status))
+        self.caller.msg(SUCC_PRE + "Toggling monitor for bucket: %s %s" % decorate(self.bucket_name, status))
 
     def _rename(self, newname):
         """renames a particular bucket"""
         if ju.isbucket(newname):
-            self.caller.msg(ERROR_PRE + "Bucket: %s already exists." % ju.decorate(newname))
+            self.caller.msg(ERROR_PRE + "Bucket: %s already exists." % decorate(newname))
         else:
             self.bucket.key = newname
-            self.caller.msg(SUCC_PRE + "Bucket: %s renamed to %s." % ju.decorate(self.bucket, newname))
+            self.caller.msg(SUCC_PRE + "Bucket: %s renamed to %s." % decorate(self.bucket, newname))
 
     def _parse(self, side):
         """parses side for /"""
@@ -431,7 +443,7 @@ class CmdBuckets(MuxCommand):
         if setting in VALID_BUCKET_SETTINGS.keys():
             self._setting_validate(setting, value)
         else:
-            self.caller.msg(ERROR_PRE + "%s is not a valid setting for bucket %s" % ju.decorate(setting, self.bucket_name))
+            self.caller.msg(ERROR_PRE + "%s is not a valid setting for bucket %s" % decorate(setting, self.bucket_name))
 
     def _set_timeout(self, setting, value):
         """timeout is a special thing.  Handle it seperately"""
@@ -442,7 +454,7 @@ class CmdBuckets(MuxCommand):
             if time.isdigit():
                self.bucket.set(setting, int(time), interval=ival)
                self.caller.msg(SUCC_PRE + "Timeout for bucket %s set to: %s."
-                               % ju.decorate(self.bucket_name, self.bucket.db.timeout_string))
+                               % decorate(self.bucket_name, self.bucket.db.timeout_string))
             else:
                self.caller.msg(ERROR_PRE + "The timeout must be an integer")
         else:
@@ -453,16 +465,16 @@ class CmdBuckets(MuxCommand):
         if setting == "desc":
             if len(value)>45:
                 self.bucket.set(setting, value)
-                self.caller.msg(SUCC_PRE + "Bucket: %s description set to: %s" % ju.decorate(self.bucket_name, value))
+                self.caller.msg(SUCC_PRE + "Bucket: %s description set to: %s" % decorate(self.bucket_name, value))
             else:
                 self.caller.msg(ERROR_PRE + "Bucket descriptions must be less than 45 characters.")
         elif setting == "timeout":
             self._set_timeout(setting, value)
         elif value.isdigit():
             self.bucket.set(setting, int(value))
-            self.caller.msg(SUCC_PRE + "Bucket %s: %s set to %s" % ju.decorate(self.bucket_name, setting, value))
+            self.caller.msg(SUCC_PRE + "Bucket %s: %s set to %s" % decorate(self.bucket_name, setting, value))
         else:
-            self.caller.msg(ERROR_PRE + "%s setting must be an integer." % ju.decorate(setting))
+            self.caller.msg(ERROR_PRE + "%s setting must be an integer." % decorate(setting))
 
     def switchparse(self):
         """switch workhorse, hard coding switches is probably bad, but it works right now
@@ -523,7 +535,7 @@ class CmdBuckets(MuxCommand):
             else:
                 self.caller.msg(ERROR_PRE + "That is not a valid bucket action. See +help buckets.")
         elif self.switch and not self._can_access(self.switch, self.caller):
-            self.caller.msg(ERROR_PRE + "You may not access that action for Bucket: %s." % ju.decorate(self.bucket))
+            self.caller.msg(ERROR_PRE + "You may not access that action for Bucket: %s." % decorate(self.bucket))
         else:
             self._bucket_table(self.buckets)
 
@@ -542,7 +554,7 @@ class CmdBuckets(MuxCommand):
                 if self._character_validate():
                     self.switchparse()
                 else:
-                    self.caller.msg(ERROR_PRE + "%s is not a valid character." % ju.decorate(self.character))
+                    self.caller.msg(ERROR_PRE + "%s is not a valid character." % decorate(self.character))
                     return
         else:
             self.switchparse()

@@ -9,6 +9,8 @@ from jobs_settings import ERROR_PRE, SUCC_PRE, TEST_PRE, SYSTEM
 from world.jobs.job import Job
 from world.jobs.bucket import Bucket
 
+sep = " == > "
+
 
 class TestSuite(unittest.TestSuite):
     """This will run all the tests"""
@@ -23,6 +25,40 @@ class TestUtilties(EvenniaTest):
         hash_a = pegasus.hash(key="test", string="test")
         hash_b = pegasus.hash(key="test", string="test")
         self.assertNotEqual(hash_a, hash_b)
+
+    # Todo - parsing switches? string1 = "+cmd_noun/cmd_verb lhs_noun/lhs_verb=rhs_noun/rhs_verb"
+    def test_parse_args(self):
+        """test that parse args returns correct information
+        :expected: { stringN: outN, . . .}
+        :stringN: test pattern to pass through `world.utilities.pegasus_utilities.StringTools.parse_args`
+        """
+        from world.utilities.pegasus_utilities import StringTools as st
+
+        st = st()
+        parse = st.parse_args
+
+        # Test strings
+        string0 = "lhs_noun/lhs_verb=rhs_noun/rhs_verb"
+        string1 = "lhs_noun=rhs_noun/rhs_verb"
+        string2 = "lhs_noun/lhs_verb=rhs_noun"
+        string3 = "lhs_noun=rhs_noun"
+        string4 = "lhs_noun"
+
+        # output patterns
+        out0 = "lhs_noun", "lhs_verb", "rhs_noun", "rhs_verb"
+        out1 = "lhs_noun", False , "rhs_noun", "rhs_verb"
+        out2 = "lhs_noun", "lhs_verb", "rhs_noun", False
+        out3 = "lhs_noun", False, "rhs_noun", False
+        out4 = "lhs_noun", False, False, False
+
+        patterns = [out0, out1, out2, out3, out4]
+        expected = patterns
+
+        strings = [string0, string1, string2, string3, string4]
+        actual = []
+        for string in strings:
+            actual.append(parse(string))
+        self.assertEqual(expected, actual)
 
 
 class TestBucket(EvenniaTest):
