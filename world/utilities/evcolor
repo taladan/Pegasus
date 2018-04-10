@@ -1,0 +1,82 @@
+#!/usr/bin/python3
+# -*- coding utf-8
+
+"""EvColor v0.1 colors test output from evennia tests
+
+The easiest way to use this is to alias your test command to pipe its output
+through EvColor. If you have any questions, please feel free to email me.
+
+You must have the colored library installed
+Color codes and documentation of colored is available
+[here](https://pypi.python.org/pypi/colored)
+
+
+Last Edit: 04-09-18, (20:24)
+"""
+__author__ = "Jamie Crosby <taladan@gmail.com>"
+__version__ = "0.1"
+__license__ = "[GLPv3](https://www.gnu.org/licenses/gpl-3.0.en.html)"
+
+
+import sys
+import colored
+from colored import stylize
+
+method_color = colored.fg("yellow") + colored.attr("bold")
+path_color = colored.fg("dark_green_sea")
+header_color = colored.fg("dark_olive_green_3a")
+break_color = colored.fg("yellow")
+line_color = colored.fg("white")
+err_color = colored.fg("dark_red_2") + colored.attr("bold")
+fail_color = colored.fg("black") + colored.attr("bold") + colored.bg("yellow") + colored.attr("bold")
+num_color = colored.fg("green_yellow") + colored.attr("bold")
+highlight = colored.fg("yellow") + colored.attr("bold")
+
+def color_digits(string):
+    bl = []
+    for i in string:
+        if i.isdigit():
+            i = stylize(i, num_color)
+            bl.append(i)
+        else:
+            bl.append(i)
+    ret = "".join(bl)
+    return ret
+
+def main_loop():
+    for line_number, line in enumerate(sys.stdin.readlines()):
+        # Strip endings
+        line = line.strip()
+
+        # parse lines for coloring
+        errs = ["ERROR:", "FAIL:"]
+        if any(err in line for err in errs):
+            err, msg = line.split(":")
+            method, path = msg.split(" ", 1)[0], msg.split(" ", 1)[1]
+            # "ERROR"
+            if err == "ERROR":
+                err = stylize(err, err_color)
+            # "FAIL"
+            else:
+                err = stylize(err, fail_color)
+            method = stylize(method, method_color)
+            path = stylize(path, path_color)
+            print(err + ":" + method + " " + path)
+        elif "====" in line:
+            print(stylize(line, header_color))
+        elif "---" in line:
+            print(stylize(line, break_color))
+        elif "FAILED" in line:
+            err, msg = line.split(" ", 1)[0], line.split(" ", 1)[1]
+            msg, num = msg.split("=", 1)
+            print(num)
+            num = color_digits(num)
+            msg = stylize(msg, line_color)
+            msg = msg + "=" + num + ")"
+            err = stylize(err, fail_color)
+            print(err + " " + msg)
+        else:
+            print(stylize(line, line_color))
+
+if __name__ == '__main__':
+    main_loop()

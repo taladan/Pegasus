@@ -137,6 +137,32 @@ class TestJob(EvenniaTest):
         self.assertEqual(expected,actual)
         pass
 
+    def test_create_CmdJobs_pass(self):
+        """test creation of job with correct parameters"""
+        # Testing _creation
+        # Import and load vars
+        from cmdjobs import CmdJobs
+        bucket, title, msgtext = "Code", "Test message", "This is a test of the job creation system."
+        job = CmdJobs()
+        job.lhs_obj = bucket
+        job.lhs_act = title
+        job.rhs = msgtext
+
+        # Expected output
+        x_exit_status = SUCC_PRE
+        x_msg = "Job: {0} created".format(ju.decorate(title))
+        expected = x_exit_status + x_msg
+
+        # Actual output
+        res = job._create()
+        a_exit_status = res.pop("exit_status")
+        a_msg = res.pop("msg")
+        actual = a_exit_status + a_msg
+        self.assertEqual(expected,actual)
+
+    def test_create_CmdJobs_fail(self):
+        pass
+
 
     def test_assign_job(self):
         """test assigning a job"""

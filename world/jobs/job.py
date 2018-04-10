@@ -146,7 +146,7 @@ class Job(Bucket):
         else:
             sysmsg = "{0} is not a valid bucket".format(bucket.capitalize())
 
-        ret = {"act": act, "exit_status": code, "msg": sysmsg, "job": self.job,}
+        ret = {"act": act, "exit_status": code, "msg": sysmsg, "job": self,}
         return ret
 
     def info(self):
@@ -162,7 +162,7 @@ class Job(Bucket):
         return ret
 
     def _update_actlist(self, msghash, act):
-        self.db.actions_list[len(job.db.actions_list)] = act
+        self.db.actions_list[len(self.db.actions_list)] = act
 
     @lazy_property
     def _all(self):
@@ -214,4 +214,4 @@ class Job(Bucket):
         self.db.messages[msghash] = msgtext
 
         # update the action list
-        self._act_update(msghash, act)
+        self._update_actlist(msghash, act)
