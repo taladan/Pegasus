@@ -1,6 +1,6 @@
 # How do I contribute?
 
-I've been getting this question lately and the answer to that is [here](https://github.com/taladan/Pegasus/wiki).
+I've been getting this question lately and the answer to that is in [The Code Contributor's Manifesto](https://github.com/taladan/Pegasus/wiki/Contribute)<sup>_(Queue the scary music, Dave)_</sup>.
 
 
 #### Info coming soon
