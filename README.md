@@ -1,17 +1,18 @@
+
+#How do I contribute?
+
+I've been getting this question lately and the answer to that is [here](https://github.com/taladan/Pegasus/wiki).
+
+
+#### Info coming soon
+
 I will be migrating this stuff to the project board as I get time.
 Some of this may not make the cut.
 
 
 # Pegasus
-Author: taladan@gmail.com
-
-last edited: 4/11/2018
-
-Credits:
-
 Server Base             - Evennia: http://www.evennia.com/
-RPG System base         - Fate: https://fate-srd.com/
-
+RPG System base         - Pathfinder: 
 
 Doc Definitions
 ---
