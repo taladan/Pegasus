@@ -50,3 +50,6 @@ nosetests.xml
 
 # PyCharm config
 .idea
+
+# git bot
+git-irc-notification
