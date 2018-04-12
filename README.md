@@ -1,5 +1,4 @@
-
-#How do I contribute?
+# How do I contribute?
 
 I've been getting this question lately and the answer to that is [here](https://github.com/taladan/Pegasus/wiki).
 
