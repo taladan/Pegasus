@@ -1,10 +1,14 @@
 
 import evennia as ev
 from evennia.utils import lazy_property
+from evennia.utils import logger as log
 from jobs_settings import VALID_JOB_ACTIONS
 import jobutils as ju
 from world.jobs.bucket import Bucket
 from world.utilities import pegasus_utilities as pegasus
+
+decorate = ju.decorate
+SYSTEM = "Jobs"
 
 class Job(Bucket):
     """Job object for holding messages and replies
@@ -39,7 +43,7 @@ class Job(Bucket):
         self.db.resolution_time = 0
         self.db.valid_actions = VALID_BUCKET_ACTIONS
         self.db.valid_settings = VALID_BUCKET_SETTINGS
-        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
+        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % decorate(self.db.key)
         self.db.group = "admin"
         """
 
@@ -64,13 +68,14 @@ class Job(Bucket):
         self.ndb.all = self._all
         self.ndb.list_pos = lambda: _getpos()
 
+    # Todo - finish getpos
     def _getpos(self, sort):
         """returns the position of the job in the bucket listing"""
         # sort_types = ("list", "bucket_view",)
         # job_list =
         # try:
         #     for job in job_list:
-        #         if job.db.id == self.db.id:
+        #         if job.db.jid == self.db.jid:
         #             pos = job_list.index(job)+1
         #             return pos
         # except Exception as e:
@@ -93,7 +98,7 @@ class Job(Bucket):
                     "actlist: Action list (tuple),
                     "caller": Enactor (ev object),
                     "stat": Exit status (global string),
-                    "sysmsg": Message (str),
+                    "msg": Message (str),
                     }
         """
         from jobs_settings import ERROR_PRE
@@ -103,30 +108,28 @@ class Job(Bucket):
         bucket = bucket.capitalize()
 
         # default errors
-        act = False
         code = ERROR_PRE
-        sysmsg = "{0} error".format(object)
+        msg = "{0} error".format(object)
         job = False
 
         # Is it a bucket?
         if ju.isbucket(bucket):
             try:
                 # set return options
-                act = "cre"
                 code = SUCC_PRE
-                sysmsg = "Job: {0} created".format(ju.decorate(title))
+                msg = "Job: {0} created".format(decorate(title))
 
                 # hash the job for an id
-                jid = pegasus.hash(key=bucket, string=title)
+                jid = self.db.jid = pegasus.hash(key=bucket, string=title)
 
                 # create the job
                 self.job = ev.create_channel(jid, desc=title, typeclass=Job)
                 # _update_actlist(act)
 
                 # add creation metadata
-                self.job.db.id = jid
                 self.job.tags.add(bucket, category="jobs")
                 self.job.tags.add(jid, category="jobs")
+                self._update_actlist("cre")
                 # self.job.ndb.creation_message = ACT + ":" + caller + "created this job on " + "April 8, 2018 at 10:00pm"
 
                 # add the actual message
@@ -135,19 +138,13 @@ class Job(Bucket):
                     bucket=bucket,
                     title=title,
                     msgtext=msgtext,
-                    action=act,
                     parent=jid,
                 )
             # Capture exception data and reraise
             except Exception as e:
-                sysmsg = "Unexpected error of type: {0}, Arguments: {1}".format(type(e).__name__, e.args)
+                log.log_trace(log.timeformat() + " " + SYSTEM + " --> " + e)
                 raise
-        # Not a bucket
-        else:
-            sysmsg = "{0} is not a valid bucket".format(bucket.capitalize())
-
-        ret = {"act": act, "exit_status": code, "msg": sysmsg, "job": self,}
-        return ret
+        return self
 
     def info(self):
         """return job info
@@ -161,7 +158,8 @@ class Job(Bucket):
                self.db.assigned_to)
         return ret
 
-    def _update_actlist(self, msghash, act):
+    def _update_actlist(self, act):
+        # Todo: fix action update - need to determine how I want to store the action data.   Probably long form strings.
         self.db.actions_list[len(self.db.actions_list)] = act
 
     @lazy_property
@@ -183,12 +181,10 @@ class Job(Bucket):
         self.db.title = kwargs.pop("title")
         self.db.parent = kwargs.pop("parent")
 
-        act = kwargs.pop("action")
         msgtext = kwargs.pop("msgtext")
 
         # Id the message
         msghash = pegasus.hash(key=self.db.bucket, string=self.db.title)
         self.db.messages[msghash] = msgtext
 
-        # update the action list
-        self._update_actlist(msghash, act)
+        # Todo: handle actionlist update.

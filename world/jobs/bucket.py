@@ -23,7 +23,6 @@ class Bucket(Channel):
     """
     def at_channel_creation(self):
         """This is done when the bucket is created"""
-        # set sane defaults
         self.db.approval_board = '0'
         self.db.completion_board = '0'
         self.db.createdby = None
@@ -38,7 +37,6 @@ class Bucket(Channel):
         self.db.num_of_jobs = self.associated
         self.db.resolution_time = 0
         self.db.percent_complete = self._pct_complete
-        # self.db.timeout_string = "0"
         self.db.total_jobs = self._total_jobs
         self.db.valid_actions = VALID_BUCKET_ACTIONS
         self.db.valid_settings = VALID_BUCKET_SETTINGS
@@ -59,6 +57,7 @@ class Bucket(Channel):
         return len(jobs)
 
     def per_player_actions(self, character):
+        """per_player_actions returns the bucket attribute from the player (if any)"""
         hash = self.db.hash
         ret = character.db.hash
         return ret
@@ -70,6 +69,7 @@ class Bucket(Channel):
         """
         bucket = kwargs.pop("bucket").capitalize()
         desc = kwargs.pop("desc")
+        self.bucket = None
 
         # Bucket exists?
         if ju.isbucket(bucket):
@@ -96,6 +96,8 @@ class Bucket(Channel):
 
                 # Reraise the error
                 raise
+        if self.bucket is None:
+            self.bucket = False
 
         ret = {"bucket": self.bucket, "code": code, "sysmsg": sysmsg}
         return ret
@@ -181,8 +183,8 @@ class Bucket(Channel):
     @lazy_property
     def _total_jobs(self):
         """returns the total number of jobs processed by and still on the system"""
+        # Todo: refactor for clarity
         if not self.db.num_of_jobs:
-            ret = self.db.num_completed_jobs + self.db.num_approved_jobs + self.db.num_denied_jobs
             ret = self.db.num_completed_jobs + self.db.num_approved_jobs + self.db.num_denied_jobs
         else:
             ret = self.db.num_completed_jobs + self.db.num_approved_jobs + self.db.num_denied_jobs + self.db.num_of_jobs

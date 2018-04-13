@@ -17,6 +17,7 @@ from world.jobs.bucket import Bucket
 from world.utilities import pegasus_utilities as pegasus
 
 MuxCommand = default_cmds.MuxCommand
+decorate = ju.decorate
 """
 argless_actions = ("all", "catchup", "clean", "compress", "credits", "mine", "new", "overdue", "sort")
 lhs_only_actions = ("act", "all", "checkin", "checkout", "claim", "clone", "delete", "help", "list",
@@ -107,6 +108,35 @@ LHS commands:
         +job/compress                       : Compresses job list (Wiz)
 """
 
+class actupdate(object):
+    """decorator class to update actions on a job automatically
+
+    This decorator takes the returned output from specific commands and
+    appends the actioncode (act) along with the caller, the exit status,
+    and the message passed and appends a formatted header and body to the
+    job's actions list.  It will return the output of the function on
+    to the outter part of the system.
+
+
+    :return:  returns the value of the output of the function wrapped
+    """
+    # Todo: testing of decorator
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self, f):
+        """ takes function as a parameter, decorates and returns wrapped function"""
+        # Always start from 0
+        actid = len(actlist) + 1 if len(actlist) < 0 else len(actlist)
+        time = '%s' % date.today().strftime("%B %d, %Y at %H:%M")
+        output = self.f()
+        act = output.get("act")
+        actlist = output.get("actlist")
+        caller = output.get("caller")
+        msg = output.get("msg")
+        actheader = (time, act, caller, msg[0:40])
+        actlist.append(actid + ":" + actheader)
+
 
 class CmdJobs(MuxCommand):
     """
@@ -175,36 +205,6 @@ class CmdJobs(MuxCommand):
     lock = "cmd:perm(Admin)"
     help_category = "Jobs"
 
-
-    class actupdate(object):
-        """decorator class to update actions on a job automatically
-
-        This decorator takes the returned output from specific commands and
-        appends the actioncode (act) along with the caller, the exit status,
-        and the message passed and appends a formatted header and body to the
-        job's actions list.  It will return the output of the function on
-        to the outter part of the system.
-
-
-        :return:  returns the value of the output of the function wrapped
-        """
-        # Todo: testing of decorator
-        def __init__(self, f):
-            self.f = f
-
-        def __call__(self, f):
-            """ takes function as a parameter, decorates and returns wrapped function"""
-            # Always start from 0
-            actid = len(actlist) + 1 if len(actlist) < 0 else len(actlist)
-            time = '%s' % date.today().strftime("%B %d, %Y at %H:%M")
-            output = self.f()
-            act = output.get("act")
-            actlist = output.get("actlist")
-            caller = output.get("caller")
-            msg = output.get("msg")
-            actheader = (time, act, caller, msg[0:40])
-            actlist.append(actid + ":" + actheader)
-
     # switches go here
     def _act(self):
       """return display information about actions performed on this job"""
@@ -226,7 +226,7 @@ class CmdJobs(MuxCommand):
         msg = self.rhs
         title = self.job.db.title,
         creator = self.job.db.createdby
-        header = "Your job %s has been approved by %s." % ju.decorate(title, self.caller)
+        header = "Your job %s has been approved by %s." % decorate(title, self.caller)
         self._mail(creator, header, body)
         # package message for decorator
         act = "apr"
@@ -358,17 +358,14 @@ class CmdJobs(MuxCommand):
         # If it's a bucket and args are all true, create a job else error
         if ju.isbucket(bucket):
             if args:
-                res = Job.create(bucket, title, msgtext)
-                act = res.pop("act")
-                exit_status = res.pop("exit_status")
-                sysmsg = res.pop("sysmsg")
-                job = res.pop("job")
+                job = Job.create(bucket, title, msgtext)
+                # todo: figure out what other variables need to be set here.
             else:
-                sysmsg = ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
+                msg = ERROR_PRE + "The correct syntax is +job/create Bucket/Title=Text"
         else:
-            sysmsg = ERROR_PRE + "%s is an invalid bucket." % ju.decorate(bucket)
+            msg = ERROR_PRE + "{0} is an invalid bucket.".format(decorate(bucket))
 
-        ret = {"act": act, "caller": self.caller, "stat": exit_status, "msg": sysmsg}
+        ret = {"stat": exit_status, "msg": sysmsg}
         return ret
 
     def _credits(self):
@@ -758,9 +755,9 @@ class CmdJobs(MuxCommand):
 
             if sortby in VALID_SORT_METHODS and direction in ("asc", "des"):
                 self.caller.db.jsort=sortby + ":" + direction
-                ret = SUCC_PRE + "Sortby method set to %s, %s" % (ju.decorate(sortby), 'descending' if direction == 'des' else 'ascending')
+                ret = SUCC_PRE + "Sortby method set to %s, %s" % (decorate(sortby), 'descending' if direction == 'des' else 'ascending')
             else:
-                ret = ERROR_PRE + "Method must be one of: %s Direction must be 'asc' or 'des' or left blank." % ju.decorate(VALID_SORT_METHODS)
+                ret = ERROR_PRE + "Method must be one of: %s Direction must be 'asc' or 'des' or left blank." % decorate(VALID_SORT_METHODS)
         # Sortby only
         elif self.lhs:
             sortby = self.lhs_obj
@@ -945,7 +942,7 @@ class CmdJobs(MuxCommand):
         self.db.resolution_time = 0
         self.db.valid_actions = VALID_BUCKET_ACTIONS
         self.db.valid_settings = VALID_BUCKET_SETTINGS
-        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % ju.decorate(self.db.key)
+        self.db.default_notification = SUCC_PRE + "A new job has been posted to %s" % decorate(self.db.key)
         self.db.group = "admin"
         """
 
@@ -1016,7 +1013,7 @@ class CmdJobs(MuxCommand):
         try:
             self.job = ev.ChannelDB.objects.get_channel(self.title)
         except AttributeError:
-            self.caller.msg(ERROR_PRE + "Job: %s does not exist." % ju.decorate(self.title))
+            self.caller.msg(ERROR_PRE + "Job: %s does not exist." % decorate(self.title))
 
     def _set_job_number(self, switch):
         """parse switch for jobs needing to be called by id and assign the appropriate value"""
