@@ -120,7 +120,7 @@ Jobs:(****)
     list          Viewing the +jobs list
     player        Player commands
     publication   Job publication and player visibility
-    manage        Managing your +jobs board
+    manage        Managing your +jobs board_settings
     reports       Getting statistics on the system
     tagging       Tagging jobs for yourself and others.
 

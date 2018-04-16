@@ -1,3 +1,7 @@
+# What is the Pegasus Project?
+
+The Pegasus project is an opensource (GPLv3) suite of tools that facilitate the creation, administration and enjoyment of a text based gaming environment.  Below you'll find a list of things on the roadmap, but suffice it to say that with any mu* server base that's available, there's always a need for good, dependable, standardized tooling that allows administrators and players to customize their experience.  As Pegasus develops, more of the ideology behind it will be explored - watch for updates!
+
 # How do I contribute?
 
 I've been getting this question lately and the answer to that is in [The Code Contributor's Manifesto](https://github.com/taladan/Pegasus/wiki/Contribute)<sup>_(Queue the scary music, Dave)_</sup>.
@@ -5,7 +9,7 @@ I've been getting this question lately and the answer to that is in [The Code Co
 
 #### Info coming soon
 
-I will be migrating this stuff to the project board as I get time.
+I will be migrating this stuff to the project board_settings as I get time.
 Some of this may not make the cut.
 
 
@@ -32,7 +36,7 @@ the higher the priority
 
 Table of Contents
 ===
-#####BASE OOC SYSTEMS:(*****)
+##### BASE OOC SYSTEMS:(*****)
 - [ ] Jobs (****)        - akin to the functionality of anomaly jobs - Buckets are in, working on jobs
 - [ ] BBS (****)        - Handles users to post public/semi-public
                     info for other users to see/comment on
@@ -44,7 +48,7 @@ Table of Contents
 - [ ] Faction/Group (**) - This will handle factions and groups.  God help us all
 - [ ] Notepad (*)        - Allows Users to keep lists/notes/journals
 
-#####   BASE CHARACTER SYSTEMS:(****)
+#####  BASE CHARACTER SYSTEMS:(****)
 - [ ] Chargen (*****)     - Allow User to generate a character
 - [ ] Languages (**)      - Allow Characters to speak in different
                        languages/understand different languages
@@ -52,7 +56,7 @@ Table of Contents
 - [ ] +Sheet (*****)      - Allow Characters to see/use +sheet
 - [ ] Combat (****)       - Handles combat functionality for Characters
 
-#####BASE AGMIN (GM) SYSTEMS:(****)
+##### BASE AGMIN (GM) SYSTEMS:(****)
 - [ ] NPC System (***)   - Allow Admin (GM's) To create & puppet NPC characters
 - [ ] +Sheet (*****)     - Allow Admin (GM's) to manipulate sheets
 - [ ] Combat (****)      - Handles combat functionality for Admin
@@ -60,7 +64,7 @@ Table of Contents
   
 
 
-#Project Details
+# Project Details
 
 BASE OOC SYSTEMS (*****)
 ===
