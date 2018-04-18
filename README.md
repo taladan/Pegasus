@@ -19,7 +19,7 @@ You may also want to keep an eye on our Issues section as Taladan will be migrat
 ### Social Media Links
 
 - [Discord](https://discord.gg/Aw44Fh)
-- [Irc](irc://irc.chat.freenode.net/channel?#pegasus-project)
+- <a href:"irc://chat.freenode.net/channel?#pegasus-project">Irc</a>
 - [Reddit](https://reddit.com/r/pegasusproject)
 - [Twitch channel](https://twitch.tv/taladan)
 - [Twitter](https://twitter.com/taladan)
