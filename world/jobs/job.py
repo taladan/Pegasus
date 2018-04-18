@@ -101,36 +101,25 @@ class Job(Bucket):
                     "msg": Message (str),
                     }
         """
-        from jobs_settings import ERROR_PRE
-        from jobs_settings import SUCC_PRE
-
+        # Todo = refactor behavior into cmdjobs creation settings.
         # ignore case
         bucket = bucket.capitalize()
-
-        # default errors
-        code = ERROR_PRE
-        msg = "{0} error".format(object)
-        job = False
 
         # Is it a bucket?
         if ju.isbucket(bucket):
             try:
-                # set return options
-                code = SUCC_PRE
-                msg = "Job: {0} created".format(decorate(title))
-
                 # hash the job for an id
                 jid = self.db.jid = pegasus.hash(key=bucket, string=title)
 
                 # create the job
                 self.job = ev.create_channel(jid, desc=title, typeclass=Job)
-                # _update_actlist(act)
+                self.job.db.status = "New"
 
                 # add creation metadata
                 self.job.tags.add(bucket, category="jobs")
+                self.job.db.title = title
                 self.job.tags.add(jid, category="jobs")
                 self._update_actlist("cre")
-                # self.job.ndb.creation_message = ACT + ":" + caller + "created this job on " + "April 8, 2018 at 10:00pm"
 
                 # add the actual message
                 self.job._add_msg(
@@ -142,9 +131,9 @@ class Job(Bucket):
                 )
             # Capture exception data and reraise
             except Exception as e:
-                log.log_trace(log.timeformat() + " " + SYSTEM + " --> " + e)
+                log.log_trace(log.timeformat() + " " + SYSTEM + " --> " + repr(e))
                 raise
-        return self
+            return self
 
     def info(self):
         """return job info

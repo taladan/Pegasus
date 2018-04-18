@@ -162,7 +162,7 @@ class CmdBuckets(MuxCommand):
         """grants player access to a specific bucket"""
         action = self.lhs_text.lower()
 
-        if not ju.ischaracter(self.character):
+        if not ju.is_character(self.character):
             code = ERROR_PRE
             sysmsg = "{0} is not a valid character.".format(decorate(self.character))
 
@@ -188,7 +188,6 @@ class CmdBuckets(MuxCommand):
 
         ret = {"exit_status":code, "sysmsg":sysmsg}
         return ret
-
 
     def _argparse(self):
         """Check args and parse a little more tightly"""
@@ -334,7 +333,7 @@ class CmdBuckets(MuxCommand):
     def _character_validate(self):
         """validates character objects"""
         char_obj = ev.search_object(self.character).first()
-        if ju.ischaracter(char_obj):
+        if ju.is_character(char_obj):
             self.character = char_obj
             return True
         else:

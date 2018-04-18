@@ -875,7 +875,7 @@ class CmdJobs(MuxCommand):
         """
         charname = self.rhs
         job = self.jobid
-        if ju.ischaracter(charname):
+        if ju.is_character(charname):
             ret = {}
             act = "tag"
             character = ev.ObjectDB.objects.search(charname)

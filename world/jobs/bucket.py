@@ -13,6 +13,9 @@ SUCC_PRE = settings.SUCC_PRE
 ERROR_PRE = settings.ERROR_PRE
 
 
+
+# todo: hasacces/ppa    04-13-18, (12:53) -
+
 class Bucket(Channel):
     """
     The Bucket is the base object for the jobs system.  This object
@@ -21,7 +24,8 @@ class Bucket(Channel):
     Todo: Work on jobs integration and finish setting up monitoring
     # self.db.total_jobs = ev.search_tag(self.db.key, category="jobs")
     """
-    def at_channel_creation(self):
+    def at_channel_creation(
+            self):
         """This is done when the bucket is created"""
         self.db.approval_board = '0'
         self.db.completion_board = '0'
@@ -167,7 +171,6 @@ class Bucket(Channel):
         for bucket in buckets:
            jobs.extend(job for job in bucket.my_jobs)
         return jobs
-
 
     def set(self, setting, value, **kwargs):
         """used to change settings on a particular bucket"""

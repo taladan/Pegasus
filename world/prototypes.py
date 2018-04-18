@@ -38,6 +38,7 @@ See the `@spawn` command and `evennia.utils.spawner` for more info.
 
 from random import randint
 
+# Todo: Work on monster prototypes - we will need the pathfinder monster manual section to fill all this info out.
 GOBLIN = {
  "key": "goblin grunt",
  "health": lambda: randint(20,30),

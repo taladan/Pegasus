@@ -28,9 +28,10 @@ DEFAULT_TABLE_WIDTH = 102
 DEFAULT_TEXT_COLOR = "|w"
 
 # Prefixes
-DEFAULT_ERROR_PRE = "|w|[200Game:|n "
-DEFAULT_SUCC_PRE = "|w|[001Game:|n "
-DEFAULT_TEST_PRE = "|000|[021TESTING>>>|n"
+DEFAULT_ERROR_PRE = "|w|Jobs Error :>|n "
+DEFAULT_SUCC_PRE = "|w|Game :>|n "
+DEFAULT_TEST_PRE = "|w|Testing :>|n"
+DEFAULT_INFO_PRE = "|w|Jobs system :>|n"
 
 # Actions
 DEFAULT_VALID_BUCKET_ACTIONS = ("bucket_access", "bucket_check", "bucket_create", "bucket_delete",

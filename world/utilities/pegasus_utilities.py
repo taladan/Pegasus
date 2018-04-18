@@ -5,6 +5,7 @@
 """
 
 # imports go here
+import evennia as ev
 
 # foobar
 __author__ = "Jamie Crosby"
@@ -91,6 +92,26 @@ class StringTools(object):
         ret = _eq(string)
         return ret
 
+def assign_character(character):
+    """take a character string and return the correct query object"""
+    return ev.search_object(character)
+
+def is_board(board):
+    # Todo: fix when bbsys is integrated
+    boards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    if not board.isdigit():
+        ret = False
+    elif board in boards:
+        ret = True
+    else:
+        ret = False
+
+    return ret
+
+def is_character(character):
+    """return bool of character status"""
+    return character in ev.DefaultCharacter.objects.all()
+
 def is_date(string):
     """determine if string is a date"""
     from dateutil.parser import parse
@@ -100,6 +121,14 @@ def is_date(string):
     except ValueError:
         ret = False
     return ret
+
+def is_org(string):
+    """return boolean if string is a group"""
+    groups = Group().list
+    names = []
+    for group in groups:
+        names.append(group.key.lower())
+    return string.lower() in names
 
 def days_past(date):
     """return how many days have passed since date"""
@@ -117,6 +146,21 @@ def days_until(date):
     now = datetime.now()
     # Todo: finish
 
+def isblank(obj):
+    """Test object for length
+
+    :return: True if obj has no length"""
+    try:
+        len(obj)
+        ret = False
+    except TypeError:
+        ret = True
+
+    return ret
+
+def input(caller, raw_string):
+    """get input from the user"""
+    return raw_string.strip()
 
 def hash(**kwargs):
     """create a hash and return it
@@ -146,3 +190,18 @@ def hash(**kwargs):
     # Create the hash
     hash = hashlib.md5(hashable.encode("utf-8")).hexdigest()
     return hash
+
+def hastag(object, tag):
+    """determine if a object has a particular tag on it
+
+    :return:boolean
+    """
+    return tag in object.tags.all()
+
+def log(msg, exception, system):
+    from evennia.utils.logger import EvenniaLogFile
+    log = EvenniaLogFile()
+    logfile = system + ".log"
+    exception = exception + "\n"
+    msg = exception + msg
+    log.log_file(msg, logfile)

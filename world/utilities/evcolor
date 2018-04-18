@@ -13,14 +13,13 @@ Color codes and documentation of colored is available
 
 Last Edit: 04-09-18, (20:24)
 """
-__author__ = "Jamie Crosby <taladan@gmail.com>"
-__version__ = "0.1"
-__license__ = "[GLPv3](https://www.gnu.org/licenses/gpl-3.0.en.html)"
-
-
 import sys
 import colored
 from colored import stylize
+
+__author__ = "Jamie Crosby <taladan@gmail.com>"
+__version__ = "0.1"
+__license__ = "[GLPv3](https://www.gnu.org/licenses/gpl-3.0.en.html)"
 
 method_color = colored.fg("yellow") + colored.attr("bold")
 path_color = colored.fg("dark_green_sea")
@@ -44,7 +43,8 @@ def color_digits(string):
     return ret
 
 def main_loop():
-    for line_number, line in enumerate(sys.stdin.readlines()):
+    input = sys.stdin.readlines()
+    for line in input:
         # Strip endings
         line = line.strip()
 
