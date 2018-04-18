@@ -19,9 +19,9 @@ You may also want to keep an eye on our Issues section as Taladan will be migrat
 ### Social Media Links
 
 - [Discord](https://discord.gg/Aw44Fh)
-- <a href:"irc://chat.freenode.net/channel?#pegasus-project">Irc</a>
 - [Reddit](https://reddit.com/r/pegasusproject)
 - [Twitch channel](https://twitch.tv/taladan)
 - [Twitter](https://twitter.com/taladan)
+- irc://chat.freenode.net/channel?#pegasus-project (git does not support irc:// calls)
 
 Note that we do not currently have a dedicated website, so if you're looking to contribute input on a domain name (pegasusproject.com is already taken, sadly XD.) or hosting or web design or anything like that, get in touch with Taladan and we can get grooving on that.
