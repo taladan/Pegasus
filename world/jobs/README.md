@@ -1,126 +1,154 @@
-## Jobs
+## Bucket Menu Pseudocode:
 
-Jobs is a task management system based on the Bucket Class.  It gives the players and staff of a game a way to have a static communication that can be accessed whether the sender is offline/online, however it is not /as/ static as mail.  Jobs allows players and staff to reply to comments put on the job, as well as perform actions against a job, such as adding players to access it, mailing the senders/players who are attached to the job, assigning of jobs to different people, approving/completing/denying jobs and posting to relevant bboards.  Jobs is also able to be hooked into by any other system so that communication can be automated and not segregated from the actions performed.
-
-For example:
-
-1. Cleric Bob adds a job requesting that his +3 mace be enchanted to have disruption on it.
-2. Staffer Josephine replies to cleric bob that, though there's an issue with the magic code right now, they'll have it done as soon as possible.
-3. Staffer Wheel lets Cleric Bob know that the mace can't be enchanted because Cleric Bob forgot that the mace was crafted out of forgettium, and it quickly becomes disenchanted if someone tries to put a new enchantment on it.
-4. Staffer Josephine adds Ranger Flip to the job
-5. Ranger Flip replies that he's got a scroll of unforgettium and is willing to give it to Cleric Bob if Cleric Bob will go on an adventure with him.
-6. Staffer Wheel says that's cool and enchants the mace, approving the job
-7. The job gets archived and posted to a bboard
-
-
-This is the flow of responses.  They can happen over a period of minutes or days if that's what it takes - the data is stored on the job channel and then retrieved as necessary.
-
-Jobs belong to buckets for organization.  Buckets are a type of communications channel (inherits from the Evennia Channel class) and it acts as a notification hub as well as organizing jobs into groupings categorized by the bucket creators.  This will allow control over what types of jobs are sent to specific buckets.
-
-
-The structure of bucket and job creation
-----------------------------------------
-
-bucket system options:
-
-|option|action|
-|:-----|:-----|
-1. bucket info|retrieve information about a bucket
-2. check access|check a player's access
-3. create bucket|bucket creation process
-4. delete bucket|deleting a bucket
-5. grant access|grant access to a player
-6. rename bucket|rename a bucket
-7. set options|change an option on a bucket
-8. toggle monitor|toggle monitoring on a bucket
-
-This is a template of the form that I cobbled together as a generic template:
+### Bucket Creation Mockup
 
 ```
-Proposed Standard Form:
-
-header_char_limit = 72
-node_name_char_limit = 34
-node_text_char_limit = 70 * 5
-
-header_section = 1
-node_options = [A-J]
-body_section = 2
 ╔═════════════════════════════════════════════════════════════════════════════╗
-║  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  ║
+║1 $System.......................Bucket Creation...................$Gamename  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
-║  ccccccccccccccccAcccccccccccccccccc   cccccccccccccccccFccccccccccccccccc  ║
-║  ccccccccccccccccBcccccccccccccccccc   cccccccccccccccccGccccccccccccccccc  ║
-║  ccccccccccccccccCcccccccccccccccccc   cccccccccccccccccHccccccccccccccccc  ║
-║  ccccccccccccccccDcccccccccccccccccc   cccccccccccccccccIccccccccccccccccc  ║
-║  ccccccccccccccccEcccccccccccccccccc   cccccccccccccccccJccccccccccccccccc  ║
+║A 1. Name............................ F  6. Bucket Manager.................. ║
+║B 2. Description..................... G  7. Grant access.................... ║
+║C 3. Approval Board.................. H  8. Set Options..................... ║
+║D 4. Denial Board.................... I  9. ................................ ║
+║E 5. Completion Board................ J 10. ................................ ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
 ║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ ....................................................................... │ ║
+║ │ ....Welcome to Bucket creation.  Help is available for each option. ... │ ║
+║ │ ....................................................................... │ ║
+║2│ ....................................................................... │ ║
+║ │ ...Please note: Each menu option must be completed for bucket.......... │ ║
+║ │ ................creation to complete. ................................. │ ║
+║ │ ....................................................................... │ ║
+║ │ ....................................................................... │ ║
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
-
-Proposed Mobile Form:
-
-header_char_limit = 34
-node_name_char_limit = 15
-node_text_char_limit = 34 * 5
-
-header_section = 1
-node_options = [A-J]
-body_section = 2
-.-------------------------------------.
-| XXXXXXXXXXXXXXXX1XXXXXXXXXXXXXXXXXX |
-.-------------------------------------.
-| cccccccAccccccc     cccccccFccccccc |
-| cccccccBccccccc     cccccccGccccccc |
-| cccccccCccccccc     cccccccHccccccc |
-| cccccccDccccccc     cccccccIccccccc |
-| cccccccEccccccc     cccccccJccccccc |
-.-------------------------------------.
-| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
-| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
-| XXXXXXXXXXXXXXXX2XXXXXXXXXXXXXXXXXX |
-| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
-| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
-.-------------------------------------.
 ```
-
-Check out [Evennia's Forms](https://github.com/evennia/evennia/wiki/evennia.utils.evform) for more information on using forms for output.
-
 
 ### Creation menu choices:<sup>1</sup>
 
-1. Name
-2. Description
-3. Approval board
-4. Denial Board
-5. Completion Board
-6. Bucket manager (test if it's a player, default is admin perms)
-7. Grant Access
-8. Set options
+1. Name ~:> if bucket doesn't exist: if name isn't too long: dbsave else: reprompt too long else: reprompt exists
+2. Description ~:> if desc exists, if it is too long: trunc and dbsave, else dbsave, else error
+3. Approval board ~:> if board exists and bucket can post, dbsave
+4. Denial Board ~:>  if board exists and bucket can post, dbsave
+5. Completion Board ~:> if board exists and bucket can post, dbsave
+6. Bucket manager (test if it's a player, default is admin perms) ~:>  if player exists: dbsave else: dbsave; set admin perms
+7. Grant Access ~:> if player exists and doesn't have access, dbsave
+8. Set options ~:> submenu
 
-#### Set options menu choices:<sup>1</sup>
-1. Timeout
-2. Public/Private
-3. Hidden
-4. Action codes 
-5. Access permissions
+
+|Choice | DB Attr                |
+|-------|------------------------|
+|access | `ndb._menutree.access` |
+|admin  | `ndb._menutree.admin`  |
+|app    | `ndb._menutree.app`    |
+|comp   | `ndb._menutree.comp`   |
+|deny   | `ndb._menutree.deny`   |
+|desc   | `ndb._menutree.desc`   |
+|name   | `ndb._menutree.name`   |
+|options| `ndb._menutree.options`|
+
+---
+
+### Bucket Options Mockup
+```
+╔═════════════════════════════════════════════════════════════════════════════╗
+║1 $System......................Bucket Options.....................$Gamename  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║A 1. Timeout......................... F  6. ................................ ║
+║B 2. Privacy......................... G  7. ................................ ║
+║C 3. Visibility...................... H  8. ................................ ║
+║D 4. Act Codes....................... I  9. ................................ ║
+║E 5. Permissions..................... J 10. ................................ ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ....................................................................... │ ║
+║ │ ....Defaults for a new bucket are below. Help for each option is....... │ ║
+║ │ ....available. ........................................................ │ ║
+║2│ ..................Default:...........Value:............................ │ ║
+║ │ ...................Permissions.........Admin........................... │ ║
+║ │ ...................Timeout.............30 days......................... │ ║
+║ │ ...................Visibility..........Public.......................... │ ║
+║ │ ...................Privacy.............Unhidden........................ │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+```
+
+### Set options menu choices:<sup>1</sup>
+1. Timeout ~:> if input exists and in 'digit str' format: dbsave else: default, reprompt
+2. Privacy  ~:> toggle boolean for public/private; notify
+3. Visibility (hidden) ~:> toggle boolean for hidden; notify
+4. Act Codes ~:> review act codes and exit
+5. Permissions ~:> submenu
+
+|Opt    | DB Attr                |
+|-------|------------------------|
+|act    | `ndb._menutree.act`    |
+|hidden | `ndb._menutree.hidden` |
+|perm   | `ndb._menutree.perm`   |
+|privacy| `ndb._menutree.privacy`|
+|timeout| `ndb._menutree.timeout`|
 
 <sup>1</sup> - Each choice in a menu needs to have an attendant help file.
+
+---
+
+### Bucket Permission Mockup
+```
+╔═════════════════════════════════════════════════════════════════════════════╗
+║1 $System....................Bucket Permissions...................$Gamename  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║A 1. Completion...................... F  6. Grant*.......................... ║
+║B 2. Approval........................ G  7. Edit............................ ║
+║C 3. Denial.......................... H  8. Stats........................... ║
+║D 4. Creation........................ I  9. Log............................. ║
+║E 5. Add............................. J 10. Mail............................ ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ....................................................................... │ ║
+║ │ ...Be aware that you are granting bucket level access for each option.  │ ║
+║ │ ....................................................................... │ ║
+║2│ ...Help is available for each option. ................................. │ ║
+║ │ ....................................................................... │ ║
+║ │ ....................................................................... │ ║
+║ │ ...* - Makes person a Bucket SuperUser................................. │ ║
+║ │ ....................................................................... │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+```
+#### Access Permissions
+
+1. Completion ~:> If player can /complete jobs
+2. Approval ~:> If player can /approve jobs
+3. Denial ~:> If player can /deny jobs
+4. Creation ~:> If player can use the /create command
+5. Add ~:> If player can use the /add command
+6. Grant ~:> If player can use +bucket/access
+7. Edit ~:> If player can use the /edit command
+8. Stats ~:> If player can use the /edit command
+9. Log ~:>  If player can /log a job
+10. Mail ~:> If player can /query and /mail
+
+|Permission |Boolean Test               |
+|-----------|---------------------------|
+|complete   | `.ndb._menutree.complete` |
+|approval   | `.ndb._menutree.approval` |
+|deny       | `.ndb._menutree.deny`     |
+|create     | `.ndb._menutree.create`   |
+|add        | `.ndb._menutree.add`      |
+|grant      | `.ndb._menutree.grant`    |
+|edit       | `.ndb._menutree.edit`     |
+|stats      | `.ndb._menutree.stats`    |
+|log        | `.ndb._menutree.log`      |
+|mail       | `.ndb._menutree.mail`     |
+
+---
 
 #### AJ Action codes
 _(these may or may not all make it into the system, they are simply here for reference)_
 
 |CODE|Description
-|----|---------:|
+|----|:--------:|
 ADD|Player comment. Generated with +job/add.
 APR|+job/approve closing action.
 ASN|Assignment to a user.
@@ -147,21 +175,6 @@ TRN|Indicates a job has been transferred.
 UNL|Job unlocking action.
 UNP|Indicates a job/comment has been unpublished.
 
-
-#### Access Permissions
-
-|Permission|Boolean test
-COMPLETE_ACCESS|If player can /complete jobs.
-APPROVE_ACCESS|If player can /approve jobs.
-DENY_ACCESS|If player can /deny jobs.
-CREATE_ACCESS|If player can use the /create command.
-ADD_ACCESS|If player can use the /add command.
-GIVE_ACCESS|If player can use +bucket/access.
-EDIT_ACCCESS|If player can use the /edit command.
-STATS_ACCESS|If player can pull reports on the system.
-LOG_ACCESS|If player can /log a job.
-MAIL_ACCESS|If player can /query and /mail.
-
 ## The bucket creation process
 
 1. +bucket
@@ -170,8 +183,16 @@ MAIL_ACCESS|If player can /query and /mail.
 4. prompt for bucket description (test if description is too long, if so, truncate)
 5. prompt for bboard to post to
 
+Limits and legend
+---
 
-More will be added as I get it written up.
+header_char_limit = 72
+node_name_char_limit = 34
+node_text_char_limit = 70 * 5
 
---Tal
+header_section = 1
+node_options = [A-J]
+body_section = 2
+
+---
 
