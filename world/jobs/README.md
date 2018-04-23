@@ -96,6 +96,81 @@ body_section = 2
 Check out [Evennia's Forms](https://github.com/evennia/evennia/wiki/evennia.utils.evform) for more information on using forms for output.
 
 
+### Creation menu choices:<sup>1</sup>
+
+1. Name
+2. Description
+3. Approval board
+4. Denial Board
+5. Completion Board
+6. Bucket manager (test if it's a player, default is admin perms)
+7. Grant Access
+8. Set options
+
+#### Set options menu choices:<sup>1</sup>
+1. Timeout
+2. Public/Private
+3. Hidden
+4. Action codes 
+5. Access permissions
+
+<sup>1</sup> - Each choice in a menu needs to have an attendant help file.
+
+#### AJ Action codes
+_(these may or may not all make it into the system, they are simply here for reference)_
+
+|CODE|Description
+|----|---------:|
+ADD|Player comment. Generated with +job/add.
+APR|+job/approve closing action.
+ASN|Assignment to a user.
+AUT|Automatic hook. If set, will run daily.
+CKI|Checked In.
+CKO|Checked Out.
+CLN|Clone action. Only appears on the newly created job.
+COM|+job/complete generates this closing action.
+CRE|Can only be first comment. Generated with +job/create.
+DEL|+job/delete closing action.
+DNY|+job/deny closing action.
+DUE|Due date change.
+EDT|Indicates when a comment has been edited.
+LOK|Indicates when a job has been locked.
+MRG|Indicates a job that has been merged from two jobs.
+NAM|Indicates a title change.
+OTH|A job created by any means other than /create triggers the OTH hook.
+PUB|Indicates a job/comment has been published.
+SRC|Indicates when a job's OPENED_BY (source) has changed.
+STA|A +job/set status change.
+SUM|Indicates a change in the summary settings.
+TAG|Indicates a job has been tagged or untagged.
+TRN|Indicates a job has been transferred.
+UNL|Job unlocking action.
+UNP|Indicates a job/comment has been unpublished.
+
+
+#### Access Permissions
+
+|Permission|Boolean test
+COMPLETE_ACCESS|If player can /complete jobs.
+APPROVE_ACCESS|If player can /approve jobs.
+DENY_ACCESS|If player can /deny jobs.
+CREATE_ACCESS|If player can use the /create command.
+ADD_ACCESS|If player can use the /add command.
+GIVE_ACCESS|If player can use +bucket/access.
+EDIT_ACCCESS|If player can use the /edit command.
+STATS_ACCESS|If player can pull reports on the system.
+LOG_ACCESS|If player can /log a job.
+MAIL_ACCESS|If player can /query and /mail.
+
+## The bucket creation process
+
+1. +bucket
+2. Option 3 (Create Bucket)
+3. prompt for bucket name (test if valid name, if not reprompt)
+4. prompt for bucket description (test if description is too long, if so, truncate)
+5. prompt for bboard to post to
+
+
 More will be added as I get it written up.
 
 --Tal
