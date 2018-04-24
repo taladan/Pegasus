@@ -5,38 +5,51 @@ Bucket
 
 ```
 ╔═════════════════════════════════════════════════════════════════════════════╗
-║1 $System.......................Bucket Creation...................$Gamename  ║
+║  XXXXX1XXXXXXX.............XXXXXXXXXXX2XXXXXXXXXXX............XXXXXX3XXXXX  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
-║A 1. Name............................ F  6. Bucket Manager.................. ║
-║B 2. Description..................... G  7. Grant access.................... ║
-║C 3. Approval Board.................. H  8. Set Options..................... ║
-║D 4. Denial Board.................... I  9. ................................ ║
-║E 5. Completion Board................ J 10. ................................ ║
+║  1. XXXXXXXXXXXXXXXAXXXXXXXXXXXXXXXX    6. XXXXXXXXXXXXXXFXXXXXXXXXXXXXXXX  ║
+║  2. XXXXXXXXXXXXXXXBXXXXXXXXXXXXXXXX    7. XXXXXXXXXXXXXXGXXXXXXXXXXXXXXXX  ║
+║  3. XXXXXXXXXXXXXXXCXXXXXXXXXXXXXXXX    8. XXXXXXXXXXXXXXHXXXXXXXXXXXXXXXX  ║
+║  4. XXXXXXXXXXXXXXXDXXXXXXXXXXXXXXXX                                        ║
+║  5. XXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXX                                        ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
 ║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
-║ │ ....................................................................... │ ║
-║ │ ....Welcome to Bucket creation.  Help is available for each option. ... │ ║
-║ │ ....................................................................... │ ║
-║2│ ....................................................................... │ ║
-║ │ ...Please note: Each menu option must be completed for bucket.......... │ ║
-║ │ ................creation to complete. ................................. │ ║
-║ │ ....................................................................... │ ║
-║ │ ....................................................................... │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
 
+Menu Variables
+--------------
+1. System
+2. Menu Title
+3. Gamename
+4. Menu_text
 
-### Creation menu choices:<sup>1</sup>
+|Menu Variable|DB Variable                              |
+|-------------|-----------------------------------------|
+|System       |`evennia.world.jobs.jobs_defaults.SYSTEM`|
+|Menu Title   |self.menu_title                          | 
+|Menu Text    |self.menu_text                           |
 
-1. Name ~:> if bucket doesn't exist: if name isn't too long: dbsave else: reprompt too long else: reprompt exists
-2. Description ~:> if desc exists, if it is too long: trunc and dbsave, else dbsave, else error
-3. Approval board ~:> if board exists and bucket can post, dbsave
-4. Denial Board ~:>  if board exists and bucket can post, dbsave
-5. Completion Board ~:> if board exists and bucket can post, dbsave
-6. Bucket manager (test if it's a player, default is admin perms) ~:>  if player exists: dbsave else: dbsave; set admin perms
-7. Grant Access ~:> if player exists and doesn't have access, dbsave
-8. Set options ~:> submenu
+Creation menu choices:<sup>1</sup>
+----------------------
+
+A. Name ~:> if bucket doesn't exist: if name isn't too long: dbsave else: reprompt too long else: reprompt exists
+B. Description ~:> if desc exists, if it is too long: trunc and dbsave, else dbsave, else error
+C. Approval board ~:> if board exists and bucket can post, dbsave
+D. Denial Board ~:>  if board exists and bucket can post, dbsave
+E. Completion Board ~:> if board exists and bucket can post, dbsave
+F. Bucket manager (test if it's a player, default is admin perms) ~:>  if player exists: dbsave else: dbsave; set admin perms
+G. Grant Access ~:> if player exists and doesn't have access, dbsave
+H. Set options ~:> submenu
 
 
 |Choice | DB Attr                |
@@ -55,34 +68,48 @@ Bucket
 ### Bucket Options Mockup
 ```
 ╔═════════════════════════════════════════════════════════════════════════════╗
-║1 $System......................Bucket Options.....................$Gamename  ║
+║  XXXXX1XXXXXXX.............XXXXXXXXXXX2XXXXXXXXXXX............XXXXXX3XXXXX  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
-║A 1. Timeout......................... F  6. ................................ ║
-║B 2. Privacy......................... G  7. ................................ ║
-║C 3. Visibility...................... H  8. ................................ ║
-║D 4. Act Codes....................... I  9. ................................ ║
-║E 5. Permissions..................... J 10. ................................ ║
+║  1. XXXXXXXXXXXXXXXAXXXXXXXXXXXXXXXX                                        ║
+║  2. XXXXXXXXXXXXXXXBXXXXXXXXXXXXXXXX                                        ║
+║  3. XXXXXXXXXXXXXXXCXXXXXXXXXXXXXXXX                                        ║
+║  4. XXXXXXXXXXXXXXXDXXXXXXXXXXXXXXXX                                        ║
+║  5. XXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXX                                        ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
 ║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
-║ │ ....................................................................... │ ║
-║ │ ....Defaults for a new bucket are below. Help for each option is....... │ ║
-║ │ ....available. ........................................................ │ ║
-║2│ ..................Default:...........Value:............................ │ ║
-║ │ ...................Permissions.........Admin........................... │ ║
-║ │ ...................Timeout.............30 days......................... │ ║
-║ │ ...................Visibility..........Public.......................... │ ║
-║ │ ...................Privacy.............Unhidden........................ │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
 
+Menu Variables
+--------------
+1. System
+2. Menu Title
+3. Gamename
+4. Menu_text
 
-#### Set options menu choices:<sup>1</sup>
-1. Timeout ~:> if input exists and in 'digit str' format: dbsave else: default, reprompt
-2. Privacy  ~:> toggle boolean for public/private; notify
-3. Visibility (hidden) ~:> toggle boolean for hidden; notify
-4. Act Codes ~:> review act codes and exit
-5. Permissions ~:> submenu
+|Menu Variable|DB Variable                              |
+|-------------|-----------------------------------------|
+|System       |`evennia.world.jobs.jobs_defaults.SYSTEM`|
+|Menu Title   |self.menu_title                          | 
+|Menu Text    |self.menu_text                           |
+
+
+Set options menu choices:<sup>1</sup>
+-------------------------------------
+A. Timeout ~:> if input exists and in 'digit str' format: dbsave else: default, reprompt
+B. Privacy  ~:> toggle boolean for public/private; notify
+C. Visibility (hidden) ~:> toggle boolean for hidden; notify
+D. Act Codes ~:> review act codes and exit
+E. Permissions ~:> submenu
 
 |Opt    | DB Attr                |
 |-------|------------------------|
@@ -98,38 +125,56 @@ Bucket
 ### Bucket Permission Mockup
 ```
 ╔═════════════════════════════════════════════════════════════════════════════╗
-║1 $System....................Bucket Permissions...................$Gamename  ║
+║  XXXXX1XXXXXXX.............XXXXXXXXXXX2XXXXXXXXXXX............XXXXXX3XXXXX  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
-║A 1. Completion...................... F  6. Grant*.......................... ║
-║B 2. Approval........................ G  7. Edit............................ ║
-║C 3. Denial.......................... H  8. Stats........................... ║
-║D 4. Creation........................ I  9. Log............................. ║
-║E 5. Add............................. J 10. Mail............................ ║
+║  1. XXXXXXXXXXXXXXXAXXXXXXXXXXXXXXXX    6. XXXXXXXXXXXXXXFXXXXXXXXXXXXXXXX  ║
+║  2. XXXXXXXXXXXXXXXBXXXXXXXXXXXXXXXX    7. XXXXXXXXXXXXXXGXXXXXXXXXXXXXXXX  ║
+║  3. XXXXXXXXXXXXXXXCXXXXXXXXXXXXXXXX    8. XXXXXXXXXXXXXXHXXXXXXXXXXXXXXXX  ║
+║  4. XXXXXXXXXXXXXXXDXXXXXXXXXXXXXXXX    9. XXXXXXXXXXXXXXIXXXXXXXXXXXXXXXX  ║
+║  5. XXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXX   10. XXXXXXXXXXXXXXJXXXXXXXXXXXXXXXX  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
 ║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
-║ │ ....................................................................... │ ║
-║ │ ...Be aware that you are granting bucket level access for each option.  │ ║
-║ │ ....................................................................... │ ║
-║2│ ...Help is available for each option. ................................. │ ║
-║ │ ....................................................................... │ ║
-║ │ ....................................................................... │ ║
-║ │ ...* - Makes person a Bucket SuperUser................................. │ ║
-║ │ ....................................................................... │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
-```
-#### Access Permissions<sup>1</sup>
 
-1. Completion ~:> If player can /complete jobs
-2. Approval ~:> If player can /approve jobs
-3. Denial ~:> If player can /deny jobs
-4. Creation ~:> If player can use the /create command
-5. Add ~:> If player can use the /add command
-6. Grant ~:> If player can use +bucket/access
-7. Edit ~:> If player can use the /edit command
-8. Stats ~:> If player can use the /edit command
-9. Log ~:>  If player can /log a job
-10. Mail ~:> If player can /query and /mail
+```
+Access Permissions<sup>1</sup>
+------------------------------
+
+Menu Variables
+--------------
+1. System
+2. Menu Title
+3. Gamename
+4. Menu_text
+
+|Menu Variable|DB Variable                              |
+|-------------|-----------------------------------------|
+|System       |`evennia.world.jobs.jobs_defaults.SYSTEM`|
+|Menu Title   |self.menu_title                          | 
+|Menu Text    |self.menu_text                           |
+
+
+Menu options
+------------
+A. Completion ~:> If player can /complete jobs
+B. Approval ~:> If player can /approve jobs
+C. Denial ~:> If player can /deny jobs
+D. Creation ~:> If player can use the /create command
+E. Add ~:> If player can use the /add command
+F. Grant ~:> If player can use +bucket/access
+G. Edit ~:> If player can use the /edit command
+H. Stats ~:> If player can use the /edit command
+I. Log ~:>  If player can /log a job
+J. Mail ~:> If player can /query and /mail
 
 |Permission |Boolean Test               |
 |-----------|---------------------------|
@@ -249,79 +294,125 @@ Due Date
 Status
 Assigned to
 
-#### Jobs mock
+#### Jobs header mock 
 ```
 ╓═══════════════════════════════════XX1XX═════════════════════════════════════╖
-│     Bucket: XXXXXXXXAXXXXXXXXX   Due Date: XXXXXXXXXXXXXXXXFXXXXXXXXXXXXXX  │
-│      Title: XXXXXXXXBXXXXXXXXX     Status: XXXXXXXXXXXXXXXXGXXXXXXXXXXXXXX  │
-│ Created on: XXXXXXXXCXXXXXXXXX     Tagged: XXXXXXXXXXXXXXXXHXXXXXXXXXXXXXX  │
-│ Created by: XXXXXXXXDXXXXXXXXX             XXXXXXXXXXXXXXXXIXXXXXXXXXXXXXX  │
+│     Bucket: XXXXXXXX2XXXXXXXXX   Due Date: XXXXXXXXXXXXXXXX5XXXXXXXXXXXXXX  │
+│ Created on: XXXXXXXX3XXXXXXXXX     Tagged: XXXXXXXXXXXXXXXX6XXXXXXXXXXXXXX  │
+│ Created by: XXXXXXXX4XXXXXXXXX             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
 │                                                                             │
-│ Assigned to: XXXXXXXXXXXXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
+│ Assigned to: XXXXXXXXXXXXXXXXXXXXXXXXX7XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
 ╰═════════════════════════════════════════════════════════════════════════════╯
+```
+
+
+Header variables
+---
+1. Job Number 
+2. Bucket Name
+3. Creation Date
+4. Creator
+5. Due Date
+6. Tagged Players
+7. Assignment
+
+|Name         |DB Variable                |
+|-------------|---------------------------|
+|Job-number   | `self.db.job_number`      |
+|Bucket       | `self.db.bucket`          |
+|Creation Date| `self.db.createdon`       |
+|creator      | `self.db.createdby`       |
+|due date     | `self.db.due_by`          |
+|tagged       | `self.db.tagged_players`  |
+|assignment   | `self.db.assigned_players`|
+
+
+#### Jobs initial message mock
+
+```
 ╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮
 ┇ .............................Initial Message............................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ Replies: X1XX...................................Submitted By: XXXXX2XXXXXX. ┇
-╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯
-
-View replies? (Default to yes - Enter opens a menu of replies if there are more than one, otherwise just loads the next reply)
-
-
-╓═══════════════════════════════════XX1XX═════════════════════════════════════╖
-│     Bucket: XXXXXXXXAXXXXXXXXX   Due Date: XXXXXXXXXXXXXXXXFXXXXXXXXXXXXXX  │
-│      Title: XXXXXXXXBXXXXXXXXX     Status: XXXXXXXXXXXXXXXXGXXXXXXXXXXXXXX  │
-│ Created on: XXXXXXXXCXXXXXXXXX     Tagged: XXXXXXXXXXXXXXXXHXXXXXXXXXXXXXX  │
-│ Created by: XXXXXXXXDXXXXXXXXX             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
-│                                                                             │
-│ Assigned to: XXXXXXXXXXXXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
-╰═════════════════════════════════════════════════════════════════════════════╯
-╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮
-┇ ..........................Reply to: XXXXXXXXXXX1XXXXXXXXXXXXX.............. ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ ........................................................................... ┇
-┇ Replies: X2XX...................................Submitted By: XXXXXX3XXXXX. ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ Replies: XX2XX..................................Submitted By: XXXXX3XXXXXX. ┇
 ╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯
 
 View replies? (Default to yes - Enter opens a menu of replies if there are more than one, otherwise just loads the next reply)
 ```
 
-+job/replies 1
+Menu variables
+---
+1. Initial Message Body
+2. total replies
+3. job creator
+
+|Name   |DB Variable                |
+|-------|---------------------------|
+|Msg    | `self.db.initial_msg`     |
+|replies| `self.db.total_replies`   |
+|creator| `self.db.created_by`      |
+
+
+#### Jobs Reply Mock
+
+```
+╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮
+┇                           Reply to: XXXXXXXXXXX1XXXXXXXXXXXXX               ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ┇
+┇ Replies: XX3XX..................................Submitted By: XXXXXX4XXXXX. ┇
+╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯
+
+View replies? (Default to yes - Enter opens a menu of replies if there are more than one, otherwise just loads the next reply)
+```
+Menu variables
+---
+1. Parent msg/job
+2. reply body
+3. total replies
+4. job creator
+
+|Name   |DB Variable                |
+|-------|---------------------------|
+|parent | `self.db.msg_parent`      |
+|reply  | `self.db.reply_msg`       |
+|replies| `self.db.total_replies`   |
+|creator| `self.db.created_by`      |
+
 
 available replies:
 
