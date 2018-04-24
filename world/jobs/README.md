@@ -77,7 +77,7 @@ Bucket
 ```
 
 
-### Set options menu choices:<sup>1</sup>
+#### Set options menu choices:<sup>1</sup>
 1. Timeout ~:> if input exists and in 'digit str' format: dbsave else: default, reprompt
 2. Privacy  ~:> toggle boolean for public/private; notify
 3. Visibility (hidden) ~:> toggle boolean for hidden; notify
