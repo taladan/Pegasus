@@ -1,4 +1,5 @@
-## Bucket Menu Pseudocode:
+Bucket
+---
 
 ### Bucket Creation Mockup
 
@@ -24,6 +25,7 @@
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
+
 
 ### Creation menu choices:<sup>1</sup>
 
@@ -73,6 +75,7 @@
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
+
 
 ### Set options menu choices:<sup>1</sup>
 1. Timeout ~:> if input exists and in 'digit str' format: dbsave else: default, reprompt
@@ -144,8 +147,27 @@
 
 ---
 
+## The bucket creation process
+
+#### Main Menu
+1. +bucket
+2. Option 3 (Create Bucket)
+3. The following options have to be set: 1 (Name), 2 (Desc), 3-5 (bbsys - only if the game is using a bboard), 8 (Set options) must be run before bucket can be created
+4. 6 (bucket manager) is only necessary if this is a non-staff bucket
+5. 7 (grant access) is not necessary for bucket creation
+
+#### Options Menu
+1. The following options must be set before the bucket can be created: 1 (Timeout)
+2. If it is a non staff bucket, then it will have to have Permissions set, as well as Privacy and Visibility before the bucket can be created
+3. If it is a staff bucket, it will default to: Admin Perms, 30 day timeout, public visibility and unhidden privacy.
+
+---
+
+Copypasta stuff for later
+
 #### AJ Action codes
 _(these may or may not all make it into the system, they are simply here for reference)_
+
 
 |CODE|Description
 |----|:--------:|
@@ -175,15 +197,9 @@ TRN|Indicates a job has been transferred.
 UNL|Job unlocking action.
 UNP|Indicates a job/comment has been unpublished.
 
-## The bucket creation process
 
-1. +bucket
-2. Option 3 (Create Bucket)
-3. prompt for bucket name (test if valid name, if not reprompt)
-4. prompt for bucket description (test if description is too long, if so, truncate)
-5. prompt for bboard to post to
 
-Limits and legend
+Bucket Limits and legend
 ---
 
 header_char_limit = 72
@@ -196,3 +212,9 @@ body_section = 2
 
 ---
 
+Jobs
+---
+
+
+Jobs Limits and legend
+---
