@@ -218,5 +218,191 @@ Jobs
 ---
 
 
+
+#### Anomaly jobs output
+```
+===============================| View Job 1 |================================
+   Bucket: CODE                             Due On: -
+    Title: Building System                  Status: Green (New)
+Opened On: Sun Apr 27 16:10:57 2008    Assigned To: Nobody
+Opened By: Swift
+   Tagged: Meg and Aurinko
+-----------------------------------------------------------------------------
+This is the main body message - what's tagged onto the job at creation
+-----------------------------------------------------------------------------
+[2+] This is an addt'l message in reply
+-----------------------------------------------------------------------------
+[5+] This is the 5th action on this job hence the number.
+-----------------------------------------------------------------------------
+[6+]  they continue
+================================| [Myjobs] |=================================
+```
+
+#### Data fields
+Bucketname
+Job Number As it appears on the system (seperate from job id -- which is a hash)
+Title
+Date Created
+Creator
+Tags
+Due Date
+Status
+Assigned to
+
+#### Jobs mock
+```
+╓═══════════════════════════════════XX1XX═════════════════════════════════════╖
+│     Bucket: XXXXXXXXAXXXXXXXXX   Due Date: XXXXXXXXXXXXXXXXFXXXXXXXXXXXXXX  │
+│      Title: XXXXXXXXBXXXXXXXXX     Status: XXXXXXXXXXXXXXXXGXXXXXXXXXXXXXX  │
+│ Created on: XXXXXXXXCXXXXXXXXX     Tagged: XXXXXXXXXXXXXXXXHXXXXXXXXXXXXXX  │
+│ Created by: XXXXXXXXDXXXXXXXXX             XXXXXXXXXXXXXXXXIXXXXXXXXXXXXXX  │
+│                                                                             │
+│ Assigned to: XXXXXXXXXXXXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
+╰═════════════════════════════════════════════════════════════════════════════╯
+╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮
+┇ .............................Initial Message............................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ Replies: X1XX...................................Submitted By: XXXXX2XXXXXX. ┇
+╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯
+
+View replies? (Default to yes - Enter opens a menu of replies if there are more than one, otherwise just loads the next reply)
+
+
+╓═══════════════════════════════════XX1XX═════════════════════════════════════╖
+│     Bucket: XXXXXXXXAXXXXXXXXX   Due Date: XXXXXXXXXXXXXXXXFXXXXXXXXXXXXXX  │
+│      Title: XXXXXXXXBXXXXXXXXX     Status: XXXXXXXXXXXXXXXXGXXXXXXXXXXXXXX  │
+│ Created on: XXXXXXXXCXXXXXXXXX     Tagged: XXXXXXXXXXXXXXXXHXXXXXXXXXXXXXX  │
+│ Created by: XXXXXXXXDXXXXXXXXX             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
+│                                                                             │
+│ Assigned to: XXXXXXXXXXXXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  │
+╰═════════════════════════════════════════════════════════════════════════════╯
+╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮
+┇ ..........................Reply to: XXXXXXXXXXX1XXXXXXXXXXXXX.............. ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ ........................................................................... ┇
+┇ Replies: X2XX...................................Submitted By: XXXXXX3XXXXX. ┇
+╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯
+
+View replies? (Default to yes - Enter opens a menu of replies if there are more than one, otherwise just loads the next reply)
+```
+
++job/replies 1
+
+available replies:
+
+1. Cleric Bob said: Foo bar baz....
+2. Staffer Joe says: But then you could hold him by the nose...
+3. Ranger Bill added a loot roll to the job
+4. Taladan has approved this job with a message
+
+Actions on job:
+1. Creation
+2. Assigned to taladan
+3. Greenie was tagged for this job
+4. Job was approved and posted to board 42, all triggers run successfully
+
+
+#### Header fields
+
+1 - Job Number as it appears in the system (not the hashed job id)
+A - Bucket name
+B - Job title
+C - creation Date
+D - Creator
+E - Assignment
+F - Due date
+G - Status of job
+H - Players/staff tagged in this job
+
+
+### Job creation
+
++job/create - spawn job creation menu
+
+```
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  XXXXX1XXXXXXX.............XXXXXXXXXXX2XXXXXXXXXXX............XXXXXX3XXXXX  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. XXXXXXXXXXXXXXXAXXXXXXXXXXXXXXXX                                        ║
+║  2. XXXXXXXXXXXXXXXBXXXXXXXXXXXXXXXX                                        ║
+║  3. XXXXXXXXXXXXXXXCXXXXXXXXXXXXXXXX                                        ║
+║  4. XXXXXXXXXXXXXXXDXXXXXXXXXXXXXXXX                                        ║
+║                                                                             ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+```
+
+Menu variables
+---
+1. System
+2. Menu Title
+3. Gamename
+4. Menu text
+
+Menu Options
+---
+A. Title ~:> if title is not None, dbsave
+B. bucket ~:> if exists and player can post, dbsave
+C. Tagged players ~:> if player(s) exist, dbsave
+D. Message ~:> if msg is not None, dbsave
+
+
+|Option|DB Variable                   |
+|------|------------------------------|
+|Title |`ndb._menutree.title`         |
+|Bucket|`ndb._menutree.bucket`        |
+|Tags  |`ndb._menutree.tagged_players`|
+|Msg   |`ndb._menutree.message`       |
+
+
 Jobs Limits and legend
 ---
+job_number = 1
+message_line_length = 75
+message_line_count = 18+??
+
