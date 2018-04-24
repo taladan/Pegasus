@@ -92,7 +92,6 @@ Bucket
 |privacy| `ndb._menutree.privacy`|
 |timeout| `ndb._menutree.timeout`|
 
-<sup>1</sup> - Each choice in a menu needs to have an attendant help file.
 
 ---
 
@@ -119,7 +118,7 @@ Bucket
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
-#### Access Permissions
+#### Access Permissions<sup>1</sup>
 
 1. Completion ~:> If player can /complete jobs
 2. Approval ~:> If player can /approve jobs
@@ -161,6 +160,8 @@ Bucket
 2. If it is a non staff bucket, then it will have to have Permissions set, as well as Privacy and Visibility before the bucket can be created
 3. If it is a staff bucket, it will default to: Admin Perms, 30 day timeout, public visibility and unhidden privacy.
 
+
+<sup>1</sup> - **_Each choice in a menu needs to have an attendant help file._**
 ---
 
 Copypasta stuff for later
