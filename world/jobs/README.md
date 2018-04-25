@@ -498,12 +498,12 @@ Job exists with comment.
 
 |Command              | What it does                                                                               |
 |---------------------|--------------------------------------------------------------------------------------------|
-|+job/comment ## = @@ | Add a comment to the initial message +job/comment ##=comment                               |
-|+job/reply ##/XX=@@  | Reply to a comment that already exists, where ## == Job id and XX == the Comment/reply id. |
+|+job/comment JJ = @@ | Add a comment to the initial message +job/comment JJ=comment                               |
+|+job/reply JJ/XX=@@  | Reply to a comment that already exists, where JJ == Job id and XX == the Comment/reply id. |
 
 ```
 switch == ("comment","reply")
-## == self.lhsnoun
+JJ == self.lhsnoun
 XX == self.lhsverb
 @@ == self.rhs
 
@@ -518,11 +518,11 @@ XX == self.lhsverb
 ##### Logic:
 |Command               | What it does                         |
 |----------------------|--------------------------------------|
-|+job/mail ## = message| Mails opener of job id # with message|
+|+job/mail JJ = message| Mails opener of job id J with message|
 
 ```
-switch = ("mail")
-## == self.lhs
+switch == ("mail")
+JJ == self.lhs
 @@ == self.rhs
 ```
 
@@ -566,12 +566,12 @@ switch = ("mail")
 
 |Command               | What it does                             |
 |----------------------|------------------------------------------|
-|+job/publish ##       | Publishes job to publish board           |
-|+job/publish ##/XX    | Publishes comment to publish board       |
+|+job/publish JJ       | Publishes job to publish board           |
+|+job/publish JJ/XX    | Publishes comment to publish board       |
 
 ```
-switch = ("publish")
-## == self.lhsnoun
+switch == ("publish")
+JJ == self.lhsnoun
 XX == self.lhsverb
 ```
 
@@ -586,17 +586,21 @@ XX == self.lhsverb
 
 |Command               | What it does                                            |
 |----------------------|---------------------------------------------------------|
-|+job/query ##/XX = @@ | Query list of players (##) with message (@@) titled (XX)|
+|+job/query JJ/XX = @@ | Query list of players (JJ) with message (@@) titled (XX)|
 
 ```
-switch = ("query")
-## == self.lhsnoun
+switch == ("query")
+JJ == self.lhsnoun
 XX == self.lhsverb
 @@ == self.rhs
 ```
 ### Finalization
 
 #### Approve a player job
+
+#### AJ Notes
+
+When you close out a LOOT queue using +job/approve, add your closing message to each player's +journal.
 
 ##### Tests:
 - Job must exist
@@ -605,13 +609,13 @@ XX == self.lhsverb
 
 ##### Logic:
 
-|Commandi           | What it does                   |
+|Command            | What it does                   |
 |-------------------|--------------------------------|
 |+job/approve ##=@@ | Approve job ## with message @@ |
 
 ```
-switch = ("approve")
-## == self.lhsnoun
+switch == ("approve")
+JJ == self.lhsnoun
 XX == self.lhsverb
 @@ == self.rhs
 ```
@@ -620,18 +624,18 @@ XX == self.lhsverb
 
 ##### Tests:
 - Job must exist
-- hook into bbsys #### (waiting on bbsys integration)
-- hook into mail sys #### (waiting on mail system integration)
+- hook into bbsys - (waiting on bbsys integration)
+- hook into mail sys - (waiting on mail system integration)
 
 ##### Logic:
 
 |Command             | What it does                    |
 |--------------------|---------------------------------|
-|+job/complete ##=@@ | Complete job ## with message @@ |
+|+job/complete JJ=@@ | Complete job JJ with message @@ |
 
 ```
-switch = ("complete")
-## == self.lhsnoun
+switch == ("complete")
+JJ == self.lhsnoun
 XX == self.lhsverb
 @@ == self.rhs
 ```
@@ -639,7 +643,7 @@ XX == self.lhsverb
 #### Deny a player job
 
 ##### Tests:
-- Job must exist
+- JJ must exist
 - hook into bbsys #### (waiting on bbsys integration)
 - hook into mail sys #### (waiting on mail system integration)
 
@@ -647,42 +651,136 @@ XX == self.lhsverb
 
 |Command         | What it does                |
 |----------------|-----------------------------|
-|+job/deny ##=@@ | Deny job ## with message @@ |
+|+job/deny JJ=@@ | Deny job JJ with message @@ |
 
 ```
-switch = ("deny")
-## == self.lhsnoun
+switch == ("deny")
+JJ == self.lhsnoun
 XX == self.lhsverb
 @@ == self.rhs
 ```
 
 #### Logs a job
 
+First step - need to research logging within Evennia a bit more.  
+
 ##### Tests:
+
+- Job must exist
+- Caller must have permission to log
+- Log directory must be set (internal)
+- self.rhs must be in format someone@somwhere.org
+
 ##### Logic:
 
+|Command        | What it does                        |
+|---------------|-------------------------------------|
+|+job/log JJ=@@ | Mails a log of job JJ to address @@ |
+
+```
+switch == ("log")
+JJ == self.lhs
+@@ == self.rhs
+```
 
 ### Manipulation
 
 #### Search jobs for <pattern>
 
 ##### Tests:
+
+- Caller must have permission to access jobs/buckets
+- if caller can't search buckets error and return
+- if caller has access to only certain buckets use that list as the search base
+
 ##### Logic:
+
+|Command        | What it does           |
+|---------------|------------------------|
+|+job/search @@ | Search all jobs for @@ |
+
+```
+switch == ("search")
+@@ == self.lhs
+```
+
+
+# TODO: NEEDED FUNCTION
+
+def player_perm():
+
 
 #### Assign a job to player
 
 ##### Tests:
+- Job must exist
+- Caller must have permission to access job
+- Player(s) must exist
+
 ##### Logic:
 
-#### Assign a job to yourself
+|Command           | What it does                     |
+|------------------|----------------------------------|
+|+job/assign JJ=@@ | Assign Job JJ to Player (list) @@|
 
-##### Tests:
-##### Logic:
+- This assigns a job to a player or player list
+- Mails notification
+
+```
+switch == ("assign")
+JJ == self.lhs
+@@ == self.rhs # Special, if self.rhs.lower() == "me", assign to caller
+```
 
 #### Changes a job SUMMARY setting
 
+The following systems should be able to use the sumset to automate some task handling:
+
+* Events:
+
+> ---
+> 
+> On event creation, automatically create job or allow users to relink events to different/multiple jobs??
+> # TODO: DEPRECATED
+> +event/link <event#>=<job#> -  link the specifed event# to the specified PLOTS job#
+> 
+> Include name, date/time, DM, and confirmed players (if any).
+> 
+> ---
+
+
+NOTES 1: +event/link NEVER GOT USED. It was an idea we'd love to have had, and would help players, but it was one of those 'one more things' atop the camel's back. A GM runs a scene, and they shouldn't need to worry about additional fiddly bits like that.
+
+* Calendar
+* Orgs
+* Chargen
+* NPC System
+
+---
+
+# TODO: needed job attribute
+
+self.db.summary = {key:setting, key1: setting, key3: setting,}
+Query: Do we want to allow parsing of summaries in jobs system for locks or other special strings?  Perhaps we can use job summaries to simulate triggers/hooks in AJ.
+
+---
+
 ##### Tests:
+- Job exists
+- Player has permission to set summary on job
+
 ##### Logic:
+|Command              | What it does                                   |
+|---------------------|------------------------------------------------|
+|+job/sumset JJ/XX=@@ | Sets (creates) field XX with contents @@ on job|
+
+
+```
+switch == ("sumset")
+JJ == self.lhsnoun
+XX == self.lhsverb
+@@ == self.rhs
+```
 
 #### Changes opened-by to <player list>
 
