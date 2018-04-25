@@ -212,50 +212,31 @@ J. Mail ~:> If player can /query and /mail
 
 Copypasta stuff for later
 
-#### AJ Action codes
-_(these may or may not all make it into the system, they are simply here for reference)_
-
-
-|CODE|Description
-|----|:--------:|
-ADD|Player comment. Generated with +job/add.
-APR|+job/approve closing action.
-ASN|Assignment to a user.
-AUT|Automatic hook. If set, will run daily.
-CKI|Checked In.
-CKO|Checked Out.
-CLN|Clone action. Only appears on the newly created job.
-COM|+job/complete generates this closing action.
-CRE|Can only be first comment. Generated with +job/create.
-DEL|+job/delete closing action.
-DNY|+job/deny closing action.
-DUE|Due date change.
-EDT|Indicates when a comment has been edited.
-LOK|Indicates when a job has been locked.
-MRG|Indicates a job that has been merged from two jobs.
-NAM|Indicates a title change.
-OTH|A job created by any means other than /create triggers the OTH hook.
-PUB|Indicates a job/comment has been published.
-SRC|Indicates when a job's OPENED_BY (source) has changed.
-STA|A +job/set status change.
-SUM|Indicates a change in the summary settings.
-TAG|Indicates a job has been tagged or untagged.
-TRN|Indicates a job has been transferred.
-UNL|Job unlocking action.
-UNP|Indicates a job/comment has been unpublished.
-
-
-
-Bucket Limits and legend
----
-
-header_char_limit = 72
-node_name_char_limit = 34
-node_text_char_limit = 70 * 5
-
+Bucket Limits and legend                                                      
+---                                                                           
+                                                                              
+header_char_limit = 72                                                        
+node_name_char_limit = 34                                                     
+node_text_char_limit = 70 * 5                                                 
+                                                                              
 header_section = 1
 node_options = [A-J]
 body_section = 2
+
+
+## Bucket Functionality
+
+# Todo: fix this
++bucket/access <player>=<bucket>
++bucket/check <player>
++bucket/create <bucket>=<description>
++bucket/delete <bucket>
++bucket/help <bucket>
++bucket/info <bucket>
++bucket/monitor <bucket>
++bucket/set <bucket>/<setting>=<value>
++buckets
+
 
 ---
 
@@ -497,3 +478,425 @@ job_number = 1
 message_line_length = 75
 message_line_count = 18+??
 
+## Jobs functionality
+
+Please note:  When I refer to job id or message id in the functionality, I am only referring to the number that appears in the output of the display.  Each job and comment/reply will have its own unique hash id, and I will refer to these specifically as 'job hash id' or 'message hash id'.
+
+### Communication
+
+#### Add comments to a job
+
+##### Tests: 
+
+- Job must exist
+- Player commenting must have permission to access
+- If using +job/reply, there must be an initial comment on the job.
+
+##### Logic:
+
+Job exists with comment.  
+
+|Command              | What it does                                                                               |
+|---------------------|--------------------------------------------------------------------------------------------|
+|+job/comment ## = @@ | Add a comment to the initial message +job/comment ##=comment                               |
+|+job/reply ##/XX=@@  | Reply to a comment that already exists, where ## == Job id and XX == the Comment/reply id. |
+
+```
+switch == ("comment","reply")
+## == self.lhsnoun
+XX == self.lhsverb
+@@ == self.rhs
+
+```
+
+#### Mails opener with <message>
+
+##### Tests: 
+
+- hook into mail sys * (waiting on mail system integration)
+
+##### Logic:
+|Command               | What it does                         |
+|----------------------|--------------------------------------|
+|+job/mail ## = message| Mails opener of job id # with message|
+
+```
+switch = ("mail")
+## == self.lhs
+@@ == self.rhs
+```
+
+##### Boilerplate message:
+
+```
+
+=============================================================================== 
+| XXXXXX1XXXXXXXX            Reply to Job XX2XX             XXXXXXX3XXXXXXXX  |
+=============================================================================== 
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+| XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+=============================================================================== 
+
+```
+|Variable|Area   |DB attr                            |
+|--------|-------|-----------------------------------|
+|1       |System | `evennia.world.jobs.SYSTEM`       |
+|2       |Job ID | `evennia.world.jobs.job.db.number`|
+|3       |Date   | `datetime.datetime.now`           |
+|4       |Message| user input                        |
+
+
+
+#### Publish a job or <comment>
+
+##### Tests:
+
+- Job/comment must exist
+- hook into bbsys * (waiting on bbsys integration)
+
+|Command               | What it does                             |
+|----------------------|------------------------------------------|
+|+job/publish ##       | Publishes job to publish board           |
+|+job/publish ##/XX    | Publishes comment to publish board       |
+
+```
+switch = ("publish")
+## == self.lhsnoun
+XX == self.lhsverb
+```
+
+#### Send a query to <players>
+
+##### Tests:
+
+- Players must exist and be tagged to job
+- hook into mail sys * (waiting on mail system integration)
+
+##### Logic:
+
+|Command               | What it does                                            |
+|----------------------|---------------------------------------------------------|
+|+job/query ##/XX = @@ | Query list of players (##) with message (@@) titled (XX)|
+
+```
+switch = ("query")
+## == self.lhsnoun
+XX == self.lhsverb
+@@ == self.rhs
+```
+### Finalization
+
+#### Approve a player job
+
+##### Tests:
+- Job must exist
+- hook into bbsys #### (waiting on bbsys integration)
+- hook into mail sys #### (waiting on mail system integration)
+
+##### Logic:
+
+|Commandi           | What it does                   |
+|-------------------|--------------------------------|
+|+job/approve ##=@@ | Approve job ## with message @@ |
+
+```
+switch = ("approve")
+## == self.lhsnoun
+XX == self.lhsverb
+@@ == self.rhs
+```
+
+#### Complete a job
+
+##### Tests:
+- Job must exist
+- hook into bbsys #### (waiting on bbsys integration)
+- hook into mail sys #### (waiting on mail system integration)
+
+##### Logic:
+
+|Command             | What it does                    |
+|--------------------|---------------------------------|
+|+job/complete ##=@@ | Complete job ## with message @@ |
+
+```
+switch = ("complete")
+## == self.lhsnoun
+XX == self.lhsverb
+@@ == self.rhs
+```
+
+#### Deny a player job
+
+##### Tests:
+- Job must exist
+- hook into bbsys #### (waiting on bbsys integration)
+- hook into mail sys #### (waiting on mail system integration)
+
+##### Logic:
+
+|Command         | What it does                |
+|----------------|-----------------------------|
+|+job/deny ##=@@ | Deny job ## with message @@ |
+
+```
+switch = ("deny")
+## == self.lhsnoun
+XX == self.lhsverb
+@@ == self.rhs
+```
+
+#### Logs a job
+
+##### Tests:
+##### Logic:
+
+
+### Manipulation
+
+#### Search jobs for <pattern>
+
+##### Tests:
+##### Logic:
+
+#### Assign a job to player
+
+##### Tests:
+##### Logic:
+
+#### Assign a job to yourself
+
+##### Tests:
+##### Logic:
+
+#### Changes a job SUMMARY setting
+
+##### Tests:
+##### Logic:
+
+#### Changes opened-by to <player list>
+
+##### Tests:
+##### Logic:
+
+#### Clear new jobs
+
+##### Tests:
+##### Logic:
+
+#### Clone a job
+
+##### Tests:
+##### Logic:
+
+#### Create a job manually
+
+##### Tests:
+##### Logic:
+
+#### Delete a job (Admin)
+
+##### Tests:
+##### Logic:
+
+#### Edits a job - Any part of the job may be edited - Creator or bucket admin perms
+
+##### Tests:
+##### Logic:
+
+#### Escalate a job's priority
+
+##### Tests:
+##### Logic:
+
+#### Merge <source> into <destination>
+
+##### Tests:
+##### Logic:
+
+#### Rename a job
+
+##### Tests:
+##### Logic:
+
+#### Set job due date - Due date defaults to bucket timeout in days
+
+##### Tests:
+##### Logic:
+
+#### Set progress status on a job
+
+##### Tests:
+##### Logic:
+
+#### Transfer (or undelete) a job
+
+##### Tests:
+##### Logic:
+
+
+### Locks
+
+#### Check in a job
+
+##### Tests:
+##### Logic:
+
+#### Check out a job
+
+##### Tests:
+##### Logic:
+
+#### Locks a job and prevents changes
+
+##### Tests:
+##### Logic:
+
+#### Unlocks a job
+
+##### Tests:
+##### Logic:
+
+
+### Tags
+
+#### Tags a job for <player>
+
+##### Tests:
+##### Logic:
+
+#### Tags a job for you
+
+##### Tests:
+##### Logic:
+
+#### Untags a job
+
+##### Tests:
+##### Logic:
+
+#### Untags a job for <player list>
+
+### Display
+
+#### Display actions on a job
+
+##### Tests:
+##### Logic:
+
+#### Display credit information ??
+
+##### Tests:
+##### Logic:
+
+#### Display help for a job's bucket
+
+##### Tests:
+##### Logic:
+
+#### Display replies to a job or job reply
+
+##### Tests:
+##### Logic:
+
+#### Get a report
+
+##### Tests:
+##### Logic:
+
+#### List all jobs in <bucket>
+
+##### Tests:
+##### Logic:
+
+#### List all/yours/new jobs
+
+##### Tests:
+##### Logic:
+
+#### List jobs
+
+##### Tests:
+##### Logic:
+
+#### List jobs matching <expression>
+
+##### Tests:
+##### Logic:
+
+#### List last <X> entries in <#>
+
+##### Tests:
+##### Logic:
+
+#### List overdue jobs
+
+##### Tests:
+##### Logic:
+
+#### Lists jobs assigned to player
+
+##### Tests:
+##### Logic:
+
+#### Lists jobs by bucket/mod/pri
+
+##### Tests:
+##### Logic:
+
+#### View a job
+
+##### Tests:
+##### Logic:
+
+#### View a job's header & summary
+
+##### Tests:
+##### Logic:
+
+
+
+#### AJ Action codes
+_(these may or may not all make it into the system, they are simply here for reference)_
+
+
+|CODE|Description                                                           |
+|----|:--------------------------------------------------------------------:|
+|ADD |Player comment. Generated with +job/add.                              |
+|APR |+job/approve closing action.                                          |
+|ASN |Assignment to a user.                                                 |
+|AUT |Automatic hook. If set, will run daily.                               |
+|CKI |Checked In.                                                           |
+|CKO |Checked Out.                                                          |
+|CLN |Clone action. Only appears on the newly created job.                  |
+|COM |+job/complete generates this closing action.                          |
+|CRE |Can only be first comment. Generated with +job/create.                |
+|DEL |+job/delete closing action.                                           | 
+|DNY |+job/deny closing action.                                             |
+|DUE |Due date change.                                                      |
+|EDT |Indicates when a comment has been edited.                             |
+|LOK |Indicates when a job has been locked.                                 |
+|MRG |Indicates a job that has been merged from two jobs.                   |
+|NAM |Indicates a title change.                                             |
+|OTH |A job created by any means other than /create triggers the OTH hook.  |
+|PUB |Indicates a job/comment has been published.                           |
+|SRC |Indicates when a job's OPENED_BY (source) has changed.                |
+|STA |A +job/set status change.                                             |
+|SUM |Indicates a change in the summary settings.                           |
+|TAG |Indicates a job has been tagged or untagged.                          |
+|TRN |Indicates a job has been transferred.                                 |
+|UNL |Job unlocking action.                                                 |
+|UNP |Indicates a job/comment has been unpublished.                         |
+                                                                              
+                                                                              
+                                                                              
