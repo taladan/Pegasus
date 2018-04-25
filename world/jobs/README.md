@@ -752,9 +752,18 @@ The following systems should be able to use the sumset to automate some task han
 NOTES 1: +event/link NEVER GOT USED. It was an idea we'd love to have had, and would help players, but it was one of those 'one more things' atop the camel's back. A GM runs a scene, and they shouldn't need to worry about additional fiddly bits like that.
 
 * Calendar
+??
+> Recurring dates (IC or OOC) that automatically post/update jobs ??
+
 * Orgs
+??
+> Org leaders should be able to update summaries on org jobs...org events tie-in...
+
 * Chargen
+> Player application processed through jobs automatically
+
 * NPC System
+> Documentation and creation of NPC's/tracking npc's that recur
 
 ---
 
@@ -763,17 +772,20 @@ NOTES 1: +event/link NEVER GOT USED. It was an idea we'd love to have had, and w
 self.db.summary = {key:setting, key1: setting, key3: setting,}
 Query: Do we want to allow parsing of summaries in jobs system for locks or other special strings?  Perhaps we can use job summaries to simulate triggers/hooks in AJ.
 
+Expose `Job.sumset()`
+
 ---
 
 ##### Tests:
+
 - Job exists
 - Player has permission to set summary on job
 
 ##### Logic:
+
 |Command              | What it does                                   |
 |---------------------|------------------------------------------------|
 |+job/sumset JJ/XX=@@ | Sets (creates) field XX with contents @@ on job|
-
 
 ```
 switch == ("sumset")
@@ -782,35 +794,140 @@ XX == self.lhsverb
 @@ == self.rhs
 ```
 
-#### Changes opened-by to <player list>
+#### Change opened-by to <player list>
 
 ##### Tests:
+Job exists
+Players exist
+Caller has perms to change opened-by (perm, bucket admin or admin)
+
 ##### Logic:
+|Command           | What it does                                                     |
+|------------------|------------------------------------------------------------------|
+|+job/source JJ=@@ | Changes Job JJ's `self.db.createdby` to @@ (may be a player list)|
+
+```
+switch == ("source")
+JJ == self.lhs
+@@ == self.rhs
+```
 
 #### Clear new jobs
 
 ##### Tests:
+None - Working on Character Attrs.
+
 ##### Logic:
+|Command    | What it does                             |
+|-----------|------------------------------------------|
+|+job/clear | Clear 'new' flag from jobs on any bucket |
+
+```
+switch == ("clear")
+```
+jobid hash goes into character.db.jobs_read = [ASDF, HJLK, QWER]
+
+
+Code frag
+```
+for job in jobs:
+  if job not in character.db.jobs_read:
+    # Mark job as read
+    character.db.jobs_read.append(job.id)
+```
 
 #### Clone a job
 
 ##### Tests:
+Job exists
+Player has perms
+Job is not locked
+
 ##### Logic:
+|Command      | What it does                                     |
+|-------------|--------------------------------------------------|
+|+job/clone JJ| Makes an identical copy of Job JJ (new instance) |
+
+```
+switch == ("clone")
+JJ == self.lhs
+```
+
+---
+
+# Waiting on Query
+
 
 #### Create a job manually
 
+Query to Beag: Does anybody actually need to be able to manually create a job??  Should this be deprecated due to the menu integration for job creation?
+
 ##### Tests:
+Player has perms
+Bucket exists
+
 ##### Logic:
+
+---
 
 #### Delete a job (Admin)
 
 ##### Tests:
+Job exists
+Player has perms
+Job is not locked
+Job is not checked out
+
 ##### Logic:
+|Command       | What it does   |
+|--------------|----------------|
+|+job/delete JJ| Deletes Job JJ |
+
+
+```
+switch == ("delete")
+JJ == self.lhs
+```
+
+When the job is deleted it should not be locked, it shouldn't be checked out or in any other paused state and should fire delete_hooks
+
+---
+
+# TODO: needed job function
+
+def delete_hook(self, num):
+    """run these hooks in at_channel_delete()"""
+    pass
+
+Query: Should we expose `Job.delete_hook()`?
+---
+
+
 
 #### Edits a job - Any part of the job may be edited - Creator or bucket admin perms
 
 ##### Tests:
+Job exists
+Player has perms
+Job is not locked
+Job is not checked out
+
 ##### Logic:
+|Command                 | What it does                               |
+|------------------------|--------------------------------------------|
+|+job/edit JJ=OLD/NEW    | Edits Job JJ repl OLD w/ NEW               |
+|+job/edit JJ/XX=OLD/NEW | Edits comment XX on Job JJ repl OLD w/ NEW |
+
+
+```
+switch == ("edit")
+JJ == self.lhsnoun
+XX == self.lhsverb
+OLD == self.rhsnoun
+NEW == self.rhsverb
+
+pull `evennia.world.jobs.jobutils.argparse(self.lhs, self.rhs)`
+```
 
 #### Escalate a job's priority
 
