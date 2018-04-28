@@ -245,7 +245,7 @@ Jobs
 
 
 
-#### Anomaly jobs output
+#### Original Anomaly jobs output
 ```
 ===============================| View Job 1 |================================
    Bucket: CODE                             Due On: -
@@ -264,16 +264,247 @@ This is the main body message - what's tagged onto the job at creation
 ================================| [Myjobs] |=================================
 ```
 
-#### Data fields
-Bucketname
-Job Number As it appears on the system (seperate from job id -- which is a hash)
-Title
-Date Created
-Creator
-Tags
-Due Date
-Status
-Assigned to
+
+
+Jobs menu-driven interface mock
+---
+
+1. [+jobs](#+jobs)
+2. [+job #](#+job-42)
+3. [+job/reply #](#+job/reply-jobnum)
+4. [+job/com](#+job/coms-job#) - Open communications menu
+5. [+job/set](#+job/set-job#) - Open settings menu
+6. [+job/info](#+job/info) - Open info menu
+7. [+job/work](#+job/work-jobnum) - Open workbench menu
+8. [+job/views](#+job/view:) - Open views menu
+9. [+job/credits](#+job/credits) - Display credit information
+
+### +jobs
+```
+>╔═════════════════════════════════════════════════════════════════════════════╗
+>║  Jobs System.........1 ...........Job 42..........2 Mygamename...........3  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║  1. Create new job.................A                                        ║
+>║  2. Clear all new jobs.............B                                        ║
+>║  3. Search jobs....................C                                        ║
+>║  4. Views..........................D                                        ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+>║ │ ..Help is available.................................................... │ ║
+>║ │ ......................................................................4 │ ║
+>║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+>╚═════════════════════════════════════════════════════════════════════════════╝
+>1. +job/create - Create a job manually
+>2. +job/clear - Clear new jobs
+>3. +job/search <pattern> - Search jobs for <pattern>
+>4. +job/views - Open the views menu
+>
+```
+### +job/view:
+also available with +job/view(s)
+```
+>╔═════════════════════════════════════════════════════════════════════════════╗
+>║  Jobs System - Views.1 ...........................2 Mygamename...........3  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║  1. Yours..........................A    6. All jobs in a bucket..........F  ║
+>║  2. All............................B    7. By mod........................G  ║
+>║  3. New............................C    8. By priority...................H  ║
+>║  4. Overdue........................D    9. By player.....................I  ║
+>║  5. By Bucket......................E   10. Range in bucket...............J  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+>║ │ ..Help is available.................................................... │ ║
+>║ │ ......................................................................4 │ ║
+>║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+>╚═════════════════════════════════════════════════════════════════════════════╝
+```
+
+
+### +job 42
+
+```
+>╔═════════════════════════════════════════════════════════════════════════════╗
+>║  .Jobs........1... ...............Job 42..........  2... .Mygamename..3...  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║  1. Communications.................A                                        ║
+>║  2. Settings.......................B                                        ║
+>║  3. Info...........................C                                        ║
+>║  4. Workbench......................D                                        ║
+>║  5. Lists..........................E                                        ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+>║ │ ...........Type:.XXXX35 Character LimitXXXXXXXXXXXXX....Replies:.999999 │ ║
+>║ │ ......Opened by:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+>║ │ ......Opened on:.04/29/2018............................................ │ ║
+>║ │ ............Due:.05/22/2018.........4.................................. │ ║
+>║ │ ..........Title:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+>║ │ ....Assigned to:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+>║ │ ....Checked out: Y/N................................................... │ ║
+>║ │ .........Locked: Y/N...........Priority:.XXXX25 Character LimitXXXX...4 │ ║
+>║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+>╚═════════════════════════════════════════════════════════════════════════════╝
+>
+```
+### +job/coms Job#
+
+Also Option one(1) on `+job Job#`
+
+```
+>╔═════════════════════════════════════════════════════════════════════════════╗
+>║  Jobs Communications.1 ...........Job 42..........2 Mygamename...........3  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║  1. Add comment....................A    6. Publish.......................F  ║
+>║  2. Mail Opener....................B    7. Email a log...................G  ║
+>║  3. Approve........................C                                        ║
+>║  4. Complete.......................D                                        ║
+>║  5. Deny...........................E                                        ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+>║ │ ..Help is available.................................................... │ ║
+>║ │ ......................................................................4 │ ║
+>║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+>╚═════════════════════════════════════════════════════════════════════════════╝
+>1. Add a comment directly to job
+>2. Sends a message to the job opener(s)
+>3. Approves a job with user message
+>4. Completes a job with user message
+>5. Denies a job with user message
+>6. Publishes a job
+>7. Emails a log of the job to user input (format: someone@somewhere.com)
+```
+### +job/set Job#
+
+Also Option two(2) on `+job Job#`
+
+```
+>╔═════════════════════════════════════════════════════════════════════════════╗
+>║  Jobs Settings.......1 ...........Job 42..........2 Mygamename...........3  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║  1. Assign.........................A                                        ║
+>║  2. Change Summary.................B                                        ║
+>║  3. Change opener(s)...............C                                        ║
+>║  4. Tags...........................D                                        ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+>║ │ ..Help is available.................................................... │ ║
+>║ │ ......................................................................4 │ ║
+>║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+>╚═════════════════════════════════════════════════════════════════════════════╝
+>1. Assign/Claim job
+>2. Change summary
+>3. Change Opener
+>4. Change Tags
+```
+### +job/info ##
+
+Also Option three(3) on `+job Job#`
+
+```
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  Jobs Info...........1 ...........Job 42..........2 Mygamename...........3  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. Actions........................A                                        ║
+║  2. Header.........................B                                        ║
+║  3. Summary........................C                                        ║
+║  4. Report.........................D                                        ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+1. Display all actions performed on this job
+2. Display the job header
+3. Display the job summary
+4. Pull a report
+```
+
+
+
+### +job/work JobNum
+
+Also Option four(4) on `+job Job#`
+
+```
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  Jobs Workbench......1 ...........Job 42..........2 Mygamename...........3  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. Clone..........................A    6. Transfer......................F  ║
+║  2. Delete.........................B    7. Check In/Out..................G  ║
+║  3. Edit...........................C    8. Lock/Unlock...................H  ║
+║  4. Merge with another job.........D                                        ║
+║  5. Set due date...................E                                        ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+1. Create a clone of this job, replies and actions
+2. Delete this job (admin only)
+3. Edit a job, name, header, body, or your reply/replies (may not edit replies that do not belong to you)
+4. Merge this job into another
+6. Set this job's due date (must be in valid local date format)
+7. Transfer
+8. Check the job out/in if it's not already checked
+9. Lock or unlock the job
+```
+
+### +job/reply JobNum
+```
+>╔═════════════════════════════════════════════════════════════════════════════╗
+>║  Jobs Workbench......1 ...........Job 42..........2 Mygamename...........3  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║  1. Show job message...............A    6. Reply to last comment.........F  ║
+>║  2. Reply to job...................B    7. Show flat list of comments....G  ║
+>║  3. List comments..................C                                        ║
+>║  4. Show Comment...................D                                        ║
+>║  5. Reply to comment...............E                                        ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+>║ │ .Total threads:.XXXXXX................................................. │ ║
+>║ │ Total comments:.XXXXXX................................................. │ ║
+>║ │ .....Opened by:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+>║ │ Last commenter:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+>║ │ ..Last comment:.XXXXXX................................................. │ ║
+>║ │ .....Opened on:.04/29/2018............................................. │ ║
+>║ │ ...........Due:.05/22/2018............................................. │ ║
+>║ │ ....................................................................... │ ║
+>║ │ ......................................................................4 │ ║
+>║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+>╚═════════════════════════════════════════════════════════════════════════════╝
+>1. Displays the initial message submitted with the job
+>2. Replies to the initial message submitted with the job
+>3. Displays a list of comments to the job, with thread indicators
+>4. Shows a specific comment
+>5. Replies to a specific comment
+>6. Replies to the last comment
+>6. Displays non-threaded list of comments by time
+```
+
+
+## +job/credits
+```
+>╔═════════════════════════════════════════════════════════════════════════════╗
+>║  Jobs Workbench......1 ...........Job 42..........2 Mygamename...........3  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║  1. Credit #1......................A    6. ..............................F  ║
+>║  2. Credit #2......................B    7. ..............................G  ║
+>║  3. Credit #3......................C    8. ..............................H  ║
+>║  4. Credit #4......................D    9. ..............................I  ║
+>║  5. ...............................E   10. ..............................J  ║
+>╠═════════════════════════════════════════════════════════════════════════════╣
+>║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+>║ │ ....................................................................... │ ║
+>║ │ ......................................................................4 │ ║
+>║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+>╚═════════════════════════════════════════════════════════════════════════════╝
+```
+
+
+
+Single command driven Jobs interface mock
+---
 
 #### Jobs header mock 
 ```
@@ -486,20 +717,32 @@ Please note:  When I refer to job id or message id in the functionality, I am on
 
 #### Add comments to a job
 
-##### Tests: 
+We should be able to do threaded replies into a job structure available to users.  Functionality we could do something like:
 
-- Job must exist
-- Player commenting must have permission to access
-- If using +job/reply, there must be an initial comment on the job.
++job/reply 42=This is my comment to job -- this just tags a standard straight line of comments (reply to initial comment)
++job/reply 42/5=This is my comment to Staffer Jolene's reply to job 42.
+
+How do I thread more deeply?
+
+Maybe use a menu driven system completely to interact with jobs.
+
+##### Tests: 
+Caller has perms
+@@ != None
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+If using +job/reply, there must be an initial comment on the job.
+If using +job/reply, the comment passed in XX must exist.
 
 ##### Logic:
 
 Job exists with comment.  
 
-|Command              | What it does                                                                               |
-|---------------------|--------------------------------------------------------------------------------------------|
-|+job/comment JJ = @@ | Add a comment to the initial message +job/comment JJ=comment                               |
-|+job/reply JJ/XX=@@  | Reply to a comment that already exists, where JJ == Job id and XX == the Comment/reply id. |
+|Command                | What it does                                                                               |
+|-----------------------|--------------------------------------------------------------------------------------------|
+|+job/comment JJ = @@   | Add a comment to the initial message +job/comment JJ=comment                               |
+|+job/reply JJ/XX = @@  | Reply to a comment that already exists, where JJ == Job id and XX == the Comment/reply id. |
 
 ```
 switch == ("comment","reply")
@@ -512,13 +755,20 @@ XX == self.lhsverb
 #### Mails opener with <message>
 
 ##### Tests: 
+Caller has perms
+@@ != None
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
-- hook into mail sys * (waiting on mail system integration)
+##### Hooks:
+mailsys
 
 ##### Logic:
-|Command               | What it does                         |
-|----------------------|--------------------------------------|
-|+job/mail JJ = message| Mails opener of job id J with message|
+
+|Command           | What it does                         |
+|------------------|--------------------------------------|
+|+job/mail JJ = @@ | Mails opener of job id J with message|
 
 ```
 switch == ("mail")
@@ -560,10 +810,17 @@ JJ == self.lhs
 #### Publish a job or <comment>
 
 ##### Tests:
+Caller has perms
+@@ != None
+JJ == Existing Job
+if XX: XX == Existing comment
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
-- Job/comment must exist
-- hook into bbsys * (waiting on bbsys integration)
+##### Hooks:
+bbsys
 
+##### Logic:
 |Command               | What it does                             |
 |----------------------|------------------------------------------|
 |+job/publish JJ       | Publishes job to publish board           |
@@ -578,19 +835,19 @@ XX == self.lhsverb
 #### Send a query to <players>
 
 ##### Tests:
-
-- Players must exist and be tagged to job
-- hook into mail sys * (waiting on mail system integration)
+Caller has perms
+@@ != None
+XX != None
+PP == Valid player or player list
 
 ##### Logic:
-
 |Command               | What it does                                            |
 |----------------------|---------------------------------------------------------|
-|+job/query JJ/XX = @@ | Query list of players (JJ) with message (@@) titled (XX)|
+|+job/query PP/XX = @@ | Query list of players (PP) with message (@@) titled (XX)|
 
 ```
 switch == ("query")
-JJ == self.lhsnoun
+PP == self.lhsnoun
 XX == self.lhsverb
 @@ == self.rhs
 ```
@@ -598,20 +855,24 @@ XX == self.lhsverb
 
 #### Approve a player job
 
-#### AJ Notes
-
-When you close out a LOOT queue using +job/approve, add your closing message to each player's +journal.
+> ##### AJ Notes
+> When you close out a LOOT queue using +job/approve, add your closing message to each player's +journal.
 
 ##### Tests:
-- Job must exist
-- hook into bbsys #### (waiting on bbsys integration)
-- hook into mail sys #### (waiting on mail system integration)
+Caller has perms
+@@ != None
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
+##### Hooks:
+bbsys
+mailsys
 
 ##### Logic:
-
 |Command            | What it does                   |
 |-------------------|--------------------------------|
-|+job/approve ##=@@ | Approve job ## with message @@ |
+|+job/approve JJ=@@ | Approve job JJ with message @@ |
 
 ```
 switch == ("approve")
@@ -623,9 +884,15 @@ XX == self.lhsverb
 #### Complete a job
 
 ##### Tests:
-- Job must exist
-- hook into bbsys - (waiting on bbsys integration)
-- hook into mail sys - (waiting on mail system integration)
+Caller has perms
+@@ != None
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
+##### Hooks:
+bbsys
+mailsys
 
 ##### Logic:
 
@@ -643,9 +910,11 @@ XX == self.lhsverb
 #### Deny a player job
 
 ##### Tests:
-- JJ must exist
-- hook into bbsys #### (waiting on bbsys integration)
-- hook into mail sys #### (waiting on mail system integration)
+Caller has perms
+@@ != None
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
 ##### Logic:
 
@@ -666,10 +935,11 @@ First step - need to research logging within Evennia a bit more.
 
 ##### Tests:
 
-- Job must exist
-- Caller must have permission to log
-- Log directory must be set (internal)
-- self.rhs must be in format someone@somwhere.org
+Caller has perms
+JJ == Existing Job
+@@ == string in format 'someone@somewhere.com'
+JJ.db.checked_out == caller or False
+Log directory must be set (internal)
 
 ##### Logic:
 
@@ -683,15 +953,14 @@ JJ == self.lhs
 @@ == self.rhs
 ```
 
-### Manipulation
+### Job Settings Functionality
 
 #### Search jobs for <pattern>
 
 ##### Tests:
 
-- Caller must have permission to access jobs/buckets
-- if caller can't search buckets error and return
-- if caller has access to only certain buckets use that list as the search base
+Caller has perms
+@@ != None
 
 ##### Logic:
 
@@ -713,9 +982,14 @@ def player_perm():
 #### Assign a job to player
 
 ##### Tests:
-- Job must exist
-- Caller must have permission to access job
-- Player(s) must exist
+Caller has perms
+JJ == Existing Job
+@@ == Valid player list or "me"
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
+##### Hooks:
+eventsys
 
 ##### Logic:
 
@@ -732,7 +1006,7 @@ JJ == self.lhs
 @@ == self.rhs # Special, if self.rhs.lower() == "me", assign to caller
 ```
 
-#### Changes a job SUMMARY setting
+#### Change a job summary setting
 
 The following systems should be able to use the sumset to automate some task handling:
 
@@ -777,15 +1051,18 @@ Expose `Job.sumset()`
 ---
 
 ##### Tests:
-
-- Job exists
-- Player has permission to set summary on job
+Caller has perms
+JJ == Existing Job
+XX != None
+@@ != None
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
 ##### Logic:
 
-|Command              | What it does                                   |
-|---------------------|------------------------------------------------|
-|+job/sumset JJ/XX=@@ | Sets (creates) field XX with contents @@ on job|
+|Command              | What it does                                       |
+|---------------------|----------------------------------------------------|
+|+job/sumset JJ/XX=@@ | Sets (creates) field XX with contents @@ on job JJ |
 
 ```
 switch == ("sumset")
@@ -797,9 +1074,14 @@ XX == self.lhsverb
 #### Change opened-by to <player list>
 
 ##### Tests:
-Job exists
-Players exist
-Caller has perms to change opened-by (perm, bucket admin or admin)
+Caller has perms
+JJ == Existing Job
+@@ == Valid player or player list or org
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
+##### Hooks:
+orgsys
 
 ##### Logic:
 |Command           | What it does                                                     |
@@ -815,7 +1097,7 @@ JJ == self.lhs
 #### Clear new jobs
 
 ##### Tests:
-None - Working on Character Attrs.
+check for new jobs
 
 ##### Logic:
 |Command    | What it does                             |
@@ -839,9 +1121,10 @@ for job in jobs:
 #### Clone a job
 
 ##### Tests:
-Job exists
-Player has perms
-Job is not locked
+Caller has perms
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
 ##### Logic:
 |Command      | What it does                                     |
@@ -855,28 +1138,34 @@ JJ == self.lhs
 
 ---
 
-# Waiting on Query
-
-
 #### Create a job manually
 
 Query to Beag: Does anybody actually need to be able to manually create a job??  Should this be deprecated due to the menu integration for job creation?
+Query Reply - Yes 
+Integration with menu creation should override the need for any line-level setting of job options.  Should this still be a thing?  Perhaps after I get a working product I'll explore the need for the ability to have attribute-level access to the job object from within the game (+job/set timeout=XX days, etc.)
 
 ##### Tests:
-Player has perms
-Bucket exists
 
 ##### Logic:
+
+On hold until testing can be done with menu-based creation system.
 
 ---
 
 #### Delete a job (Admin)
 
 ##### Tests:
-Job exists
-Player has perms
-Job is not locked
-Job is not checked out
+Caller has perms
+JJ == Existing job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
+
+##### Hooks:
+bbsys
+mailsys
+eventsys
+orgsys
 
 ##### Logic:
 |Command       | What it does   |
@@ -907,16 +1196,19 @@ Query: Should we expose `Job.delete_hook()`?
 #### Edits a job - Any part of the job may be edited - Creator or bucket admin perms
 
 ##### Tests:
-Job exists
-Player has perms
-Job is not locked
-Job is not checked out
+Caller has perms
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+if XX: XX == Valid coment on job JJ
+if OLD in JJ or JJ/XX: replace OLD with NEW else: caller.msg: Old not found in JJ
+
 
 ##### Logic:
-|Command                 | What it does                               |
-|------------------------|--------------------------------------------|
-|+job/edit JJ=OLD/NEW    | Edits Job JJ repl OLD w/ NEW               |
-|+job/edit JJ/XX=OLD/NEW | Edits comment XX on Job JJ repl OLD w/ NEW |
+|Command                 | What it does                                    |
+|------------------------|-------------------------------------------------|
+|+job/edit JJ=OLD/NEW    | Edits Initial comment on Job JJ repl OLD w/ NEW |
+|+job/edit JJ/XX=OLD/NEW | Edits comment XX on Job JJ repl OLD w/ NEW      |
 
 
 ```
@@ -932,24 +1224,105 @@ pull `evennia.world.jobs.jobutils.argparse(self.lhs, self.rhs)`
 #### Escalate a job's priority
 
 ##### Tests:
+Caller has perms
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+@@ in JJ.db.valid_priorities
+
+---
+
+Query to Beag: 
+would it be more useful to be able to implement your own prioritization schema instead of using a stock l/m/h type scheme in job Priority stuff? Or would you rather just have a stock l/m/h?
+
+---
+
 ##### Logic:
+|Command        | What it does                      |
+|---------------|-----------------------------------|
+|+job/esc JJ=@@ | Escalates job JJ's priority to @@ |
+
+
+```
+switch == ("esc")
+JJ == self.lhs
+@@ == self.rhs
+
+pull `evennia.world.jobs.jobutils.argparse(self.lhs, self.rhs)`
+```
 
 #### Merge <source> into <destination>
 
+This allows a Caller to merge one job into another.  Single merge-type, appending source onto destination
+
 ##### Tests:
+Caller has perms
+@@ == Existing Job
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+@@.db.locked == False
+@@.db.checked_out == caller or False
+
 ##### Logic:
+|Command          | What it does                            |
+|-----------------|-----------------------------------------|
+|+job/merge JJ=@@ | Merge job JJ into @@ (appends JJ to @@) |
+
+
+```
+switch == ("merge")
+JJ == self.lhs
+@@ == self.rhs
+```
 
 #### Rename a job
 
 ##### Tests:
+Caller has perms
+@@ != None
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
 ##### Logic:
+|Command           | What it does        |
+|------------------|---------------------|
+|+job/rename JJ=@@ | Rename job JJ to @@ |
+
+
+```
+switch == ("rename")
+JJ == self.lhs
+@@ == self.rhs
+```
 
 #### Set job due date - Due date defaults to bucket timeout in days
 
 ##### Tests:
+Caller has perms
+@@ == valid date format (MM/DD/YYYY, MM-DD-YYYY, localize option: DD-MM-YYYY, DD/MM/YYYY)
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
 ##### Logic:
+|Command        | What it does              |
+|---------------|---------------------------|
+|+job/due JJ=@@ | Set job JJ due date to @@ |
+
+
+```
+switch == ("due")
+JJ == self.lhs
+@@ == self.rhs
+```
 
 #### Set progress status on a job
+
+
+query Beag: Should progress (AJ: +job/set #=hold|new|underway|25|50|75|100) be set on job?  Does anyone use this?
+
 
 ##### Tests:
 ##### Logic:
@@ -957,8 +1330,23 @@ pull `evennia.world.jobs.jobutils.argparse(self.lhs, self.rhs)`
 #### Transfer (or undelete) a job
 
 ##### Tests:
-##### Logic:
+Caller has perms
+@@ == Valid bucket
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
+##### Logic:
+|Command             | What it does                 |
+|--------------------|------------------------------|
+|+job/transfer JJ=@@ | Transfer job JJ to bucket @@ |
+
+
+```
+switch == ("due")
+JJ == self.lhs
+@@ == self.rhs
+```
 
 ### Locks
 
