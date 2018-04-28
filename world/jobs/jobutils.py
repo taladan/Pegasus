@@ -4,49 +4,12 @@
 import evennia as ev
 import jobs_settings as settings
 
-# Todo: Refactor this to pegasus utils
-def argparse(lhs, rhs):
-    """
-    :param lhs: Arguments from the left side of an = (self.lhs)
-    :param rhs: Arguments from the right side of an = (self.rhs)
-    :return: argument list (lhs_obj, lhs_act, rhs_obj, rhs_act) or False
-    """
-    if '/' in lhs or '/' in rhs:
-        if '/' in lhs:
-            lhs_obj, lhs_act = lhs.split('/')
-        else:
-            lhs_obj, lhs_act = False, False
-        if '/' in rhs:
-            rhs_obj, rhs_act = rhs.split('/')
-        else:
-            rhs_obj, rhs_act = False, False
-        ret = (lhs_obj, lhs_act, rhs_obj, rhs_act)
-    else:
-        ret = False
-    return ret
-
 def assign_channel(string):
     """
     :param string: Any string name of a channel object
     :return: Channel object matching string
     """
     return ev.ChannelDB.objects.get_channel(string)
-
-def base36encode(integer):
-    """encodes integer to a base 36 number"""
-    chars, encoded, sign = '0123456789abcdefghijklmnopqrstuvwxyz', '', ''
-
-    if (integer < 0):
-        sign = '-'
-        integer = -1 * integer
-
-    elif (integer == 0):
-        sign = '0'
-
-    while integer > 0:
-        integer, remainder = divmod(integer, 36)
-        encoded = chars[remainder] + encoded
-    return sign + encoded
 
 def exists(*args):
     """
@@ -64,7 +27,7 @@ def decorate(*args):
         ret.append(settings.TEXT_COLOR + str(text) + "|n")
     return tuple(ret)
 
-def is_character(string):
+def ischaracter(string):
     return ev.utils.utils.inherits_from(string, "typeclasses.characters.Character")
 
 def isaccount(string):

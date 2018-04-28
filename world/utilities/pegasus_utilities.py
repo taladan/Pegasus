@@ -205,3 +205,24 @@ def log(msg, exception, system):
     exception = exception + "\n"
     msg = exception + msg
     log.log_file(msg, logfile)
+
+
+def argparse(lhs, rhs):
+    """
+    :param lhs: Arguments from the left side of an = (self.lhs)
+    :param rhs: Arguments from the right side of an = (self.rhs)
+    :return: argument list (lhs_obj, lhs_act, rhs_obj, rhs_act) or False
+    """
+    if '/' in lhs or '/' in rhs:
+        if '/' in lhs:
+            lhs_obj, lhs_act = lhs.split('/')
+        else:
+            lhs_obj, lhs_act = False, False
+        if '/' in rhs:
+            rhs_obj, rhs_act = rhs.split('/')
+        else:
+            rhs_obj, rhs_act = False, False
+        ret = (lhs_obj, lhs_act, rhs_obj, rhs_act)
+    else:
+        ret = False
+    return ret
