@@ -3,6 +3,7 @@
 import random
 from datetime import datetime as date
 import evennia as ev
+import world.utilities.pegasus_utilities
 from evennia import default_cmds
 from evennia.utils import evtable
 import jobutils as ju
@@ -875,7 +876,7 @@ class CmdJobs(MuxCommand):
         """
         charname = self.rhs
         job = self.jobid
-        if ju.is_character(charname):
+        if ju.ischaracter(charname):
             ret = {}
             act = "tag"
             character = ev.ObjectDB.objects.search(charname)
@@ -913,7 +914,7 @@ class CmdJobs(MuxCommand):
         if self.switches or self.args:
             if self.switches:
                 if self.args:
-                    passargs = ju.argparse(self.lhs, self.rhs)
+                    passargs = world.utilities.pegasus_utilities.argparse(self.lhs, self.rhs)
                     if passargs:
                         self.lhs_obj, self.lhs_act, self.rhs_obj, self.rhs_act = passargs
                     else:

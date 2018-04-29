@@ -1,33 +1,26 @@
-Bucket
----
+# Bucket
 
-### Bucket Creation Mockup
+Bucket Creation Mockup
+---
 
 ```
 ╔═════════════════════════════════════════════════════════════════════════════╗
-║  XXXXX1XXXXXXX.............XXXXXXXXXXX2XXXXXXXXXXX............XXXXXX3XXXXX  ║
+║  Jobs System.........1 .......Bucket Creation.....2 Mygamename...........3  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
-║  1. XXXXXXXXXXXXXXXAXXXXXXXXXXXXXXXX    6. XXXXXXXXXXXXXXFXXXXXXXXXXXXXXXX  ║
-║  2. XXXXXXXXXXXXXXXBXXXXXXXXXXXXXXXX    7. XXXXXXXXXXXXXXGXXXXXXXXXXXXXXXX  ║
-║  3. XXXXXXXXXXXXXXXCXXXXXXXXXXXXXXXX    8. XXXXXXXXXXXXXXHXXXXXXXXXXXXXXXX  ║
-║  4. XXXXXXXXXXXXXXXDXXXXXXXXXXXXXXXX                                        ║
-║  5. XXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXX                                        ║
+║  1. Name                           A    6. Grant Access                  F  ║
+║  2. Description                    B    7. Options Submenu               G  ║
+║  3. Approval Board                 C    8. Finalize Creation             H  ║
+║  4. Denial Board                   D                                        ║
+║  5. Completion Board               E                                        ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
 ║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
 
-Menu Variables
---------------
+#### Menu Variables
 1. System
 2. Menu Title
 3. Gamename
@@ -39,17 +32,16 @@ Menu Variables
 |Menu Title   |self.menu_title                          | 
 |Menu Text    |self.menu_text                           |
 
-Creation menu choices:<sup>1</sup>
-----------------------
+#### Creation menu choices:<sup1</sup
 
-A. Name ~:> if bucket doesn't exist: if name isn't too long: dbsave else: reprompt too long else: reprompt exists
-B. Description ~:> if desc exists, if it is too long: trunc and dbsave, else dbsave, else error
-C. Approval board ~:> if board exists and bucket can post, dbsave
-D. Denial Board ~:>  if board exists and bucket can post, dbsave
-E. Completion Board ~:> if board exists and bucket can post, dbsave
-F. Bucket manager (test if it's a player, default is admin perms) ~:>  if player exists: dbsave else: dbsave; set admin perms
-G. Grant Access ~:> if player exists and doesn't have access, dbsave
-H. Set options ~:> submenu
+A. Name ~: if bucket doesn't exist: if name isn't too long: dbsave else: reprompt too long else: reprompt exists
+B. Description ~: if desc exists, if it is too long: trunc and dbsave, else dbsave, else error
+C. Approval board ~: if board exists and bucket can post, dbsave
+D. Denial Board ~:  if board exists and bucket can post, dbsave
+E. Completion Board ~: if board exists and bucket can post, dbsave
+F. Grant Access ~: if player exists and doesn't have access, dbsave
+G. Set options ~: submenu
+H. Finalize Creation ~: Test Bucket.db.key, db.desc, db.approval, db.denial, db.completion are set then create bucket and write to bucket (Bucket.flush())
 
 
 |Choice | DB Attr                |
@@ -65,32 +57,26 @@ H. Set options ~:> submenu
 
 ---
 
-### Bucket Options Mockup
+Bucket Options Mockup
+---
 ```
 ╔═════════════════════════════════════════════════════════════════════════════╗
-║  XXXXX1XXXXXXX.............XXXXXXXXXXX2XXXXXXXXXXX............XXXXXX3XXXXX  ║
+║  Jobs System.........1 .......Bucket Options......2 Mygamename...........3  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
-║  1. XXXXXXXXXXXXXXXAXXXXXXXXXXXXXXXX                                        ║
-║  2. XXXXXXXXXXXXXXXBXXXXXXXXXXXXXXXX                                        ║
-║  3. XXXXXXXXXXXXXXXCXXXXXXXXXXXXXXXX                                        ║
-║  4. XXXXXXXXXXXXXXXDXXXXXXXXXXXXXXXX                                        ║
-║  5. XXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXX                                        ║
+║  1. Timeout                        A    6. Bucket Manager(s)             F  ║
+║  2. Privacy                        B    7. Write permissions to bucket   G  ║
+║  3. Visibility                     C                                        ║
+║  4. Act Codes                      D                                        ║
+║  5. Permissions Submenu            E                                        ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
 ║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
 
-Menu Variables
---------------
+#### Menu Variables
 1. System
 2. Menu Title
 3. Gamename
@@ -103,13 +89,14 @@ Menu Variables
 |Menu Text    |self.menu_text                           |
 
 
-Set options menu choices:<sup>1</sup>
--------------------------------------
-A. Timeout ~:> if input exists and in 'digit str' format: dbsave else: default, reprompt
-B. Privacy  ~:> toggle boolean for public/private; notify
-C. Visibility (hidden) ~:> toggle boolean for hidden; notify
-D. Act Codes ~:> review act codes and exit
-E. Permissions ~:> submenu
+#### Set options menu choices:<sup1</sup
+A. Timeout ~: if input exists and in 'digit str' format: dbsave else: default, reprompt
+B. Privacy  ~: toggle boolean for public/private; notify
+C. Visibility (hidden) ~: toggle boolean for hidden; notify
+D. Act Codes ~: review act codes and exit
+E. Permissions ~: submenu
+F. Bucket Manager(s) ~: add player(s) to the Bucket.db.manager_list
+G. Write permissons to bucket ~: aggregate changes in permssions and write to bucket (Bucket.flush())
 
 |Opt    | DB Attr                |
 |-------|------------------------|
@@ -122,35 +109,26 @@ E. Permissions ~:> submenu
 
 ---
 
-### Bucket Permission Mockup
+Bucket Permission Mockup
+---
 ```
 ╔═════════════════════════════════════════════════════════════════════════════╗
-║  XXXXX1XXXXXXX.............XXXXXXXXXXX2XXXXXXXXXXX............XXXXXX3XXXXX  ║
+║  Jobs System.........1 ........Bucket Permissions.2 Mygamename...........3  ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
-║  1. XXXXXXXXXXXXXXXAXXXXXXXXXXXXXXXX    6. XXXXXXXXXXXXXXFXXXXXXXXXXXXXXXX  ║
-║  2. XXXXXXXXXXXXXXXBXXXXXXXXXXXXXXXX    7. XXXXXXXXXXXXXXGXXXXXXXXXXXXXXXX  ║
-║  3. XXXXXXXXXXXXXXXCXXXXXXXXXXXXXXXX    8. XXXXXXXXXXXXXXHXXXXXXXXXXXXXXXX  ║
-║  4. XXXXXXXXXXXXXXXDXXXXXXXXXXXXXXXX    9. XXXXXXXXXXXXXXIXXXXXXXXXXXXXXXX  ║
-║  5. XXXXXXXXXXXXXXXEXXXXXXXXXXXXXXXX   10. XXXXXXXXXXXXXXJXXXXXXXXXXXXXXXX  ║
+║  1. Resolution                     A    6. Stats                         F  ║
+║  2. Creation                       B    7. Log                           G  ║
+║  3. Add                            C    8. Mail                          H  ║
+║  4. Grant                          D    9. Write permissions to bucket   I  ║
+║  5. Edit                           E                                        ║
 ╠═════════════════════════════════════════════════════════════════════════════╣
 ║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
-║ │ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX │ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
 ║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 
 ```
-Access Permissions<sup>1</sup>
-------------------------------
-
-Menu Variables
---------------
+#### Menu Variables
 1. System
 2. Menu Title
 3. Gamename
@@ -163,18 +141,16 @@ Menu Variables
 |Menu Text    |self.menu_text                           |
 
 
-Menu options
-------------
-A. Completion ~:> If player can /complete jobs
-B. Approval ~:> If player can /approve jobs
-C. Denial ~:> If player can /deny jobs
-D. Creation ~:> If player can use the /create command
-E. Add ~:> If player can use the /add command
-F. Grant ~:> If player can use +bucket/access
-G. Edit ~:> If player can use the /edit command
-H. Stats ~:> If player can use the /edit command
-I. Log ~:>  If player can /log a job
-J. Mail ~:> If player can /query and /mail
+#### Menu options
+A. BBsys ~: If player can /complete/approve/deny jobs
+B. Creation ~: If player can use the /create command
+C. Add ~: If player can use the /add command
+D. Grant ~: If player can use +bucket/access
+E. Edit ~: If player can use the /edit command
+F. Stats ~: If player can use the /edit command
+G. Log ~:  If player can /log a job
+H. Mail ~: If player can /query and /mail
+I. Write permissions to bucket ~: Aggregate changed permissions and write to bucket (Bucket.flush())
 
 |Permission |Boolean Test               |
 |-----------|---------------------------|
@@ -191,7 +167,8 @@ J. Mail ~:> If player can /query and /mail
 
 ---
 
-## The bucket creation process
+Bucket Creation
+---
 
 #### Main Menu
 1. +bucket
@@ -206,11 +183,7 @@ J. Mail ~:> If player can /query and /mail
 3. If it is a staff bucket, it will default to: Admin Perms, 30 day timeout, public visibility and unhidden privacy.
 
 
-<sup>1</sup> - **_Each choice in a menu needs to have an attendant help file._**
-
 ---
-
-Copypasta stuff for later
 
 Bucket Limits and legend                                                      
 ---                                                                           
@@ -226,44 +199,160 @@ body_section = 2
 
 ## Bucket Functionality
 
-# Todo: fix this
-+bucket/access <player>=<bucket>
-+bucket/check <player>
-+bucket/create <bucket>=<description>
-+bucket/delete <bucket>
-+bucket/help <bucket>
-+bucket/info <bucket>
-+bucket/monitor <bucket>
-+bucket/set <bucket>/<setting>=<value>
-+buckets
+### Access
++bucket/access Player = Bucket - grants Player(s)/Org(s) access to Bucket.  Bucket Admin/Admin only command. 
+
+##### Tests
+Caller has perms
+BB == Existing Bucket
+PP Exists and not in BB.db.access_list
+
+needed attr: Bucket.db.access_list
+##### Logic
+| Command             | What it does                         |
+|---------------------|--------------------------------------|
+|+bucket/access PP=BB | Grants player PP access to bucket BB |
 
 
----
-
-Jobs
----
-
-
-
-#### Original Anomaly jobs output
 ```
-===============================| View Job 1 |================================
-   Bucket: CODE                             Due On: -
-    Title: Building System                  Status: Green (New)
-Opened On: Sun Apr 27 16:10:57 2008    Assigned To: Nobody
-Opened By: Swift
-   Tagged: Meg and Aurinko
------------------------------------------------------------------------------
-This is the main body message - what's tagged onto the job at creation
------------------------------------------------------------------------------
-[2+] This is an addt'l message in reply
------------------------------------------------------------------------------
-[5+] This is the 5th action on this job hence the number.
------------------------------------------------------------------------------
-[6+]  they continue
-================================| [Myjobs] |=================================
+switch = "access"
+PP = self.lhs
+BB = self.lhs
 ```
 
+### Check
+
+##### Tests
+Caller has perms
+PP == Existing Player
+
+##### Logic
+| Command         | What it does                                   |
+|-----------------|------------------------------------------------|
+|+bucket/check PP | Return list of buckets player PP has access to |
+
+```
+switch = "check"
+PP = self.lhs
+```
+
+### Create
+
+##### Tests
+Caller has perms
+BB != Existing Bucket
+@@ != None
+
+##### Logic
+| Command             | What it does                                |
+|---------------------|---------------------------------------------|
+|+bucket/create BB=@@ | Creates Bucket named BB with description @@ |
+
+```
+switch = "create"
+BB = self.lhs
+@@ = self.rhs
+```
+
+### Delete
+
+##### Tests
+Caller has perms
+BB == Existing Bucket
+BB.db.total_jobs = 0
+
+needed attribute Bucket.db.total_jobs
+
+##### Logic
+| Command          | What it does                      |
+|------------------|-----------------------------------|
+|+bucket/delete BB | Deletes bucket BB (must be empty) |
+
+```
+switch = "delete"
+BB = self.lhs
+```
+
+### Help
+
+##### Tests
+Caller has perms
+BB == Existing Bucket
+
+##### Logic
+| Command        | What it does              |
+|----------------|---------------------------|
+|+bucket/help BB | Return help for bucket BB |
+
+```
+switch = "help"
+BB = self.lhs
+```
+### Info
+
+##### Tests
+Caller has perms
+BB == Existing Bucket
+
+##### Logic
+| Command        | What it does              |
+|----------------|---------------------------|
+|+bucket/info BB | Return info for bucket BB |
+
+```
+switch = "info"
+BB = self.lhs
+```
+### Monitor
+
+##### Tests
+Caller has perms
+BB == Existing Bucket
+
+##### Logic
+| Command           | What it does                   |
+|-------------------|--------------------------------|
+|+bucket/monitor BB | Toggle monitoring of bucket BB |
+
+```
+switch = "monitor"
+BB = self.lhs
+```
+### Options
+
+##### Tests
+Caller has perms
+BB == Existing bucket
+XX == Valid option
+@@ == Valid option setting
+
+##### Logic
+| Command             | What it does                            |
+|---------------------|-----------------------------------------|
+|+bucket/set BB/XX=@@ | Sets option XX on bucket BB to value @@ |
+
+```
+switch = "set"
+BB = self.lhs_noun
+XX = self.lhs_verb
+@@ = self.rhs
+```
+### Bucket List
+
+##### Tests
+Caller has perms
+
+##### Logic
+| Command | What it does                                             |
+|---------|----------------------------------------------------------|
+|+buckets | Display the current list of buckets caller has access to |
+
+```
+switch = ""
+```
+---
+
+# Jobs
 
 
 Jobs menu-driven interface mock
@@ -281,119 +370,119 @@ Jobs menu-driven interface mock
 
 ### +jobs
 ```
->╔═════════════════════════════════════════════════════════════════════════════╗
->║  Jobs System.........1 ...........Job 42..........2 Mygamename...........3  ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║  1. Create new job.................A                                        ║
->║  2. Clear all new jobs.............B                                        ║
->║  3. Search jobs....................C                                        ║
->║  4. Views..........................D                                        ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
->║ │ ..Help is available.................................................... │ ║
->║ │ ......................................................................4 │ ║
->║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
->╚═════════════════════════════════════════════════════════════════════════════╝
->1. +job/create - Create a job manually
->2. +job/clear - Clear new jobs
->3. +job/search <pattern> - Search jobs for <pattern>
->4. +job/views - Open the views menu
->
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  Jobs System.........1 ...........Job 42..........2 Mygamename...........3  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. Create new job.................A                                        ║
+║  2. Clear all new jobs.............B                                        ║
+║  3. Search jobs....................C                                        ║
+║  4. Views..........................D                                        ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+1. +job/create - Create a job manually
+2. +job/clear - Clear new jobs
+3. +job/search <pattern - Search jobs for <pattern
+4. +job/views - Open the views menu
+
 ```
 ### +job/view:
 also available with +job/view(s)
 ```
->╔═════════════════════════════════════════════════════════════════════════════╗
->║  Jobs System - Views.1 ...........................2 Mygamename...........3  ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║  1. Yours..........................A    6. All jobs in a bucket..........F  ║
->║  2. All............................B    7. By mod........................G  ║
->║  3. New............................C    8. By priority...................H  ║
->║  4. Overdue........................D    9. By player.....................I  ║
->║  5. By Bucket......................E   10. Range in bucket...............J  ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
->║ │ ..Help is available.................................................... │ ║
->║ │ ......................................................................4 │ ║
->║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
->╚═════════════════════════════════════════════════════════════════════════════╝
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  Jobs System - Views.1 ...........................2 Mygamename...........3  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. Yours..........................A    6. All jobs in a bucket..........F  ║
+║  2. All............................B    7. By mod........................G  ║
+║  3. New............................C    8. By priority...................H  ║
+║  4. Overdue........................D    9. By player.....................I  ║
+║  5. By Bucket......................E   10. Range in bucket...............J  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
 ```
 
 
 ### +job 42
 
 ```
->╔═════════════════════════════════════════════════════════════════════════════╗
->║  .Jobs........1... ...............Job 42..........  2... .Mygamename..3...  ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║  1. Communications.................A                                        ║
->║  2. Settings.......................B                                        ║
->║  3. Info...........................C                                        ║
->║  4. Workbench......................D                                        ║
->║  5. Lists..........................E                                        ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
->║ │ ...........Type:.XXXX35 Character LimitXXXXXXXXXXXXX....Replies:.999999 │ ║
->║ │ ......Opened by:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
->║ │ ......Opened on:.04/29/2018............................................ │ ║
->║ │ ............Due:.05/22/2018.........4.................................. │ ║
->║ │ ..........Title:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
->║ │ ....Assigned to:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
->║ │ ....Checked out: Y/N................................................... │ ║
->║ │ .........Locked: Y/N...........Priority:.XXXX25 Character LimitXXXX...4 │ ║
->║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
->╚═════════════════════════════════════════════════════════════════════════════╝
->
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  .Jobs........1... ...............Job 42..........  2... .Mygamename..3...  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. Communications.................A                                        ║
+║  2. Settings.......................B                                        ║
+║  3. Info...........................C                                        ║
+║  4. Workbench......................D                                        ║
+║  5. Lists..........................E                                        ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ...........Type:.XXXX35 Character LimitXXXXXXXXXXXXX....Replies:.999999 │ ║
+║ │ ......Opened by:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+║ │ ......Opened on:.04/29/2018............................................ │ ║
+║ │ ............Due:.05/22/2018.........4.................................. │ ║
+║ │ ..........Title:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+║ │ ....Assigned to:.XXXX50 Character LimitXXXXXXXXXXXXXXXXXXXXXXXXXXXX.... │ ║
+║ │ ....Checked out: Y/N................................................... │ ║
+║ │ .........Locked: Y/N...........Priority:.XXXX25 Character LimitXXXX...4 │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
 ```
 ### +job/coms Job#
 
 Also Option one(1) on `+job Job#`
 
 ```
->╔═════════════════════════════════════════════════════════════════════════════╗
->║  Jobs Communications.1 ...........Job 42..........2 Mygamename...........3  ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║  1. Add comment....................A    6. Publish.......................F  ║
->║  2. Mail Opener....................B    7. Email a log...................G  ║
->║  3. Approve........................C                                        ║
->║  4. Complete.......................D                                        ║
->║  5. Deny...........................E                                        ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
->║ │ ..Help is available.................................................... │ ║
->║ │ ......................................................................4 │ ║
->║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
->╚═════════════════════════════════════════════════════════════════════════════╝
->1. Add a comment directly to job
->2. Sends a message to the job opener(s)
->3. Approves a job with user message
->4. Completes a job with user message
->5. Denies a job with user message
->6. Publishes a job
->7. Emails a log of the job to user input (format: someone@somewhere.com)
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  Jobs Communications.1 ...........Job 42..........2 Mygamename...........3  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. Add comment....................A    6. Publish.......................F  ║
+║  2. Mail Opener....................B    7. Email a log...................G  ║
+║  3. Approve........................C                                        ║
+║  4. Complete.......................D                                        ║
+║  5. Deny...........................E                                        ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+1. Add a comment directly to job
+2. Sends a message to the job opener(s)
+3. Approves a job with user message
+4. Completes a job with user message
+5. Denies a job with user message
+6. Publishes a job
+7. Emails a log of the job to user input (format: someone@somewhere.com)
 ```
 ### +job/set Job#
 
 Also Option two(2) on `+job Job#`
 
 ```
->╔═════════════════════════════════════════════════════════════════════════════╗
->║  Jobs Settings.......1 ...........Job 42..........2 Mygamename...........3  ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║  1. Assign.........................A                                        ║
->║  2. Change Summary.................B                                        ║
->║  3. Change opener(s)...............C                                        ║
->║  4. Tags...........................D                                        ║
->╠═════════════════════════════════════════════════════════════════════════════╣
->║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
->║ │ ..Help is available.................................................... │ ║
->║ │ ......................................................................4 │ ║
->║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
->╚═════════════════════════════════════════════════════════════════════════════╝
->1. Assign/Claim job
->2. Change summary
->3. Change Opener
->4. Change Tags
+╔═════════════════════════════════════════════════════════════════════════════╗
+║  Jobs Settings.......1 ...........Job 42..........2 Mygamename...........3  ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║  1. Assign.........................A                                        ║
+║  2. Change Summary.................B                                        ║
+║  3. Change opener(s)...............C                                        ║
+║  4. Tags...........................D                                        ║
+╠═════════════════════════════════════════════════════════════════════════════╣
+║ ╭─────────────────────────────────────────────────────────────────────────╮ ║
+║ │ ..Help is available.................................................... │ ║
+║ │ ......................................................................4 │ ║
+║ ╰─────────────────────────────────────────────────────────────────────────╯ ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+1. Assign/Claim job
+2. Change summary
+3. Change Opener
+4. Change Tags
 ```
 ### +job/info ##
 
@@ -1350,124 +1439,234 @@ JJ == self.lhs
 
 ### Locks
 
-#### Check in a job
+#### Check in/out a job
 
 ##### Tests:
-##### Logic:
+Caller has perms
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
-#### Check out a job
+##### Logic:
+|Command       | What it does         |
+|--------------|----------------------|
+|+job/check JJ | Checks in/out job JJ |
+
+if JJ.db.checked_out == False:
+    JJ.db.checked_out = caller
+elif: JJ.db.checked_out == caller:
+    JJ.db.checked_out = False
+else:
+    caller.msg(Checked out error)
+
+```
+switch == ("check")
+JJ == self.lhs
+```
+
+#### Locks/Unlocks a job and prevents changes
 
 ##### Tests:
+Caller has perms
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
 ##### Logic:
+|Command      | What it does         |
+|-------------|----------------------|
+|+job/lock JJ | Locks/Unlocks job JJ |
 
-#### Locks a job and prevents changes
+if JJ.db.locked == False:
+    JJ.db.locked = True
+else:
+    JJ.db.locked = False
 
-##### Tests:
-##### Logic:
-
-#### Unlocks a job
-
-##### Tests:
-##### Logic:
-
+```
+switch == ("lock")
+JJ == self.lhs
+```
 
 ### Tags
 
 #### Tags a job for <player>
 
 ##### Tests:
-##### Logic:
+Caller has perms
+@@ == Existing player or list of existing players
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
-#### Tags a job for you
-
-##### Tests:
 ##### Logic:
+|Command        | What it does                 |
+|---------------|------------------------------|
+|+job/tag JJ=@@ | Tags job JJ for player(s) @@ |
+
+
+```
+switch == ("tag")
+JJ == self.lhs
+@@ == self.rhs
+```
 
 #### Untags a job
 
 ##### Tests:
+Caller has perms
+@@ == Existing player or list of existing players
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
 ##### Logic:
+|Command          | What it does                   |
+|-----------------|--------------------------------|
+|+job/untag JJ=@@ | Untags job JJ for player(s) @@ |
 
-#### Untags a job for <player list>
 
+```
+switch == ("untag")
+JJ == self.lhs
+@@ == self.rhs
+```
 ### Display
 
 #### Display actions on a job
 
 ##### Tests:
-##### Logic:
+Caller has perms
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
 
-#### Display credit information ??
+##### Logic:
+|Command      | What it does                                        |
+|-------------|-----------------------------------------------------|
+|+job/acts JJ | Display list of actions performed on job JJ to date |
+
+```
+switch == ("acts")
+JJ == self.lhs
+```
+
+#### Display credit information 
+Refer to [menu driven](#+job/credits) mock for credits display reference.
 
 ##### Tests:
+
 ##### Logic:
+|Command      | What it does                                 |
+|-------------|----------------------------------------------|
+|+job/credits | Display list contributors to the jobs system |
+
+```
+switch == ("credits")
+```
+
 
 #### Display help for a job's bucket
 
 ##### Tests:
+Caller has perms
+JJ == Existing Job
+
 ##### Logic:
+|Command      | What it does                            |
+|-------------|-----------------------------------------|
+|+job/help JJ | Display help for the job and its bucket |
+
+```
+switch == ("help")
+JJ == self.lhs
+```
 
 #### Display replies to a job or job reply
 
 ##### Tests:
+Caller has perms
+JJ == Existing Job
+JJ.db.locked == False
+JJ.db.checked_out == caller or False
+
+---
+
+04-29-18, (10:57) - Query to Beag:  Do we want threaded messages in jobs or is a flat message structure preferred?
+
+---
+
 ##### Logic:
+|Command           | What it does                            |
+|------------------|-----------------------------------------|
+|+job/thread JJ    | Display help for the job and its bucket |
+|+job/thread JJ/XX | Display help for the job and its bucket |
+
+# Todo - Finish this
+
+```
+switch == ("help")
+JJ == self.lhs
+```
 
 #### Get a report
 
-##### Tests:
-##### Logic:
 
-#### List all jobs in <bucket>
+---
 
-##### Tests:
-##### Logic:
+04-29-18, (11:18) - query Beag: Does anyone ever use the reports functionality of jobs system?
 
-#### List all/yours/new jobs
+---
 
 ##### Tests:
 ##### Logic:
 
-#### List jobs
+#### List all/yours/new/overdue/player/bucket jobs
 
 ##### Tests:
+Caller has perms
+JJ in ("all", "mine", "new", "overdue", "playername", "bucketname")
+
 ##### Logic:
+|Command      | What it does                                                    |
+|-------------|-----------------------------------------------------------------|
+|+job/list JJ | Lists jobs by pattern (all, mine, new, overdue, Player, bucket) |
 
-#### List jobs matching <expression>
-
-##### Tests:
-##### Logic:
-
-#### List last <X> entries in <#>
-
-##### Tests:
-##### Logic:
-
-#### List overdue jobs
-
-##### Tests:
-##### Logic:
-
-#### Lists jobs assigned to player
-
-##### Tests:
-##### Logic:
-
-#### Lists jobs by bucket/mod/pri
-
-##### Tests:
-##### Logic:
+```
+switch == ("list")
+JJ == self.lhs
+```
 
 #### View a job
 
 ##### Tests:
+Caller has perms
+JJ == Existing Job
+
 ##### Logic:
+|Command | What it does   |
+|--------|----------------|
+|+job JJ | Display job JJ |
+
+```
+switch == (None)
+JJ == self.lhs
+```
 
 #### View a job's header & summary
 
 ##### Tests:
+Caller has perms
+JJ == Existing Job
+
 ##### Logic:
+|Command      | What it does                          |
+|-------------|---------------------------------------|
+|+job/info JJ | Display header and summary for job JJ |
 
-
+```
+switch == ("info")
+JJ == self.lhs
+```
 
 #### AJ Action codes
 _(these may or may not all make it into the system, they are simply here for reference)_
